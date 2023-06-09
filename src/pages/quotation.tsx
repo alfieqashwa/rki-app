@@ -1,6 +1,11 @@
 import { type NextPage } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
+
+const QuotPdf = dynamic(() => import("~/components/pdf-quotation"), {
+  ssr: false,
+});
 
 const Quotation: NextPage = () => {
   const [data] = useState([
@@ -51,7 +56,7 @@ const Quotation: NextPage = () => {
   return (
     <main className="thom container mx-auto">
       <div className="kurt mx-72 my-20">
-        <section className="flex items-center justify-center space-x-6">
+        <section className="flex items-center justify-center gap-x-6 space-x-6">
           <div className="relative h-40 w-40">
             <Image src="/img/logo.jpeg" alt="Logo" fill />
           </div>
@@ -80,7 +85,7 @@ const Quotation: NextPage = () => {
             q u o a t i o n
           </h3>
         </section>
-        <section className="mt-4 flex items-start justify-between">
+        <section className="mt-4 flex flex-row items-start justify-between">
           <div className="w-1/3">
             <h3 className="text-xl">To</h3>
             <article>
@@ -165,6 +170,9 @@ const Quotation: NextPage = () => {
           </div>
         </section>
       </div>
+      <section>
+        <QuotPdf />
+      </section>
     </main>
   );
 };
