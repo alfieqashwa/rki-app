@@ -1,7 +1,53 @@
 import { type NextPage } from "next";
 import Image from "next/image";
+import { useState } from "react";
 
 const Quotation: NextPage = () => {
+  const [data] = useState([
+    {
+      no: 1,
+      desc: "UNITRONIC BUS DN THIN Y,DifaceNet",
+      qty: 80,
+      unit: "M",
+      price: 81_000,
+      amount: 6_480_000,
+    },
+    {
+      no: 2,
+      desc: "Terminal Weidmuller Tingkat",
+      qty: 100,
+      unit: "Pcs",
+      price: 31_000,
+      amount: 3_100_000,
+    },
+    {
+      no: 3,
+      desc: "Cable Ties CV- 150 ( 3,6X150mm) Putih KSS",
+      qty: 10,
+      unit: "Pack",
+      price: 22_000,
+      amount: 220_000,
+    },
+    {
+      no: 4,
+      desc: "Cable Ties CV- 150 ( 2,5X100mm) Putih KSS",
+      qty: 10,
+      unit: "Pack",
+      price: 12_000,
+      amount: 9_920_000,
+    },
+  ]);
+
+  const formatter = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+
+    // These options are needed to round to whole numbers if that's what you want.
+    //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+    //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+  });
+
   return (
     <main className="thom container mx-auto">
       <div className="kurt mx-72 my-20">
@@ -63,6 +109,59 @@ const Quotation: NextPage = () => {
                 INQ DATE :<span className="pl-4">-</span>
               </h3>
             </article>
+          </div>
+        </section>
+        <section className="mt-4">
+          <table className="min-w-full text-left text-slate-700">
+            <thead className="border-b border-slate-700 font-semibold text-slate-700">
+              <tr>
+                {["no", "description", "qty", "unit", "price", "amount"].map(
+                  (th, i) => (
+                    <th className="px-6 py-2 capitalize" scope="col" key={i}>
+                      {th}
+                    </th>
+                  )
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((d) => (
+                <tr className="border-b border-slate-700" key={d.no}>
+                  <td className="whitespace-nowrap px-6 py-4">{d.no}</td>
+                  <td className="whitespace-nowrap px-6 py-4">{d.desc}</td>
+                  <td className="whitespace-nowrap px-6 py-4">{d.qty}</td>
+                  <td className="whitespace-nowrap px-6 py-4">{d.unit}</td>
+                  <td className="whitespace-nowrap px-6 py-4">
+                    {formatter.format(d.price)}
+                  </td>
+                  <td className="whitespace-nowrap px-6 py-4">
+                    {formatter.format(d.amount)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="mt-8 flex flex-col items-end divide-y-2 font-semibold text-slate-500">
+            <div className="flex w-1/4 justify-between">
+              <p>Sub Total :</p>
+              <p>{formatter.format(9_920_000)}</p>
+            </div>
+            <div className="flex w-1/4 justify-between">
+              <p>
+                Disc :<span className="pl-2">0%</span>
+              </p>
+              <p>-</p>
+            </div>
+            <div className="flex w-1/4 justify-between">
+              <p>
+                Vat :<span className="pl-2">11%</span>
+              </p>
+              <p>{formatter.format(1_091_200)}</p>
+            </div>
+            <div className="flex w-1/4 justify-between">
+              <p>Total :</p>
+              <p>{formatter.format(11_011_200)}</p>
+            </div>
           </div>
         </section>
       </div>
