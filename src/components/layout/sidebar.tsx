@@ -3,7 +3,6 @@ import {
   Library,
   ListMusic,
   Mic2,
-  Music,
   Music2,
   PlayCircle,
   Radio,
@@ -12,17 +11,10 @@ import {
 
 import { cn } from "~/lib/utils"
 import { Button } from "~/components/ui/button"
-import { ScrollArea } from "~/components/ui/scroll-area"
 
-import { type Playlist } from "../../data/playlists"
-
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  playlists: Playlist[]
-}
-
-export function Sidebar({ className, playlists }: SidebarProps) {
+export function Sidebar() {
   return (
-    <div className={cn("pb-12", className)}>
+    <div className={cn("pb-12")}>
       <div className="space-y-4 py-4">
         <div className="px-4 py-2">
           <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">
@@ -73,26 +65,6 @@ export function Sidebar({ className, playlists }: SidebarProps) {
               Albums
             </Button>
           </div>
-        </div>
-        <div className="py-2">
-          <h2 className="relative px-6 text-lg font-semibold tracking-tight">
-            Playlists
-          </h2>
-          <ScrollArea className="h-[300px] px-2">
-            <div className="space-y-1 p-2">
-              {playlists?.map((playlist, i) => (
-                <Button
-                  key={i}
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-start font-normal"
-                >
-                  <ListMusic className="mr-2 h-4 w-4" />
-                  {playlist}
-                </Button>
-              ))}
-            </div>
-          </ScrollArea>
         </div>
       </div>
     </div>
