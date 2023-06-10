@@ -18,7 +18,15 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
+      "~/*": ["./src/*"],
+      "~/components/*": ["src/components/*"],
+      "~/ui/*": ["src/components/ui/*"],
+      "~/server/*": ["src/server/*"],
+      "~/utils/*": ["src/utils/*"],
+      "~/store/*": ["src/store/*"],
+      "~/styles/*": ["src/styles/*"],
+      "~/constants/*": ["src/constants/*"],
+      "~/types/*": ["src/types/*"]
     }
   },
   "include": [
