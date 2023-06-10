@@ -1,4 +1,6 @@
 {
-  "WillLuke.nextjs.addTypesOnSave": true,
-  "WillLuke.nextjs.hasPrompted": true
+  "WillLuke.nextjs.hasPrompted": true,
+  "prettier.semi": false,
+  "editor.defaultFormatter": "vscode.typescript-language-features",
+  "prettier.requirePragma": false
 }

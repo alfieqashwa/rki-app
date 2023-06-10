@@ -1,13 +1,13 @@
-import { type NextPage } from "next";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import { useState } from "react";
+import { type NextPage } from "next"
+import dynamic from "next/dynamic"
+import Image from "next/image"
+import { useState } from "react"
 
 const QuotPdf = dynamic(() => import("~/components/pdf/pdf-quotation"), {
   ssr: false,
-});
+})
 
-const Quotation: NextPage = (props) => {
+const Quotation: NextPage = () => {
   const [data] = useState([
     {
       no: 1,
@@ -41,7 +41,7 @@ const Quotation: NextPage = (props) => {
       price: 12_000,
       amount: 9_920_000,
     },
-  ]);
+  ])
 
   const formatter = new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -51,7 +51,7 @@ const Quotation: NextPage = (props) => {
     // These options are needed to round to whole numbers if that's what you want.
     //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
     //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-  });
+  })
 
   return (
     <main className="thom container mx-auto">
@@ -174,7 +174,7 @@ const Quotation: NextPage = (props) => {
         <QuotPdf />
       </section>
     </main>
-  );
-};
+  )
+}
 
-export default Quotation;
+export default Quotation
