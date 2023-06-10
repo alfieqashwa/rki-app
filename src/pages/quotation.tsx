@@ -3,11 +3,11 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useState } from "react";
 
-const QuotPdf = dynamic(() => import("~/components/pdf-quotation"), {
+const QuotPdf = dynamic(() => import("~/components/pdf/pdf-quotation"), {
   ssr: false,
 });
 
-const Quotation: NextPage = () => {
+const Quotation: NextPage = (props) => {
   const [data] = useState([
     {
       no: 1,

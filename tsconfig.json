@@ -19,14 +19,15 @@
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"],
-      "~/components/*": ["src/components/*"],
-      "~/ui/*": ["src/components/ui/*"],
-      "~/server/*": ["src/server/*"],
-      "~/utils/*": ["src/utils/*"],
       "~/store/*": ["src/store/*"],
+      "~/server/*": ["src/server/*"],
+      "~/lib/*": ["src/lib/*"],
+      "~/utils/*": ["src/utils/*"],
       "~/styles/*": ["src/styles/*"],
       "~/constants/*": ["src/constants/*"],
-      "~/types/*": ["src/types/*"]
+      "~/types/*": ["src/types/*"],
+      "~/components/*": ["src/components/*"],
+      "~/ui/*": ["src/components/ui/*"]
     }
   },
   "include": [
