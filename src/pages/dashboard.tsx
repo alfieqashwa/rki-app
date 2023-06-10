@@ -8,7 +8,7 @@ import { Button } from "~/components/ui/button"
 
 export default function MusicPage() {
   return (
-    <Layout>
+    <Layout title="Dashboard">
       <div className="h-full px-4 py-6 lg:px-8">
         <Tabs defaultValue="music" className="h-full space-y-6">
           <div className="space-between flex items-center">
