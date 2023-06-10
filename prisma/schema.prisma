@@ -66,37 +66,87 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
-model Customer {
-    id          String  @id @default(cuid())
-    companyName String  @map("company_name")
-    address     Address @relation(fields: [addressId], references: [id], onDelete: Cascade)
-    addressId   String  @map("address_id")
+model Company {
+    id              String           @id @default(cuid())
+    name            String
+    address         Address          @relation(fields: [addressId], references: [id], onDelete: Cascade)
+    addressId       String           @map("address_id")
+    saleOrders      SaleOrder[]
+    personInCharges PersonInCharge[]
+}
+
+model PersonInCharge {
+    id        String  @id @default(cuid())
+    name      String
+    position  String?
+    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    companyId String
+
+    @@map("person_in_charge")
+}
+
+enum Category {
+    Product
+    Service
 }
 
 model Product {
-    id            String @id @default(cuid())
-    description   String
-    qty           Int
-    unit          Unit   @default(PCS)
-    salePrice     Int    @map("sale_price")
-    purchasePrice Int    @map("purchase_price")
+    id        String      @id @default(cuid())
+    stock     Int
+    category  Category    @default(Product) @map("product_type")
+    unit      String
+    price     Int
+    orderItem OrderItem[]
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 }
 
-enum Unit {
-    PACK
-    PCS
-    M
+model OrderItem {
+    id       String @id @default(cuid())
+    quantity Int
+
+    product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String  @map("product_id")
+
+    order   SaleOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    orderId String    @map("oreder_id")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("order_item")
+}
+
+enum Status {
+    QUOTATION
+    SOLD
+}
+
+model SaleOrder {
+    id          String      @id @default(cuid())
+    orderNumber String      @unique @map("order_number")
+    company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    companyId   String      @map("company_id")
+    total       Float       @default(0)
+    orderItems  OrderItem[]
+    status      Status      @default(QUOTATION)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("sale_order")
 }
 
 model Address {
-    id         String     @id @default(cuid())
+    id         String    @id @default(cuid())
     street     String
     province   String
     regency    String
     district   String
     village    String
-    postalCode String     @map("postal_code")
-    customers  Customer[]
+    postalCode String    @map("postal_code")
+    customers  Company[]
 }
 
 model Province {
