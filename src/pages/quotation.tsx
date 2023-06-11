@@ -1,4 +1,4 @@
-import { PlayCircle } from "lucide-react"
+import { FilePlus2, PlusCircle } from "lucide-react"
 import { type NextPage } from "next"
 import dynamic from "next/dynamic"
 import { Quotation } from "~/components/quotation"
@@ -11,14 +11,17 @@ const QuotPdf = dynamic(() => import("~/components/pdf/pdf-quotation"), {
   ssr: false,
 })
 
-const QuotationPage: NextPage = () => {
+const QuotationPage: NextPage = (): JSX.Element => {
   return (
     <Layout title="Quotation">
       <div className="h-full px-4 py-6 lg:px-8">
         <Tabs defaultValue="quotation" className="h-full space-y-6">
           <div className="space-between flex items-center">
             <TabsList>
-              <TabsTrigger value="quotation" className="relative">
+              <TabsTrigger value="customer" className="relative">
+                Customer
+              </TabsTrigger>
+              <TabsTrigger value="quotation">
                 Quotation
               </TabsTrigger>
               <TabsTrigger value="preview">
@@ -27,11 +30,29 @@ const QuotationPage: NextPage = () => {
             </TabsList>
             <div className="ml-auto mr-4">
               <Button>
-                <PlayCircle className="mr-2 h-4 w-4" />
+                <PlusCircle className="mr-2 h-4 w-4" />
                 Add Quotation
               </Button>
             </div>
           </div>
+          <TabsContent
+            value="customer"
+            className="border-none p-0 outline-none">
+            <div className="flex items-center justify-between pr-4">
+              <div className="space-y-1">
+                <h2 className="text-2xl font-semibold tracking-tight">
+                  List of Customers
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  You can create, edit, or delete your customer here.
+                </p>
+              </div>
+              <Button size="sm" variant="outline">
+                <FilePlus2 className="mr-2 h-4 w-4" />Add Customer</Button>
+            </div>
+            <Separator className="my-4" />
+            <div>CUSTOMER LIST</div>
+          </TabsContent>
           <TabsContent
             value="quotation"
             className="border-none p-0 outline-none">

@@ -11,6 +11,7 @@ import {
 
 import { cn } from "~/lib/utils"
 import { Button } from "~/components/ui/button"
+import Link from "next/link"
 
 
 // interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -25,25 +26,31 @@ export function Sidebar({ className }: SidebarProps) {
       <div className="space-y-4 py-4">
         <div className="px-4 py-2">
           <h2 className="mb-2 px-2 text-lg font-semibold tracking-tight">
-            Discover
+            Sales
           </h2>
           <div className="space-y-1">
-            <Button
-              variant="secondary"
-              size="sm"
-              className="w-full justify-start"
-            >
-              <PlayCircle className="mr-2 h-4 w-4" />
-              Listen Now
-            </Button>
-            <Button variant="ghost" size="sm" className="w-full justify-start">
-              <LayoutGrid className="mr-2 h-4 w-4" />
-              Browse
-            </Button>
-            <Button variant="ghost" size="sm" className="w-full justify-start">
-              <Radio className="mr-2 h-4 w-4" />
-              Radio
-            </Button>
+            <Link href="/quotation">
+              <Button
+                variant="secondary"
+                size="sm"
+                className="w-full justify-start"
+              >
+                <PlayCircle className="mr-2 h-4 w-4" />
+                Quotations
+              </Button>
+            </Link>
+            <Link href="/sale">
+              <Button variant="ghost" size="sm" className="w-full justify-start">
+                <LayoutGrid className="mr-2 h-4 w-4" />
+                Sales
+              </Button>
+            </Link>
+            <Link href="/invoice">
+              <Button variant="ghost" size="sm" className="w-full justify-start">
+                <Radio className="mr-2 h-4 w-4" />
+                Invoices
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="px-4 py-2">
@@ -74,6 +81,6 @@ export function Sidebar({ className }: SidebarProps) {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
