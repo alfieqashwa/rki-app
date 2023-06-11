@@ -73,6 +73,14 @@ model Company {
     addressId       String           @map("address_id")
     saleOrders      SaleOrder[]
     personInCharges PersonInCharge[]
+    status          CompanyStatus    @default(CUSTOMER)
+}
+
+enum CompanyStatus {
+    CUSTOMER
+    SUPPLIER
+    BOTH
+    NONE
 }
 
 model PersonInCharge {
