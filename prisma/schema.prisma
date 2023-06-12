@@ -66,6 +66,17 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+model Address {
+    id         String    @id @default(cuid())
+    street     String
+    province   String
+    regency    String
+    district   String
+    village    String
+    postalCode String    @map("postal_code")
+    customers  Company[]
+}
+
 model Company {
     id              String           @id @default(cuid())
     name            String
@@ -147,17 +158,6 @@ model SaleOrder {
     updatedAt DateTime @updatedAt
 
     @@map("sale_order")
-}
-
-model Address {
-    id         String    @id @default(cuid())
-    street     String
-    province   String
-    regency    String
-    district   String
-    village    String
-    postalCode String    @map("postal_code")
-    customers  Company[]
 }
 
 model Province {

@@ -1,5 +1,6 @@
 import { z } from "zod"
 import { createTRPCRouter, protectedProcedure } from "../trpc"
+import { updateCompanySchema } from "~/types/schema"
 
 export const companyRouter = createTRPCRouter({
   // Queries
@@ -52,6 +53,42 @@ export const companyRouter = createTRPCRouter({
               }
             },
           },
+        })
+      } catch (err) {
+        console.error(err)
+      }
+    }),
+  updateCompany: protectedProcedure
+    .input(updateCompanySchema)
+    .mutation(async ({ ctx, input: { id, name, status, street, province, regency, district, village, postalCode } }) => {
+      try {
+        return await ctx.prisma.company.update({
+          where: { id },
+          data: {
+            name,
+            status,
+            address: {
+              update: {
+                street,
+                province,
+                regency,
+                district,
+                village,
+                postalCode,
+              }
+            },
+          }
+        })
+      } catch (err) {
+        console.error(err)
+      }
+    }),
+  deleteCompany: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ ctx, input: { id } }) => {
+      try {
+        return await ctx.prisma.company.delete({
+          where: { id }
         })
       } catch (err) {
         console.error(err)

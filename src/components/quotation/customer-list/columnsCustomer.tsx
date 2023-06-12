@@ -1,11 +1,10 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { format, formatDistance, subDays } from "date-fns";
-import { id } from "date-fns/locale";
 import { MapPin, Star } from "lucide-react";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
-import { Badge } from "~/ui/badge";
 import { Checkbox } from "~/ui/checkbox";
 import type { RouterOutputs } from "~/utils/api";
+import { RowCustomerActions } from "./row-customer-actions";
 // import { RowEventActions } from "./row-event-actions";
 
 export const columnsCustomer: ColumnDef<
@@ -171,7 +170,11 @@ export const columnsCustomer: ColumnDef<
   {
     accessorKey: "createdAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="CreatedAt" />
+      <DataTableColumnHeader
+        column={column}
+        title="Created At"
+        className="whitespace-nowrap"
+      />
     ),
     cell: ({ row }) => (
       <div className="whitespace-nowrap">
@@ -182,7 +185,11 @@ export const columnsCustomer: ColumnDef<
   {
     accessorKey: "updatedAt",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="UpdatedAt" />
+      <DataTableColumnHeader
+        column={column}
+        title="Updated At"
+        className="whitespace-nowrap"
+      />
     ),
     cell: ({ row }) => {
       const date = formatDistance(
@@ -196,15 +203,33 @@ export const columnsCustomer: ColumnDef<
       return <div className="whitespace-nowrap">{date}</div>;
     },
   },
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => {
-  //     const {
-  //       original: { id, title, venue, date },
-  //     } = row;
-  //     return (
-  //       <RowEventActions id={id} title={title} venue={venue} date={date} />
-  //     );
-  //   },
-  // },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const {
+        original: {
+          id,
+          name,
+          status,
+          personInCharges,
+          address,
+          addressId,
+          createdAt,
+          updatedAt,
+        },
+      } = row;
+      return (
+        <RowCustomerActions
+          id={id}
+          name={name}
+          status={status}
+          personInCharges={personInCharges}
+          address={address}
+          addressId={addressId}
+          createdAt={createdAt}
+          updatedAt={updatedAt}
+        />
+      );
+    },
+  },
 ];
