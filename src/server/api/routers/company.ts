@@ -6,7 +6,8 @@ export const companyRouter = createTRPCRouter({
   customerList: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.company.findMany({
       where: { status: "CUSTOMER" },
-      include: { address: true, personInCharges: true }
+      include: { address: true, personInCharges: true },
+      orderBy: { createdAt: "desc" }
     })
   }),
 
@@ -16,6 +17,18 @@ export const companyRouter = createTRPCRouter({
       name: z.string().min(3, {
         message: "at least have 3 characters"
       }).max(20),
+      // status: z.nativeEnum(CompanyStatus, {
+      //   errorMap: (issue, _ctx) => {
+      //     switch (issue.code) {
+      //       case 'invalid_type':
+      //         return { message: 'Please select one!' }
+      //       case 'invalid_enum_value':
+      //         return { message: 'Please select one!' }
+      //       default:
+      //         return { message: 'Invalid!' }
+      //     }
+      //   },
+      // }),
       street: z.string().min(5).max(40),
       province: z.string(),
       regency: z.string(),
@@ -38,7 +51,7 @@ export const companyRouter = createTRPCRouter({
                 postalCode
               }
             },
-          }
+          },
         })
       } catch (err) {
         console.error(err)
