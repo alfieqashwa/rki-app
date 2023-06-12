@@ -68,6 +68,7 @@ export const AddCustomer = (): JSX.Element => {
 
       await utils.company.customerList.invalidate();
       await wait().then(() => setOpen(false));
+      setProvinceValue("");
     },
     onError() {
       toast({
