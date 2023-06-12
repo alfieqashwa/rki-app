@@ -12,7 +12,7 @@ export const companyRouter = createTRPCRouter({
   }),
 
   // Mutations
-  create: protectedProcedure
+  createCustomer: protectedProcedure
     .input(z.object({
       name: z.string().min(3, {
         message: "at least have 3 characters"

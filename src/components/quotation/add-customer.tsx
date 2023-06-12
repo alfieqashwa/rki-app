@@ -58,7 +58,7 @@ export const AddCustomer = (): JSX.Element => {
   // Mutations
   const utils = api.useContext();
 
-  const { mutate, isLoading, error } = api.company.create.useMutation({
+  const { mutate, isLoading, error } = api.company.createCustomer.useMutation({
     async onSuccess() {
       toast({
         title: "Succeed!",
