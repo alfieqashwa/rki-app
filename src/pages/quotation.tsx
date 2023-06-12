@@ -2,6 +2,7 @@ import { FilePlus2, PlusCircle } from "lucide-react"
 import { type NextPage } from "next"
 import dynamic from "next/dynamic"
 import { Quotation } from "~/components/quotation"
+import { AddCustomer } from "~/components/quotation/add-customer"
 import Layout from "~/components/template/layout"
 import { Button } from "~/components/ui/button"
 import { Separator } from "~/components/ui/separator"
@@ -47,8 +48,7 @@ const QuotationPage: NextPage = (): JSX.Element => {
                   You can create, edit, or delete your customer here.
                 </p>
               </div>
-              <Button size="sm" variant="outline">
-                <FilePlus2 className="mr-2 h-4 w-4" />Add Customer</Button>
+              <AddCustomer />
             </div>
             <Separator className="my-4" />
             <div>CUSTOMER LIST</div>
