@@ -1,33 +1,52 @@
-import { FilePlus2, PlusCircle } from "lucide-react"
-import { type NextPage } from "next"
-import dynamic from "next/dynamic"
-import { Quotation } from "~/components/quotation"
-import { AddCustomer } from "~/components/quotation/add-customer"
-import Layout from "~/components/template/layout"
-import { Button } from "~/components/ui/button"
-import { Separator } from "~/components/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
+import { PlusCircle } from "lucide-react";
+import { type GetServerSideProps, type NextPage } from "next";
+import { getServerSession } from "next-auth";
+import dynamic from "next/dynamic";
+import { Quotation } from "~/components/quotation";
+import { AddCustomer } from "~/components/quotation/add-customer";
+import { CustomerList } from "~/components/quotation/customer-list";
+import Layout from "~/components/template/layout";
+import { authOptions } from "~/server/auth";
+import { Button } from "~/ui/button";
+import { Separator } from "~/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/ui/tabs";
 
 const QuotPdf = dynamic(() => import("~/components/pdf/pdf-quotation"), {
   ssr: false,
-})
+});
+
+// If No Authenticated, then redirect to Home Page. Else, enter this page.
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+};
 
 const QuotationPage: NextPage = (): JSX.Element => {
   return (
     <Layout title="Quotation">
       <div className="h-full px-4 py-6 lg:px-8">
-        <Tabs defaultValue="quotation" className="h-full space-y-6">
+        <Tabs defaultValue="customer" className="h-full space-y-6">
           <div className="space-between flex items-center">
             <TabsList>
               <TabsTrigger value="customer" className="relative">
                 Customer
               </TabsTrigger>
-              <TabsTrigger value="quotation">
-                Quotation
-              </TabsTrigger>
-              <TabsTrigger value="preview">
-                Preview
-              </TabsTrigger>
+              <TabsTrigger value="quotation">Quotation</TabsTrigger>
+              <TabsTrigger value="preview">Preview</TabsTrigger>
             </TabsList>
             <div className="ml-auto mr-4">
               <Button>
@@ -38,7 +57,8 @@ const QuotationPage: NextPage = (): JSX.Element => {
           </div>
           <TabsContent
             value="customer"
-            className="border-none p-0 outline-none">
+            className="border-none p-0 outline-none"
+          >
             <div className="flex items-center justify-between pr-4">
               <div className="space-y-1">
                 <h2 className="text-2xl font-semibold tracking-tight">
@@ -51,11 +71,12 @@ const QuotationPage: NextPage = (): JSX.Element => {
               <AddCustomer />
             </div>
             <Separator className="my-4" />
-            <div>CUSTOMER LIST</div>
+            <CustomerList />
           </TabsContent>
           <TabsContent
             value="quotation"
-            className="border-none p-0 outline-none">
+            className="border-none p-0 outline-none"
+          >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <h2 className="text-2xl font-semibold tracking-tight">
@@ -89,7 +110,7 @@ const QuotationPage: NextPage = (): JSX.Element => {
         </Tabs>
       </div>
     </Layout>
-  )
-}
+  );
+};
 
-export default QuotationPage
+export default QuotationPage;

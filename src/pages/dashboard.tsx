@@ -1,10 +1,33 @@
-import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area"
-import { Separator } from "~/components/ui/separator"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
+import { ScrollArea, ScrollBar } from "~/ui/scroll-area";
+import { Separator } from "~/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/ui/tabs";
 
-import { PlusCircle } from "lucide-react"
-import Layout from "~/components/template/layout"
-import { Button } from "~/components/ui/button"
+import { PlusCircle } from "lucide-react";
+import { type GetServerSideProps } from "next";
+import { getServerSession } from "next-auth";
+import Layout from "~/components/template/layout";
+import { authOptions } from "~/server/auth";
+import { Button } from "~/ui/button";
+
+// If No Authenticated, then redirect to Home Page. Else, enter this page.
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session,
+    },
+  };
+};
 
 export default function MusicPage() {
   return (
@@ -28,10 +51,7 @@ export default function MusicPage() {
               </Button>
             </div>
           </div>
-          <TabsContent
-            value="music"
-            className="border-none p-0 outline-none"
-          >
+          <TabsContent value="music" className="border-none p-0 outline-none">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
                 <h2 className="text-2xl font-semibold tracking-tight">
@@ -45,30 +65,113 @@ export default function MusicPage() {
             <Separator className="my-4" />
             <div className="relative">
               <ScrollArea>
-                <div className="flex space-x-4 pb-4">
-
-                </div>
+                <div className="flex space-x-4 pb-4"></div>
                 <ScrollBar orientation="horizontal" />
               </ScrollArea>
             </div>
             <article>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
-              <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet dolorem, delectus quia! Soluta laboriosam sequi voluptatum praesentium, eveniet dignissimos quasi perspiciatis!</p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
+              <p>
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Atque
+                ad, iusto praesentium dicta excepturi qui, animi quaerat eveniet
+                dolorem, delectus quia! Soluta laboriosam sequi voluptatum
+                praesentium, eveniet dignissimos quasi perspiciatis!
+              </p>
             </article>
           </TabsContent>
           <TabsContent
@@ -90,5 +193,5 @@ export default function MusicPage() {
         </Tabs>
       </div>
     </Layout>
-  )
+  );
 }
