@@ -74,6 +74,9 @@ model Company {
     saleOrders      SaleOrder[]
     personInCharges PersonInCharge[]
     status          CompanyStatus    @default(CUSTOMER)
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
 }
 
 enum CompanyStatus {
