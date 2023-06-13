@@ -102,7 +102,6 @@ export const AddCustomer = (): JSX.Element => {
   };
 
   const disabled = villageValue === "";
-  console.log({ provinceValue, regencyValue, districtValue, villageValue });
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild onSelect={(e) => e.preventDefault()}>
@@ -131,7 +130,7 @@ export const AddCustomer = (): JSX.Element => {
                 className="col-span-3 capitalize"
               />
               {error?.data?.zodError?.fieldErrors.name && (
-                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
+                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
                   {error?.data?.zodError?.fieldErrors.name}
                 </span>
               )}
@@ -148,7 +147,7 @@ export const AddCustomer = (): JSX.Element => {
                 className="col-span-3 capitalize"
               />
               {error?.data?.zodError?.fieldErrors.phone && (
-                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
+                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
                   {error?.data?.zodError?.fieldErrors.phone}
                 </span>
               )}
@@ -188,7 +187,7 @@ export const AddCustomer = (): JSX.Element => {
                 className="col-span-3 capitalize"
               />
               {error?.data?.zodError?.fieldErrors.street && (
-                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
+                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
                   {error?.data?.zodError?.fieldErrors.street}
                 </span>
               )}
@@ -253,7 +252,7 @@ export const AddCustomer = (): JSX.Element => {
                 className="col-span-3"
               />
               {error?.data?.zodError?.fieldErrors.postalCode && (
-                <span className="col-span-4 -mt-4 text-right text-xs text-destructive">
+                <span className="col-span-4 -mt-2.5 text-right text-xs text-destructive">
                   {error?.data?.zodError?.fieldErrors.postalCode}
                 </span>
               )}
@@ -266,7 +265,7 @@ export const AddCustomer = (): JSX.Element => {
                 Please wait
               </Button>
             ) : (
-              <Button type="submit" disabled={disabled} className="w-1/3">
+              <Button type="submit" disabled={disabled} size="lg">
                 Submit
               </Button>
             )}
