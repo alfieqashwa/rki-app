@@ -26,7 +26,7 @@ import { wait } from "~/utils/wait";
 type Props = {
   id: string;
   name: string;
-  status: string;
+  phone: string;
   street: string;
   province: string;
   regency: string;
@@ -40,7 +40,7 @@ type Props = {
 export function UpdateCustomer({
   id,
   name,
-  status,
+  phone,
   street,
   province,
   regency,
@@ -83,7 +83,7 @@ export function UpdateCustomer({
     console.log({
       id,
       name,
-      status: "CUSTOMER",
+      phone: "",
       street: "",
       province: "",
       regency: "",

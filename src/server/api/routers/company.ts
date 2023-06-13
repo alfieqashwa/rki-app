@@ -6,7 +6,7 @@ export const companyRouter = createTRPCRouter({
   // Queries
   customerList: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.company.findMany({
-      where: { status: "CUSTOMER" },
+      where: { isCustomer: true },
       include: { address: true, personInCharges: true },
       orderBy: { createdAt: "desc" }
     })
@@ -30,18 +30,20 @@ export const companyRouter = createTRPCRouter({
       //     }
       //   },
       // }),
+      phone: z.string().length(12, { message: "length must be equal to 12" }),
       street: z.string().min(5).max(40),
       province: z.string(),
       regency: z.string(),
       district: z.string(),
       village: z.string(),
-      postalCode: z.string().length(5),
+      postalCode: z.string().length(5, { message: "length must be equal to 5" }),
     }))
-    .mutation(async ({ ctx, input: { name, street, province, regency, district, village, postalCode } }) => {
+    .mutation(async ({ ctx, input: { name, phone, street, province, regency, district, village, postalCode } }) => {
       try {
         return await ctx.prisma.company.create({
           data: {
             name,
+            phone,
             address: {
               create: {
                 street,
@@ -60,13 +62,12 @@ export const companyRouter = createTRPCRouter({
     }),
   updateCompany: protectedProcedure
     .input(updateCompanySchema)
-    .mutation(async ({ ctx, input: { id, name, status, street, province, regency, district, village, postalCode } }) => {
+    .mutation(async ({ ctx, input: { id, name, street, province, regency, district, village, postalCode } }) => {
       try {
         return await ctx.prisma.company.update({
           where: { id },
           data: {
             name,
-            status,
             address: {
               update: {
                 street,

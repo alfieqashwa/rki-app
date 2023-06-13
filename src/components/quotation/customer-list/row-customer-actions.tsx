@@ -18,7 +18,7 @@ export function RowCustomerActions(
   const {
     id,
     name,
-    status,
+    phone,
     address: { street, province, regency, district, village, postalCode },
   } = props;
   const [open, setOpen] = useState(false);
@@ -45,7 +45,7 @@ export function RowCustomerActions(
         <UpdateCustomer
           id={id}
           name={name}
-          status={status}
+          phone={phone}
           street={street}
           province={province}
           regency={regency}

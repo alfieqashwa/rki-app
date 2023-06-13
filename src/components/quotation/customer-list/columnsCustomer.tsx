@@ -210,7 +210,9 @@ export const columnsCustomer: ColumnDef<
         original: {
           id,
           name,
-          status,
+          phone,
+          isCustomer,
+          isSupplier,
           personInCharges,
           address,
           addressId,
@@ -222,7 +224,9 @@ export const columnsCustomer: ColumnDef<
         <RowCustomerActions
           id={id}
           name={name}
-          status={status}
+          isCustomer={isCustomer}
+          isSupplier={isSupplier}
+          phone={phone}
           personInCharges={personInCharges}
           address={address}
           addressId={addressId}

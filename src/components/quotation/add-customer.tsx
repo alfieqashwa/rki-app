@@ -85,11 +85,13 @@ export const AddCustomer = (): JSX.Element => {
 
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name")?.toString().toLowerCase() as string;
+    const phone = formData.get("phone")?.toString().toLowerCase() as string;
     const street = formData.get("street")?.toString().toLowerCase() as string;
     const postalCode = formData.get("postalCode") as string;
 
     mutate({
       name,
+      phone,
       street,
       province: provinceValue,
       regency: regencyValue,
@@ -134,6 +136,24 @@ export const AddCustomer = (): JSX.Element => {
                 </span>
               )}
             </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="phone" className="text-right">
+                Phone
+              </Label>
+              <Input
+                id="phone"
+                name="phone"
+                placeholder="phone number"
+                className="col-span-3 capitalize"
+              />
+              {error?.data?.zodError?.fieldErrors.phone && (
+                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
+                  {error?.data?.zodError?.fieldErrors.phone}
+                </span>
+              )}
+            </div>
+
             {/* //! DO NOT REMOVE THIS COMMENTED-OUT BELOW!! */}
             {/* <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="status" className="text-right">

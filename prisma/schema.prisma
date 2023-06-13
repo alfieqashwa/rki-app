@@ -83,12 +83,12 @@ model Company {
     id              String           @id @default(cuid())
     name            String
     phone           String
+    isCustomer      Boolean?         @default(true) @map("is_customer")
+    isSupplier      Boolean?         @default(false) @map("is_supplier")
     address         Address          @relation(fields: [addressId], references: [id], onDelete: Cascade)
     addressId       String           @map("address_id")
     saleOrders      SaleOrder[]
     personInCharges PersonInCharge[]
-    isCustomer      Boolean?         @default(true) @map("is_customer")
-    isSupplier      Boolean?         @default(false) @map("is_supplier")
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
