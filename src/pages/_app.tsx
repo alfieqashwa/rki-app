@@ -14,6 +14,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        {/* max-width: 100%;
+    overflow-x: hidden; */}
         <main
           className={cn(
             "min-h-screen bg-background font-sans antialiased",
