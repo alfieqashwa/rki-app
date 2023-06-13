@@ -1,7 +1,7 @@
-// import { PROVINCES } from "../src/constants/provinces"
-// import { REGENCIES } from "../src/constants/regencies"
-// import { DISTRICTS } from "../src/constants/districts"
-// import { VILLAGES } from "../src/constants/villages"
+import { PROVINCES } from "../src/constants/provinces"
+import { REGENCIES } from "../src/constants/regencies"
+import { DISTRICTS } from "../src/constants/districts"
+import { VILLAGES } from "../src/constants/villages"
 
 import { PrismaClient } from "@prisma/client"
 const prisma = new PrismaClient()
@@ -14,23 +14,23 @@ async function main() {
 */
 
   /* //!================== PROVINCES ====================== */
-  // const provinces = await prisma.province.createMany({ data: PROVINCES })
-  // console.log({ provinces })
+  const provinces = await prisma.province.createMany({ data: PROVINCES })
+  console.log({ provinces })
 
   /* //!================== REGENCIES ====================== */
-  // const getRegencies = REGENCIES.map((r) => ({ id: r.id, provinceId: r.province_id, name: r.name }))
-  // const regencies = await prisma.regency.createMany({ data: getRegencies })
-  // console.log({ regencies })
+  const getRegencies = REGENCIES.map((r) => ({ id: r.id, provinceId: r.province_id, name: r.name }))
+  const regencies = await prisma.regency.createMany({ data: getRegencies })
+  console.log({ regencies })
 
   /* //!================== DISTRICTS ====================== */
-  // const getDistricts = DISTRICTS.map((d) => ({ id: d.id, regencyId: d.regency_id, name: d.name }))
-  // const districts = await prisma.district.createMany({ data: getDistricts })
-  // console.log({ districts })
+  const getDistricts = DISTRICTS.map((d) => ({ id: d.id, regencyId: d.regency_id, name: d.name }))
+  const districts = await prisma.district.createMany({ data: getDistricts })
+  console.log({ districts })
 
   /* //!================== VILLAGES ====================== */
-  // const getVillages = VILLAGES.map((v) => ({ id: v.id, districtId: v.district_id, name: v.name }))
-  // const villages = await prisma.village.createMany({ data: getVillages })
-  // console.log({ villages })
+  const getVillages = VILLAGES.map((v) => ({ id: v.id, districtId: v.district_id, name: v.name }))
+  const villages = await prisma.village.createMany({ data: getVillages })
+  console.log({ villages })
 
 
   /* //!=============  FIND & CAPTURE IF THERE'RE ANY DUPLICATED ID ======================= */

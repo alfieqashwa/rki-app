@@ -49,13 +49,15 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String      @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?     @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
+    role          Role        @default(ADMIN)
+    saleOrders    SaleOrder[]
 }
 
 model VerificationToken {
@@ -80,31 +82,27 @@ model Address {
 model Company {
     id              String           @id @default(cuid())
     name            String
+    phone           String
     address         Address          @relation(fields: [addressId], references: [id], onDelete: Cascade)
     addressId       String           @map("address_id")
     saleOrders      SaleOrder[]
     personInCharges PersonInCharge[]
-    status          CompanyStatus    @default(CUSTOMER)
+    isCustomer      Boolean?         @default(true) @map("is_customer")
+    isSupplier      Boolean?         @default(false) @map("is_supplier")
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
-}
-
-enum CompanyStatus {
-    CUSTOMER
-    SUPPLIER
-    BOTH
-    NONE
 }
 
 model PersonInCharge {
     id        String  @id @default(cuid())
     name      String
     position  String?
+    email     String? @unique
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
     companyId String
 
-    @@map("person_in_charge")
+    @@map("person_in_charges")
 }
 
 enum Category {
@@ -113,12 +111,13 @@ enum Category {
 }
 
 model Product {
-    id        String      @id @default(cuid())
-    stock     Int
-    category  Category    @default(Product) @map("product_type")
-    unit      String
-    price     Int
-    orderItem OrderItem[]
+    id           String      @id @default(cuid())
+    countInStock Int         @map("count_in_stock")
+    category     Category    @default(Product)
+    unit         String
+    salePrice    Float?      @map("sale_price")
+    costPrice    Float?      @map("cost_price")
+    orderItem    OrderItem[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
@@ -134,10 +133,7 @@ model OrderItem {
     order   SaleOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
     orderId String    @map("oreder_id")
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@map("order_item")
+    @@map("order_items")
 }
 
 enum Status {
@@ -148,16 +144,20 @@ enum Status {
 model SaleOrder {
     id          String      @id @default(cuid())
     orderNumber String      @unique @map("order_number")
+    dateOrdered DateTime    @default(now()) @map("date_ordered")
     company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
     companyId   String      @map("company_id")
-    total       Float       @default(0)
+    totalPrice  Float       @default(0) @map("total_price")
     orderItems  OrderItem[]
     status      Status      @default(QUOTATION)
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String @map("user_id")
 
-    @@map("sale_order")
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("sale_orders")
 }
 
 model Province {
@@ -181,4 +181,10 @@ model Village {
     id         String @id
     districtId String @map("district_id")
     name       String
+}
+
+enum Role {
+    DEWA
+    ADMIN
+    EDITOR
 }
