@@ -1,11 +1,11 @@
-import { type Session } from "next-auth"
-import { SessionProvider } from "next-auth/react"
-import { ThemeProvider } from "next-themes"
-import { type AppType } from "next/app"
-import { fontSans } from "~/lib/fonts"
-import { cn } from "~/lib/utils"
-import "~/styles/globals.css"
-import { api } from "~/utils/api"
+import { type Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
+import { type AppType } from "next/app";
+import { fontSans } from "~/lib/fonts";
+import { cn } from "~/lib/utils";
+import "~/styles/globals.css";
+import { api } from "~/utils/api";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -24,7 +24,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         </main>
       </ThemeProvider>
     </SessionProvider>
-  )
-}
+  );
+};
 
-export default api.withTRPC(MyApp)
+export default api.withTRPC(MyApp);
