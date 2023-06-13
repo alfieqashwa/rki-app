@@ -1,14 +1,17 @@
-import Head from "next/head"
-import { NavigationHeader } from "./navigation-header"
-import { Sidebar } from "./sidebar"
+import Head from "next/head";
+import { NavigationHeader } from "./navigation-header";
+import { Sidebar } from "./sidebar";
 
 type LayoutProps = {
-  children: React.ReactNode
-  title: string
-}
+  children: React.ReactNode;
+  title: string;
+};
 
-export default function Layout({ children, title = "" }: LayoutProps): JSX.Element {
-  const titleHeader = `${title} | RKI APP`
+export default function Layout({
+  children,
+  title = "",
+}: LayoutProps): JSX.Element {
+  const titleHeader = `${title} | RKI APP`;
 
   return (
     <>
@@ -18,7 +21,7 @@ export default function Layout({ children, title = "" }: LayoutProps): JSX.Eleme
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavigationHeader />
-      <div className="hidden md:block pt-20">
+      <div className="hidden pt-20 md:block ">
         <div className="border-t">
           <div className="bg-background">
             <div className="grid lg:grid-cols-5">
@@ -31,5 +34,5 @@ export default function Layout({ children, title = "" }: LayoutProps): JSX.Eleme
         </div>
       </div>
     </>
-  )
+  );
 }
