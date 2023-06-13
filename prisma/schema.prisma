@@ -96,7 +96,7 @@ model Company {
 
 model PersonInCharge {
     id        String  @id @default(cuid())
-    name      String
+    name      String  @unique()
     position  String?
     email     String? @unique
     company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
