@@ -2,7 +2,7 @@ import { z } from "zod"
 
 export const updateCompanySchema = z.object({
   id: z.string().cuid(),
-  phone: z.string().length(12, { message: "length must be equal to 12" }),
+  phone: z.string().min(7, { message: "min length is 7" }).max(12, { message: "max length is 12" }),
   name: z.string().min(3, {
     message: "at least have 3 characters"
   }).max(20),

@@ -85,7 +85,7 @@ export const AddCustomer = (): JSX.Element => {
 
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name")?.toString().toLowerCase() as string;
-    const phone = formData.get("phone")?.toString().toLowerCase() as string;
+    const phone = formData.get("phone") as string;
     const street = formData.get("street")?.toString().toLowerCase() as string;
     const postalCode = formData.get("postalCode") as string;
 

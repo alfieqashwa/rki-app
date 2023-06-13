@@ -30,7 +30,7 @@ export const companyRouter = createTRPCRouter({
       //     }
       //   },
       // }),
-      phone: z.string().length(12, { message: "length must be equal to 12" }),
+      phone: z.string().min(7, { message: "min length is 7" }).max(12, { message: "max length is 12" }),
       street: z.string().min(5).max(40),
       province: z.string(),
       regency: z.string(),

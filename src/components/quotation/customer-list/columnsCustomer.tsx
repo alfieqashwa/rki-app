@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { format, formatDistance, subDays } from "date-fns";
-import { MapPin, Star } from "lucide-react";
+import { MapPin, Phone, Star } from "lucide-react";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
 import { Checkbox } from "~/ui/checkbox";
 import type { RouterOutputs } from "~/utils/api";
@@ -41,6 +41,20 @@ export const columnsCustomer: ColumnDef<
         <Star className="mr-2 h-4 w-4 text-muted-foreground" />
         <span className="whitespace-nowrap capitalize">
           {row.getValue("name")}
+        </span>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "phone",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Phone" />
+    ),
+    cell: ({ row }) => (
+      <div className="flex items-center">
+        <Phone className="mr-2 h-4 w-4 text-muted-foreground" />
+        <span className="whitespace-nowrap capitalize">
+          {row.getValue("phone")}
         </span>
       </div>
     ),
