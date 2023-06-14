@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { MapPin, Star } from "lucide-react";
+import { Building, MapPin, Star, User } from "lucide-react";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
 import { Checkbox } from "~/ui/checkbox";
 import type { RouterOutputs } from "~/utils/api";
@@ -34,7 +34,7 @@ export const columnsPic: ColumnDef<RouterOutputs["pic"]["picList"][0]>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
-        <Star className="mr-2 h-4 w-4 text-muted-foreground" />
+        <User className="mr-2 h-4 w-4 text-muted-foreground" />
         <span className="whitespace-nowrap capitalize">
           {row.getValue("name")}
         </span>
@@ -64,7 +64,7 @@ export const columnsPic: ColumnDef<RouterOutputs["pic"]["picList"][0]>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex items-center">
-          <MapPin className="mr-2 h-4 w-4 text-muted-foreground" />
+          <Building className="mr-2 h-4 w-4 text-muted-foreground" />
           <span className="whitespace-nowrap capitalize">
             {row.getValue("company")}
           </span>

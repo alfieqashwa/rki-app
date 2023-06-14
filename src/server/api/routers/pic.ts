@@ -52,6 +52,23 @@ export const picRouter = createTRPCRouter({
 
       }
     }),
+  update: protectedProcedure
+    .input(z.object({
+      id: z.string().cuid(),
+      name: z.string().min(3, { message: "min length is 3" }).max(20, { message: "max length is 20" }),
+      position: z.string().min(3, { message: "min length is 3" }).max(20, { message: "max length is 20" }).nullable(),
+    }))
+    .mutation(async ({ ctx, input: { id, name, position } }) => {
+      try {
+        return await ctx.prisma.personInCharge.update({
+          where: { id },
+          data: { name, position }
+        })
+      } catch (err) {
+        console.error(err)
+
+      }
+    }),
   delete: protectedProcedure
     .input(z.object({ id: z.string().cuid() }))
     .mutation(async ({ ctx, input: { id } }) => {

@@ -42,19 +42,7 @@ export function RowPicActions({ id, name, position, companyName }: Props) {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <CreatePersonInCharge id={id} customerName={name} />
-        {/* <UpdatePic
-          id={id}
-          name={name}
-          phone={phone}
-          street={street}
-          province={province}
-          regency={regency}
-          district={district}
-          village={village}
-          postalCode={postalCode}
-          open={open}
-          setOpen={setOpen}
-        /> */}
+        <UpdatePic id={id} name={name} position={position} />
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
           <DeletePic id={id} name={name} />

@@ -21,82 +21,25 @@ import { wait } from "~/utils/wait";
 type Props = {
   id: string;
   name: string;
-  phone: string | null;
-  street: string;
-  province: string;
-  regency: string;
-  district: string;
-  village: string;
-  postalCode: string;
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  position: string | null;
 };
 
-export function UpdatePic({
-  id,
-  name,
-  phone,
-  street,
-  province,
-  regency,
-  district,
-  village,
-  postalCode,
-  open,
-  setOpen,
-}: Props) {
-  const [provinceValue, setProvinceValue] = useState(province);
-  const [regencyValue, setRegencyValue] = useState(regency);
-  const [districtValue, setDistrictValue] = useState(district);
-  const [villageValue, setVillageValue] = useState(village);
-
-  // Queries
-  const provincesQuery = api.address.provinces.useQuery();
-
-  const provinceId = provincesQuery?.data?.find(
-    (province) => province.name.toLowerCase() === provinceValue
-  )?.id;
-
-  const regenciesQuery = api.address.regencies.useQuery(undefined, {
-    enabled: provinceValue !== "" || provinceId != undefined,
-    select: (data) => data.filter((d) => d.provinceId === provinceId),
-  });
-
-  const regencyId = regenciesQuery?.data?.find(
-    (regency) => regency.name.toLowerCase() === regencyValue
-  )?.id;
-
-  const districtsQuery = api.address.districts.useQuery(undefined, {
-    enabled: regencyValue !== "" || regencyId != undefined,
-    select: (data) => data.filter((d) => d.regencyId === regencyId),
-  });
-
-  const districtId = districtsQuery?.data?.find(
-    (district) => district.name.toLowerCase() === districtValue
-  )?.id;
-
-  const villagesQuery = api.address.villages.useQuery(undefined, {
-    enabled: districtValue !== "" || districtId != undefined,
-    select: (data) => data.filter((d) => d.districtId === districtId),
-  });
-
-  const villageId = villagesQuery?.data?.find(
-    (village) => village.name.toLowerCase() === villageValue
-  )?.id;
+export function UpdatePic({ id, name, position }: Props) {
+  const [open, setOpen] = useState(false);
 
   const utils = api.useContext();
   const { toast } = useToast();
 
-  const { mutate, isLoading, error } = api.company.updateCompany.useMutation({
+  const { mutate, isLoading, error } = api.pic.update.useMutation({
     async onSuccess() {
       toast({
         title: "Succeed!",
         variant: "default",
         description: "Your form has been updated.",
       });
-      await utils.company.customerList.invalidate();
       /* auto-closed after succeed submit the dialog form */
       await wait().then(() => setOpen(!open));
+      await utils.pic.picList.invalidate();
     },
     onError() {
       toast({
@@ -113,32 +56,22 @@ export function UpdatePic({
 
     const formData = new FormData(e.currentTarget);
     const name = formData.get("name")?.toString().toLowerCase() as string;
-    const phone = formData.get("phone") as string;
-    const street = formData.get("street")?.toString().toLowerCase() as string;
-    const postalCode = formData.get("postalCode") as string;
+    const position = formData
+      .get("position")
+      ?.toString()
+      .toLowerCase() as string;
 
     mutate({
       id,
       name,
-      phone,
-      street,
-      province: provinceValue,
-      regency: regencyValue,
-      district: districtValue,
-      village: villageValue,
-      postalCode,
+      position,
     });
   };
 
-  const disabled =
-    !provinceId ||
-    !regencyId ||
-    !districtId ||
-    !villageId ||
-    villageValue === "";
+  const disabled = false;
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
         <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
         Edit
@@ -167,7 +100,7 @@ export function UpdatePic({
                 id="name"
                 name="name"
                 defaultValue={name}
-                placeholder="company name"
+                placeholder="name"
                 className="col-span-3 capitalize"
               />
               {error?.data?.zodError?.fieldErrors.name && (
@@ -177,108 +110,25 @@ export function UpdatePic({
               )}
             </div>
 
-            {!!phone && (
+            {!!position && (
               <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="phone" className="text-right">
+                <Label htmlFor="position" className="text-right">
                   Phone
                 </Label>
                 <Input
-                  id="phone"
-                  name="phone"
-                  defaultValue={phone}
-                  placeholder="phone number"
+                  id="position"
+                  name="position"
+                  defaultValue={position}
+                  placeholder="position"
                   className="col-span-3 capitalize"
                 />
-                {error?.data?.zodError?.fieldErrors.phone && (
+                {error?.data?.zodError?.fieldErrors.position && (
                   <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
-                    {error?.data?.zodError?.fieldErrors.phone}
+                    {error?.data?.zodError?.fieldErrors.position}
                   </span>
                 )}
               </div>
             )}
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="street" className="text-right">
-                Street
-              </Label>
-              <Input
-                id="street"
-                name="street"
-                defaultValue={street}
-                placeholder="street"
-                className="col-span-3 capitalize"
-              />
-              {error?.data?.zodError?.fieldErrors.street && (
-                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.street}
-                </span>
-              )}
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="province" className="text-right">
-                Province
-              </Label>
-              <CommandCombobox
-                datas={provincesQuery.data}
-                value={provinceValue}
-                setValue={setProvinceValue}
-                placeholder="province"
-              />
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="regency" className="text-right">
-                Regency
-              </Label>
-              <CommandCombobox
-                datas={regenciesQuery.data}
-                value={regencyValue}
-                setValue={setRegencyValue}
-                placeholder="regency"
-              />
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="district" className="text-right">
-                District
-              </Label>
-              <CommandCombobox
-                datas={districtsQuery.data}
-                value={districtValue}
-                setValue={setDistrictValue}
-                placeholder="district"
-              />
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="village" className="text-right">
-                Village
-              </Label>
-              <CommandCombobox
-                datas={villagesQuery.data}
-                value={villageValue}
-                setValue={setVillageValue}
-                placeholder="village"
-              />
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="postalCode" className="text-right">
-                Postal Code
-              </Label>
-              <Input
-                id="postalCode"
-                name="postalCode"
-                defaultValue={postalCode}
-                placeholder="postal code"
-                className="col-span-3"
-              />
-              {error?.data?.zodError?.fieldErrors.postalCode && (
-                <span className="col-span-4 -mt-2.5 text-right text-xs text-destructive">
-                  {error?.data?.zodError?.fieldErrors.postalCode}
-                </span>
-              )}
-            </div>
           </div>
           <SheetFooter className="mt-4 flex flex-row items-center justify-end space-x-2">
             <Button
