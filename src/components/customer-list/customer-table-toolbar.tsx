@@ -3,7 +3,6 @@ import { X } from "lucide-react";
 import { DataTableViewOptions } from "~/components/table/data-table-view-options";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
-
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
 }

@@ -1,8 +1,10 @@
 import type { Table } from "@tanstack/react-table";
-import { X } from "lucide-react";
+import { Building, X } from "lucide-react";
 import { DataTableViewOptions } from "~/components/table/data-table-view-options";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
+import { DataTableFacetedFilter } from "../table/data-table-faceted-filter";
+import { api } from "~/utils/api";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -15,6 +17,18 @@ export function PicTableToolbar<TData>({
     table.getPreFilteredRowModel().rows.length >
     table.getFilteredRowModel().rows.length;
 
+  const { data: companies, status } = api.company.companyList.useQuery(
+    undefined,
+    {
+      select: (data) =>
+        data.map((d) => ({
+          value: d.name,
+          label: d.name,
+          icon: Building,
+        })),
+    }
+  );
+
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
@@ -26,6 +40,13 @@ export function PicTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
+        {status === "success" && table.getColumn("company") && (
+          <DataTableFacetedFilter
+            column={table.getColumn("company")}
+            title="Company"
+            options={companies}
+          />
+        )}
         {isFiltered && (
           <Button
             variant="ghost"

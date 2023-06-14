@@ -1,5 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { Building, MapPin, Star, User } from "lucide-react";
+import { Building, Star, User } from "lucide-react";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
 import { Checkbox } from "~/ui/checkbox";
 import type { RouterOutputs } from "~/utils/api";
@@ -79,21 +79,9 @@ export const columnsPic: ColumnDef<RouterOutputs["pic"]["picList"][0]>[] = [
     id: "actions",
     cell: ({ row }) => {
       const {
-        original: {
-          id,
-          name,
-          position,
-          company: { name: companyName },
-        },
+        original: { id, name, position },
       } = row;
-      return (
-        <RowPicActions
-          id={id}
-          name={name}
-          position={position}
-          companyName={companyName}
-        />
-      );
+      return <RowPicActions id={id} name={name} position={position} />;
     },
   },
 ];

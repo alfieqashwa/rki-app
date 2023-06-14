@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/ui/dropdown-menu";
-import { type RouterOutputs } from "~/utils/api";
 import { DeletePic } from "./delete-pic";
 import { UpdatePic } from "./update-pic";
 import { CreatePersonInCharge } from "./create-person-in-charge";
@@ -17,9 +16,8 @@ type Props = {
   id: string;
   name: string;
   position: string | null;
-  companyName: string;
 };
-export function RowPicActions({ id, name, position, companyName }: Props) {
+export function RowPicActions({ id, name, position }: Props) {
   const [open, setOpen] = useState(false);
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
