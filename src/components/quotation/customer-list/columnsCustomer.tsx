@@ -5,6 +5,8 @@ import { DataTableColumnHeader } from "~/components/table/data-table-column-head
 import { Checkbox } from "~/ui/checkbox";
 import type { RouterOutputs } from "~/utils/api";
 import { RowCustomerActions } from "./row-customer-actions";
+import { Button } from "~/components/ui/button";
+import { PicList } from "./picList";
 // import { RowEventActions } from "./row-event-actions";
 
 export const columnsCustomer: ColumnDef<
@@ -44,6 +46,19 @@ export const columnsCustomer: ColumnDef<
         </span>
       </div>
     ),
+  },
+  {
+    id: "PIC",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="PIC" />
+    ),
+    cell: ({ row }) => {
+      const {
+        original: { personInCharges },
+      } = row;
+
+      return <PicList personInCharges={personInCharges} />;
+    },
   },
   {
     accessorKey: "phone",
