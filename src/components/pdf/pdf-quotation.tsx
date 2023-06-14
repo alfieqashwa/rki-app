@@ -144,7 +144,13 @@ export default function PdfQuotation() {
 
             <View style={{ lineHeight: "1.25px" }}>
               <Text style={styles.h1}>rekayasa kendali industri</Text>
-              <Text style={{ fontSize: "16px", marginTop: "4px" }}>
+              <Text
+                style={{
+                  fontSize: "16px",
+                  marginTop: "4px",
+                  fontStyle: "italic",
+                }}
+              >
                 Automation Control and Project Support Solutions
               </Text>
               <Text style={{ fontSize: "12px" }}>Capital Eight</Text>

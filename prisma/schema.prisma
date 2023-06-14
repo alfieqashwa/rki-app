@@ -58,6 +58,15 @@ model User {
     sessions      Session[]
     role          Role        @default(ADMIN)
     saleOrders    SaleOrder[]
+    profile       Profile?
+}
+
+model Profile {
+    id       String @id @default(cuid())
+    username String
+    position String
+    user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId   String @unique @map("user_id")
 }
 
 model VerificationToken {
@@ -82,7 +91,7 @@ model Address {
 model Company {
     id              String           @id @default(cuid())
     name            String
-    phone           String
+    phone           String?
     isCustomer      Boolean?         @default(true) @map("is_customer")
     isSupplier      Boolean?         @default(false) @map("is_supplier")
     address         Address          @relation(fields: [addressId], references: [id], onDelete: Cascade)
@@ -112,9 +121,9 @@ enum Category {
 
 model Product {
     id           String      @id @default(cuid())
-    countInStock Int         @map("count_in_stock")
+    countInStock Int?        @map("count_in_stock")
     category     Category    @default(Product)
-    unit         String
+    uom          String?
     salePrice    Float?      @map("sale_price")
     costPrice    Float?      @map("cost_price")
     orderItem    OrderItem[]

@@ -11,6 +11,7 @@ import {
 import { type RouterOutputs } from "~/utils/api";
 import { DeleteCustomer } from "./delete-customer";
 import { UpdateCustomer } from "./update-customer";
+import { CreatePersonInCharge } from "./create-person-in-charge";
 
 export function RowCustomerActions(
   props: RouterOutputs["company"]["customerList"][0]
@@ -42,6 +43,12 @@ export function RowCustomerActions(
           Copy ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
+        <CreatePersonInCharge
+          id={id}
+          customerName={name}
+          open={open}
+          setOpen={setOpen}
+        />
         <UpdateCustomer
           id={id}
           name={name}

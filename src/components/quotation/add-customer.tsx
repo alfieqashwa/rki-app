@@ -20,10 +20,24 @@ import { wait } from "~/utils/wait";
 
 export const AddCustomer = (): JSX.Element => {
   const [open, setOpen] = useState(false);
+  const [pics, setPics] = useState({
+    picName: "",
+    position: "",
+  });
   const [provinceValue, setProvinceValue] = useState("");
   const [regencyValue, setRegencyValue] = useState("");
   const [districtValue, setDistrictValue] = useState("");
   const [villageValue, setVillageValue] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPics({
+      ...pics,
+      [e.target.name]: [value],
+    });
+  };
+
+  console.log({ pics });
 
   // Queries
   const provincesQuery = api.address.provinces.useQuery();
