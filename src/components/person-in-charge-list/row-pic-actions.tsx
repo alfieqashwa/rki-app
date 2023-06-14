@@ -8,9 +8,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/ui/dropdown-menu";
+import { CreatePersonInCharge } from "./create-person-in-charge";
 import { DeletePic } from "./delete-pic";
 import { UpdatePic } from "./update-pic";
-import { CreatePersonInCharge } from "./create-person-in-charge";
 
 type Props = {
   id: string;
