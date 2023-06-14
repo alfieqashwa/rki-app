@@ -1,3 +1,4 @@
+import { z } from "zod"
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -5,6 +6,15 @@ import {
 import { createPicList, upsertPicSchema } from "~/types/schema"
 
 export const picRouter = createTRPCRouter({
+  // Queries
+  picList: protectedProcedure
+    .query(async ({ ctx }) => {
+      return await ctx.prisma.personInCharge.findMany({
+        include: { company: { select: { name: true } } },
+        orderBy: { name: "asc" }
+      })
+    }),
+
   // Mutations
   createList: protectedProcedure
     .input(createPicList)
@@ -40,6 +50,17 @@ export const picRouter = createTRPCRouter({
       } catch (err) {
         console.error(err)
 
+      }
+    }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ ctx, input: { id } }) => {
+      try {
+        return await ctx.prisma.personInCharge.delete({
+          where: { id }
+        })
+      } catch (err) {
+        console.error(err)
       }
     })
 })

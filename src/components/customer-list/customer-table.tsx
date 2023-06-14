@@ -15,6 +15,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import * as React from "react";
+import { DataTablePagination } from "~/components/table/data-table-pagination";
 
 import {
   Table,
@@ -24,6 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/ui/table";
+import { CustomerTableToolbar } from "./customer-table-toolbar";
 
 // import { DataTablePagination } from "~/components/table/data-table-pagination";
 // import { EventTableToolbar } from "./event-table-toolbar";
@@ -69,7 +71,7 @@ export function CustomerTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      {/* <EventTableToolbar table={table} /> */}
+      <CustomerTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -120,7 +122,7 @@ export function CustomerTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {/* <DataTablePagination table={table} /> */}
+      <DataTablePagination table={table} />
     </div>
   );
 }

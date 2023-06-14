@@ -15,7 +15,6 @@ export const CustomerList = (): JSX.Element => {
           columns={columnsCustomer}
         />
       )}
-      <pre>{JSON.stringify(customerListQuery.data, null, 2)}</pre>
     </div>
   );
 };

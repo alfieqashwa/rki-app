@@ -1,4 +1,4 @@
-import { FilePlus2, Loader2 } from "lucide-react";
+import { Loader2, Pen } from "lucide-react";
 import { useState } from "react";
 import { CommandCombobox } from "~/components/combobox";
 import { Button } from "~/ui/button";
@@ -14,30 +14,41 @@ import {
   SheetTrigger,
 } from "~/ui/sheet";
 import { ToastAction } from "~/ui/toast";
-import { toast } from "~/ui/use-toast";
+import { useToast } from "~/ui/use-toast";
 import { api } from "~/utils/api";
 import { wait } from "~/utils/wait";
 
-export const AddCustomer = (): JSX.Element => {
-  const [open, setOpen] = useState(false);
-  const [pics, setPics] = useState({
-    picName: "",
-    position: "",
-  });
-  const [provinceValue, setProvinceValue] = useState("");
-  const [regencyValue, setRegencyValue] = useState("");
-  const [districtValue, setDistrictValue] = useState("");
-  const [villageValue, setVillageValue] = useState("");
+type Props = {
+  id: string;
+  name: string;
+  phone: string | null;
+  street: string;
+  province: string;
+  regency: string;
+  district: string;
+  village: string;
+  postalCode: string;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setPics({
-      ...pics,
-      [e.target.name]: [value],
-    });
-  };
-
-  console.log({ pics });
+export function UpdatePic({
+  id,
+  name,
+  phone,
+  street,
+  province,
+  regency,
+  district,
+  village,
+  postalCode,
+  open,
+  setOpen,
+}: Props) {
+  const [provinceValue, setProvinceValue] = useState(province);
+  const [regencyValue, setRegencyValue] = useState(regency);
+  const [districtValue, setDistrictValue] = useState(district);
+  const [villageValue, setVillageValue] = useState(village);
 
   // Queries
   const provincesQuery = api.address.provinces.useQuery();
@@ -69,20 +80,23 @@ export const AddCustomer = (): JSX.Element => {
     select: (data) => data.filter((d) => d.districtId === districtId),
   });
 
-  // Mutations
-  const utils = api.useContext();
+  const villageId = villagesQuery?.data?.find(
+    (village) => village.name.toLowerCase() === villageValue
+  )?.id;
 
-  const { mutate, isLoading, error } = api.company.createCustomer.useMutation({
+  const utils = api.useContext();
+  const { toast } = useToast();
+
+  const { mutate, isLoading, error } = api.company.updateCompany.useMutation({
     async onSuccess() {
       toast({
         title: "Succeed!",
         variant: "default",
-        description: "Your form has been created.",
+        description: "Your form has been updated.",
       });
-
       await utils.company.customerList.invalidate();
-      await wait().then(() => setOpen(false));
-      setProvinceValue("");
+      /* auto-closed after succeed submit the dialog form */
+      await wait().then(() => setOpen(!open));
     },
     onError() {
       toast({
@@ -104,6 +118,7 @@ export const AddCustomer = (): JSX.Element => {
     const postalCode = formData.get("postalCode") as string;
 
     mutate({
+      id,
       name,
       phone,
       street,
@@ -115,23 +130,34 @@ export const AddCustomer = (): JSX.Element => {
     });
   };
 
-  const disabled = villageValue === "";
+  const disabled =
+    !provinceId ||
+    !regencyId ||
+    !districtId ||
+    !villageId ||
+    villageValue === "";
+
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild onSelect={(e) => e.preventDefault()}>
-        <Button size="sm" variant="outline">
-          <FilePlus2 className="mr-2 h-4 w-4" />
-          Add Customer
-        </Button>
+    <Sheet>
+      <SheetTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+        <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+        Edit
       </SheetTrigger>
-      <SheetContent position="right" size="sm">
+
+      <SheetContent className="sm:max-w-1/2">
         <SheetHeader>
-          <SheetTitle>Add New Customer</SheetTitle>
-          <SheetDescription>
-            Fill the form to create new customer and click the Submit button.
+          <SheetTitle>Update Customer</SheetTitle>
+          <SheetDescription asChild>
+            <p>
+              Edit
+              <span className="px-1.5 font-medium uppercase text-amber-300">
+                {name}
+              </span>
+              of your customer here. Click Update when you&apos;re done.
+            </p>
           </SheetDescription>
         </SheetHeader>
-        <form onSubmit={handleSubmit}>
+        <form className="grid gap-4 py-3" onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
@@ -140,55 +166,36 @@ export const AddCustomer = (): JSX.Element => {
               <Input
                 id="name"
                 name="name"
+                defaultValue={name}
                 placeholder="company name"
                 className="col-span-3 capitalize"
               />
               {error?.data?.zodError?.fieldErrors.name && (
-                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
+                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
                   {error?.data?.zodError?.fieldErrors.name}
                 </span>
               )}
             </div>
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone" className="text-right">
-                Phone
-              </Label>
-              <Input
-                id="phone"
-                name="phone"
-                placeholder="phone number"
-                className="col-span-3 capitalize"
-              />
-              {error?.data?.zodError?.fieldErrors.phone && (
-                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.phone}
-                </span>
-              )}
-            </div>
-
-            {/* //! DO NOT REMOVE THIS COMMENTED-OUT BELOW!! */}
-            {/* <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="status" className="text-right">
-                Status
-              </Label>
-              <Select name="status">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Company Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="CUSTOMER">CUSTOMER</SelectItem>
-                  <SelectItem value="SUPPLIER">SUPPLIER</SelectItem>
-                  <SelectItem value="BOTH">BOTH</SelectItem>
-                  <SelectItem value="NONE">NONE</SelectItem>
-                </SelectContent>
-              </Select>
-              {error?.data?.zodError?.fieldErrors.status && (
-                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.status}
-                </span>
-              )}
-            </div> */}
+            {!!phone && (
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="phone" className="text-right">
+                  Phone
+                </Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  defaultValue={phone}
+                  placeholder="phone number"
+                  className="col-span-3 capitalize"
+                />
+                {error?.data?.zodError?.fieldErrors.phone && (
+                  <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
+                    {error?.data?.zodError?.fieldErrors.phone}
+                  </span>
+                )}
+              </div>
+            )}
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="street" className="text-right">
@@ -197,6 +204,7 @@ export const AddCustomer = (): JSX.Element => {
               <Input
                 id="street"
                 name="street"
+                defaultValue={street}
                 placeholder="street"
                 className="col-span-3 capitalize"
               />
@@ -206,7 +214,6 @@ export const AddCustomer = (): JSX.Element => {
                 </span>
               )}
             </div>
-
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="province" className="text-right">
                 Province
@@ -262,6 +269,7 @@ export const AddCustomer = (): JSX.Element => {
               <Input
                 id="postalCode"
                 name="postalCode"
+                defaultValue={postalCode}
                 placeholder="postal code"
                 className="col-span-3"
               />
@@ -272,15 +280,24 @@ export const AddCustomer = (): JSX.Element => {
               )}
             </div>
           </div>
-          <SheetFooter className="absolute bottom-16 right-8 w-full">
+          <SheetFooter className="mt-4 flex flex-row items-center justify-end space-x-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              // onClick={() => void wait().then(() => setOpen(!open))}
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
             {isLoading ? (
-              <Button disabled className="w-1/3">
+              <Button disabled size="sm">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please wait
               </Button>
             ) : (
-              <Button type="submit" disabled={disabled} size="lg">
-                Submit
+              <Button disabled={disabled} type="submit" size="sm">
+                Update
               </Button>
             )}
           </SheetFooter>
@@ -288,4 +305,9 @@ export const AddCustomer = (): JSX.Element => {
       </SheetContent>
     </Sheet>
   );
-};
+
+  // wait for 800 miliseconds before close the dialog
+  function handleCancel() {
+    void wait(800).then(() => setOpen(!open));
+  }
+}
