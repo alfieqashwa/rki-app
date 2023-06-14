@@ -2,15 +2,16 @@ import { PlusCircle } from "lucide-react";
 import { type GetServerSideProps, type NextPage } from "next";
 import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
-import { Quotation } from "~/components/quotation";
 import { CustomerList } from "~/components/customer-list";
+import { AddCustomer } from "~/components/customer-list/add-customer";
+import { PersonInChargeList } from "~/components/person-in-charge-list";
+import { AddPic } from "~/components/person-in-charge-list/add-pic";
+import { Quotation } from "~/components/quotation";
 import Layout from "~/components/template/layout";
 import { authOptions } from "~/server/auth";
 import { Button } from "~/ui/button";
 import { Separator } from "~/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/ui/tabs";
-import { AddCustomer } from "~/components/customer-list/add-customer";
-import { PersonInChargeList } from "~/components/person-in-charge-list";
 
 const QuotPdf = dynamic(() => import("~/components/pdf/pdf-quotation"), {
   ssr: false,
@@ -83,7 +84,7 @@ const QuotationPage: NextPage = (): JSX.Element => {
                   You can create, edit, or delete your PIC here.
                 </p>
               </div>
-              {/* <AddCustomer /> */}
+              <AddPic />
             </div>
             <Separator className="my-4" />
             <PersonInChargeList />

@@ -14,7 +14,17 @@ export const updateCompanySchema = z.object({
   postalCode: z.string().length(5)
 })
 
-export const createPicList = z.array(
+export const createPicSchema = z.object({
+  name: z.string().min(3, {
+    message: "at least have 3 characters"
+  }).max(20),
+  position: z.string().min(3, {
+    message: "at least have 3 characters"
+  }).max(20),
+  companyId: z.string().cuid()
+})
+
+export const createPicListSchema = z.array(
   z.object({
     name: z.string().min(3, {
       message: "at least have 3 characters"

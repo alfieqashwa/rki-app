@@ -15,7 +15,8 @@ export const companyRouter = createTRPCRouter({
   companyList: protectedProcedure
     .query(async ({ ctx }) => {
       return await ctx.prisma.company.findMany({
-        select: { name: true }
+        select: { id: true, name: true },
+        orderBy: { name: "asc" }
       })
     }),
 

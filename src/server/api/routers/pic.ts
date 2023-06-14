@@ -3,7 +3,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc"
-import { createPicList, upsertPicSchema } from "~/types/schema"
+import { createPicListSchema, createPicSchema, upsertPicSchema } from "~/types/schema"
 
 export const picRouter = createTRPCRouter({
   // Queries
@@ -16,8 +16,23 @@ export const picRouter = createTRPCRouter({
     }),
 
   // Mutations
+  create: protectedProcedure
+    .input(createPicSchema)
+    .mutation(async ({ ctx, input: { name, position, companyId } }) => {
+      try {
+        return await ctx.prisma.personInCharge.create({
+          data: {
+            name,
+            position,
+            companyId
+          }
+        })
+      } catch (err) {
+        console.error(err)
+      }
+    }),
   createList: protectedProcedure
-    .input(createPicList)
+    .input(createPicListSchema)
     .mutation(async ({ ctx, input }) => {
       try {
         return await ctx.prisma.personInCharge.createMany({

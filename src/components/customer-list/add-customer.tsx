@@ -106,7 +106,7 @@ export const AddCustomer = (): JSX.Element => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild onSelect={(e) => e.preventDefault()}>
-        <Button size="sm" variant="outline">
+        <Button size="sm" variant="outline" className="whitespace-nowrap">
           <FilePlus2 className="mr-2 h-4 w-4" />
           Add Customer
         </Button>
