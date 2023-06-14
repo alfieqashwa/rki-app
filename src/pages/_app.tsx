@@ -5,6 +5,7 @@ import { type AppType } from "next/app";
 import { fontSans } from "~/lib/fonts";
 import { cn } from "~/lib/utils";
 import "~/styles/globals.css";
+import { Toaster } from "~/ui/toaster";
 import { api } from "~/utils/api";
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -21,6 +22,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           )}
         >
           <Component {...pageProps} />
+          <Toaster />
         </main>
       </ThemeProvider>
     </SessionProvider>
