@@ -67,8 +67,8 @@ export const AddCustomer = (): JSX.Element => {
         description: "Your form has been created.",
       });
 
-      await utils.company.customerList.invalidate();
       await wait().then(() => setOpen(false));
+      await utils.company.customerList.invalidate();
       setProvinceValue("");
     },
     onError() {

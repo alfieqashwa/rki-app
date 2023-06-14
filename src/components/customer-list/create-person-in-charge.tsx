@@ -56,9 +56,9 @@ export function CreatePersonInCharge({ id, customerName }: Props) {
         variant: "default",
         description: "Your form has been created.",
       });
-      await utils.company.customerList.invalidate();
       /* auto-closed after succeed submit the dialog form */
       await wait().then(() => setOpen(!open));
+      await utils.company.customerList.invalidate();
     },
     onError() {
       toast({

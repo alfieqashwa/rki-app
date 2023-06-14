@@ -33,9 +33,9 @@ export function DeleteCustomer({ id, name, open, setOpen }: Props) {
         variant: "default",
         description: "Your Team has been deleted.",
       });
-      await utils.company.customerList.invalidate();
       /* auto-closed after succeed submit the dialog form */
       await wait().then(() => setOpen(!open));
+      await utils.company.customerList.invalidate();
     },
     onError() {
       toast({

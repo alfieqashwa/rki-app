@@ -94,9 +94,9 @@ export function UpdateCustomer({
         variant: "default",
         description: "Your form has been updated.",
       });
-      await utils.company.customerList.invalidate();
       /* auto-closed after succeed submit the dialog form */
       await wait().then(() => setOpen(!open));
+      await utils.company.customerList.invalidate();
     },
     onError() {
       toast({
