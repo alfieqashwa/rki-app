@@ -20,32 +20,15 @@ import { wait } from "~/utils/wait";
 type Props = {
   id: string;
   customerName: string;
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function CreatePersonInCharge({
-  id,
-  customerName,
-  open,
-  setOpen,
-}: Props) {
+export function CreatePersonInCharge({ id, customerName }: Props) {
+  const [open, setOpen] = useState(false);
   const [inputFields, setInputFields] = useState([
     { name: "", position: "", companyId: id },
   ]);
   const utils = api.useContext();
   const { toast } = useToast();
-
-  // const sample = [
-  //   {
-  //     name: ["name1"],
-  //     position: ["position1"],
-  //   },
-  //   {
-  //     name: ["name2"],
-  //     position: ["position2"],
-  //   },
-  // ];
 
   const handleChange = (
     index: number,
@@ -64,14 +47,6 @@ export function CreatePersonInCharge({
     (values[index] as Values)[event.target.name as keyof Values] =
       event.target.value;
     setInputFields([...values]);
-  };
-  const handleAddFields = () => {
-    setInputFields([...inputFields, { name: "", position: "", companyId: id }]);
-  };
-  const handleRemoveFields = (index: number) => {
-    const values = [...inputFields];
-    values.splice(index, 1);
-    setInputFields(values);
   };
 
   const { mutate, isLoading, error } = api.pic.createList.useMutation({
@@ -97,22 +72,13 @@ export function CreatePersonInCharge({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // const formData = new FormData(e.currentTarget);
-    // const name = formData.get("name")?.toString().toLowerCase() as string;
-    // const position = formData
-    //   .get("position")
-    //   ?.toString()
-    //   .toLowerCase() as string;
-
-    // mutate({ name: name, position: position, companyId: id });
-    // console.log(`SUBMIT::: `, inputFields);
     mutate([...inputFields]);
   };
 
-  const disabled = false;
+  const disabled =
+    inputFields[0]?.name === "" || inputFields[0]?.position === "";
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
         <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
         Add PIC
@@ -202,12 +168,7 @@ export function CreatePersonInCharge({
           </div>
 
           <SheetFooter className="absolute bottom-20 right-10 mt-4 flex flex-row items-center justify-end space-x-4">
-            <Button
-              type="button"
-              variant="ghost"
-              // onClick={() => void wait().then(() => setOpen(!open))}
-              onClick={handleCancel}
-            >
+            <Button type="button" variant="ghost" onClick={handleCancel}>
               Cancel
             </Button>
             {isLoading ? (
@@ -226,8 +187,16 @@ export function CreatePersonInCharge({
     </Sheet>
   );
 
-  // wait for 800 miliseconds before close the dialog
+  function handleRemoveFields(index: number) {
+    const values = [...inputFields];
+    values.splice(index, 1);
+    setInputFields(values);
+  }
   function handleCancel() {
     void wait(800).then(() => setOpen(!open));
+  }
+  // wait for 800 miliseconds before close the dialog
+  function handleAddFields() {
+    setInputFields([...inputFields, { name: "", position: "", companyId: id }]);
   }
 }

@@ -43,12 +43,7 @@ export function RowCustomerActions(
           Copy ID
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <CreatePersonInCharge
-          id={id}
-          customerName={name}
-          open={open}
-          setOpen={setOpen}
-        />
+        <CreatePersonInCharge id={id} customerName={name} />
         <UpdateCustomer
           id={id}
           name={name}

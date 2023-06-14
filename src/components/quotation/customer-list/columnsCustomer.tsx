@@ -4,10 +4,8 @@ import { MapPin, Phone, Star } from "lucide-react";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
 import { Checkbox } from "~/ui/checkbox";
 import type { RouterOutputs } from "~/utils/api";
-import { RowCustomerActions } from "./row-customer-actions";
-import { Button } from "~/components/ui/button";
 import { PicList } from "./picList";
-// import { RowEventActions } from "./row-event-actions";
+import { RowCustomerActions } from "./row-customer-actions";
 
 export const columnsCustomer: ColumnDef<
   RouterOutputs["company"]["customerList"][0]
@@ -54,10 +52,16 @@ export const columnsCustomer: ColumnDef<
     ),
     cell: ({ row }) => {
       const {
-        original: { personInCharges },
+        original: { id, name, personInCharges },
       } = row;
 
-      return <PicList personInCharges={personInCharges} />;
+      return (
+        <PicList
+          customerId={id}
+          customerName={name}
+          personInCharges={personInCharges}
+        />
+      );
     },
   },
   {

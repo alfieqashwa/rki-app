@@ -1,19 +1,17 @@
 import { type PersonInCharge } from "@prisma/client";
 import { Users } from "lucide-react";
-import { Settings2 } from "lucide-react";
-import { Fragment } from "react";
-import { Separator } from "~/components/ui/separator";
-
 import { Button } from "~/ui/button";
-import { Input } from "~/ui/input";
-import { Label } from "~/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "~/ui/popover";
+import { Separator } from "~/ui/separator";
+import { CreatePersonInCharge } from "./create-person-in-charge";
 
 type Props = {
+  customerId: string;
+  customerName: string;
   personInCharges: PersonInCharge[];
 };
 
-export function PicList({ personInCharges }: Props) {
+export function PicList({ customerId, customerName, personInCharges }: Props) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -28,7 +26,11 @@ export function PicList({ personInCharges }: Props) {
             <div className="space-y-2">
               <h4 className="font-medium leading-none">Person in Charge</h4>
               <p className="text-sm text-muted-foreground">
-                List of Person in Charge (PiC).
+                PiC&apos;s of{" "}
+                <span className="whitespace-nowrap capitalize">
+                  {customerName}
+                </span>
+                .
               </p>
             </div>
             {personInCharges?.map((pic) => (
@@ -48,6 +50,12 @@ export function PicList({ personInCharges }: Props) {
                 <Separator />
               </div>
             ))}
+            <div className="mt-3">
+              <CreatePersonInCharge
+                id={customerId}
+                customerName={customerName}
+              />
+            </div>
           </div>
         </PopoverContent>
       ) : (
@@ -59,6 +67,9 @@ export function PicList({ personInCharges }: Props) {
                 None of Person in Charge (PiC) are found.
               </p>
             </div>
+          </div>
+          <div className="mt-3">
+            <CreatePersonInCharge id={customerId} customerName={customerName} />
           </div>
         </PopoverContent>
       )}
