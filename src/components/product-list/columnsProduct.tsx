@@ -1,8 +1,8 @@
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { type ColumnDef } from "@tanstack/react-table";
+import { Layers, Package, Tag } from "lucide-react";
 import { type RouterOutputs } from "~/utils/api";
-import { DataTableColumnHeader } from "../table/data-table-column-header";
-import { Star } from "lucide-react";
+import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
 
 export const columnsProduct: ColumnDef<
   RouterOutputs["product"]["getAll"][number]
@@ -35,7 +35,7 @@ export const columnsProduct: ColumnDef<
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
-        <Star className="mr-2 h-4 w-4 text-muted-foreground" />
+        <Package className="mr-2 h-4 w-4 text-muted-foreground" />
         <span className="whitespace-nowrap capitalize">
           {row.getValue("name")}
         </span>
@@ -49,7 +49,7 @@ export const columnsProduct: ColumnDef<
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
-        <Star className="mr-2 h-4 w-4 text-muted-foreground" />
+        <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
         <span className="whitespace-nowrap capitalize">
           {row.getValue("uom")}
         </span>
@@ -66,7 +66,7 @@ export const columnsProduct: ColumnDef<
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
-        <Star className="mr-2 h-4 w-4 text-muted-foreground" />
+        <Layers className="mr-2 h-4 w-4 text-muted-foreground" />
         <span className="whitespace-nowrap capitalize">
           {row.getValue("countInStock")}
         </span>
