@@ -1,7 +1,7 @@
-import { Checkbox } from "@radix-ui/react-checkbox";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Banknote, Layers, Package, Tag } from "lucide-react";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
+import { Checkbox } from "~/ui/checkbox";
 import { type RouterOutputs } from "~/utils/api";
 import { RowProductActions } from "./row-product-actions";
 
@@ -68,9 +68,7 @@ export const columnsProduct: ColumnDef<
     cell: ({ row }) => (
       <div className="flex items-center">
         <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
-        <span className="whitespace-nowrap capitalize">
-          {row.getValue("uom")}
-        </span>
+        <span>{row.getValue("uom")}</span>
       </div>
     ),
     filterFn: (row, id, value: string) => {
