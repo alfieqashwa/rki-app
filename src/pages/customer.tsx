@@ -1,17 +1,13 @@
-import { PlusCircle } from "lucide-react";
 import { type GetServerSideProps, type NextPage } from "next";
 import { getServerSession } from "next-auth";
-import dynamic from "next/dynamic";
-import { Quotation } from "~/components/quotation";
+import { CustomerList } from "~/components/customer-list";
+import { AddCustomer } from "~/components/customer-list/add-customer";
+import { PersonInChargeList } from "~/components/person-in-charge-list";
+import { AddPic } from "~/components/person-in-charge-list/add-pic";
 import Layout from "~/components/template/layout";
 import { authOptions } from "~/server/auth";
-import { Button } from "~/ui/button";
 import { Separator } from "~/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/ui/tabs";
-
-const QuotPdf = dynamic(() => import("~/components/pdf/pdf-quotation"), {
-  ssr: false,
-});
 
 // If No Authenticated, then redirect to Home Page. Else, enter this page.
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -33,56 +29,51 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-const QuotationPage: NextPage = (): JSX.Element => {
+const CustomerPage: NextPage = (): JSX.Element => {
   return (
-    <Layout title="Quotation">
+    <Layout title="Customer">
       <div className="h-full px-4 py-6 lg:px-8">
-        <Tabs defaultValue="quotation" className="h-full space-y-6">
+        <Tabs defaultValue="customer" className="h-full space-y-6">
           <div className="space-between flex items-center">
             <TabsList>
-              <TabsTrigger value="quotation">Quotation</TabsTrigger>
-              <TabsTrigger value="preview">Preview</TabsTrigger>
+              <TabsTrigger value="customer">Customer</TabsTrigger>
+              <TabsTrigger value="pic">Person in Charge</TabsTrigger>
             </TabsList>
             <div className="ml-auto mr-4">
-              <Button>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Quotation
-              </Button>
+              <AddCustomer />
             </div>
           </div>
           <TabsContent
-            value="quotation"
+            value="customer"
             className="border-none p-0 outline-none"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pr-4">
               <div className="space-y-1">
                 <h2 className="text-2xl font-semibold tracking-tight">
-                  List of Quotations
+                  List of Customers
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  Top picks for you. Updated daily.
+                  You can create, edit, or delete your customer here.
                 </p>
               </div>
             </div>
             <Separator className="my-4" />
-            <Quotation />
+            <CustomerList />
           </TabsContent>
-          <TabsContent
-            value="preview"
-            className="h-full flex-col border-none p-0 data-[state=active]:flex"
-          >
-            <div className="flex items-center justify-between">
+          <TabsContent value="pic" className="border-none p-0 outline-none">
+            <div className="flex items-center justify-between pr-4">
               <div className="space-y-1">
                 <h2 className="text-2xl font-semibold tracking-tight">
-                  PDF Preview
+                  List of Person in Charge
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  You can check preview and download the pdf.
+                  You can create, edit, or delete your PIC here.
                 </p>
               </div>
+              <AddPic />
             </div>
             <Separator className="my-4" />
-            <QuotPdf />
+            <PersonInChargeList />
           </TabsContent>
         </Tabs>
       </div>
@@ -90,4 +81,4 @@ const QuotationPage: NextPage = (): JSX.Element => {
   );
 };
 
-export default QuotationPage;
+export default CustomerPage;

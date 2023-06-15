@@ -7,20 +7,22 @@ import {
   PlayCircle,
   Radio,
   User,
-} from "lucide-react"
+} from "lucide-react";
 
-import { cn } from "~/lib/utils"
-import { Button } from "~/components/ui/button"
-import Link from "next/link"
-
+import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 // interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 //   x?: string
 // }
 
-type SidebarProps = React.HTMLAttributes<HTMLDivElement>
+type SidebarProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Sidebar({ className }: SidebarProps) {
+  const { pathname } = useRouter();
+
   return (
     <div className={cn("pb-12", className)}>
       <div className="space-y-4 py-4">
@@ -29,24 +31,52 @@ export function Sidebar({ className }: SidebarProps) {
             Sales
           </h2>
           <div className="space-y-1">
-            <Link href="/quotation">
+            <Link href="/customer">
               <Button
-                variant="secondary"
+                variant={`${pathname === "/customer" ? "secondary" : "ghost"}`}
                 size="sm"
                 className="w-full justify-start"
               >
                 <PlayCircle className="mr-2 h-4 w-4" />
+                Customers
+              </Button>
+            </Link>
+            <Link href="/product">
+              <Button
+                variant={`${pathname === "/product" ? "secondary" : "ghost"}`}
+                size="sm"
+                className="w-full justify-start"
+              >
+                <PlayCircle className="mr-2 h-4 w-4" />
+                Products
+              </Button>
+            </Link>
+            <Link href="/quotation">
+              <Button
+                variant={`${pathname === "/quotation" ? "secondary" : "ghost"}`}
+                size="sm"
+                className="w-full justify-start"
+              >
+                <LayoutGrid className="mr-2 h-4 w-4" />
                 Quotations
               </Button>
             </Link>
             <Link href="/sale">
-              <Button variant="ghost" size="sm" className="w-full justify-start">
+              <Button
+                variant={`${pathname === "/sale" ? "secondary" : "ghost"}`}
+                size="sm"
+                className="w-full justify-start"
+              >
                 <LayoutGrid className="mr-2 h-4 w-4" />
                 Sales
               </Button>
             </Link>
             <Link href="/invoice">
-              <Button variant="ghost" size="sm" className="w-full justify-start">
+              <Button
+                variant={`${pathname === "/invoice" ? "secondary" : "ghost"}`}
+                size="sm"
+                className="w-full justify-start"
+              >
                 <Radio className="mr-2 h-4 w-4" />
                 Invoices
               </Button>
@@ -81,6 +111,6 @@ export function Sidebar({ className }: SidebarProps) {
           </div>
         </div>
       </div>
-    </div >
-  )
+    </div>
+  );
 }

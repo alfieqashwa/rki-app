@@ -1,4 +1,4 @@
-import { Copy, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/ui/button";
 import {
@@ -31,14 +31,6 @@ export function RowPicActions({ id, name, position }: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem
-          onClick={() => void navigator.clipboard.writeText(id)}
-          className="hover:cursor-pointer"
-        >
-          <Copy className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-          Copy ID
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
         <CreatePersonInCharge id={id} customerName={name} />
         <UpdatePic id={id} name={name} position={position} />
         <DropdownMenuSeparator />

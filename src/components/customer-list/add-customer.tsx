@@ -1,4 +1,4 @@
-import { FilePlus2, Loader2 } from "lucide-react";
+import { Loader2, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { CommandCombobox } from "~/components/combobox";
 import { Button } from "~/ui/button";
@@ -106,8 +106,8 @@ export const AddCustomer = (): JSX.Element => {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild onSelect={(e) => e.preventDefault()}>
-        <Button size="sm" variant="outline" className="whitespace-nowrap">
-          <FilePlus2 className="mr-2 h-4 w-4" />
+        <Button className="whitespace-nowrap">
+          <PlusCircle className="mr-2 h-4 w-4" />
           Add Customer
         </Button>
       </SheetTrigger>
