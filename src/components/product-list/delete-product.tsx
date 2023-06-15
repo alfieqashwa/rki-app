@@ -1,5 +1,4 @@
 import { Loader2, Trash } from "lucide-react";
-import { useState } from "react";
 import { Button } from "~/ui/button";
 import {
   Dialog,
@@ -18,14 +17,15 @@ import { wait } from "~/utils/wait";
 type Props = {
   id: string;
   name: string;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function DeleteProduct({ id, name }: Props) {
-  const [open, setOpen] = useState(false);
+export function DeleteProduct({ id, name, open, setOpen }: Props) {
   const utils = api.useContext();
   const { toast } = useToast();
 
-  const { mutate, isLoading } = api.company.deleteCompany.useMutation({
+  const { mutate, isLoading } = api.product.delete.useMutation({
     async onSuccess() {
       // delete user from team
       toast({
@@ -56,7 +56,7 @@ export function DeleteProduct({ id, name }: Props) {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
       <DialogTrigger className="flex w-full items-center">
         <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
         Delete

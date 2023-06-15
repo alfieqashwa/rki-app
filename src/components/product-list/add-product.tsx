@@ -1,3 +1,4 @@
+import { Category, UomType } from "@prisma/client";
 import { Loader2, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/ui/button";
@@ -23,7 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Category, UomType } from "@prisma/client";
 
 export const AddProduct = (): JSX.Element => {
   const [open, setOpen] = useState(false);

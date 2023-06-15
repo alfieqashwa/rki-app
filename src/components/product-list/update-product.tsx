@@ -1,6 +1,5 @@
+import { Category, UomType } from "@prisma/client";
 import { Loader2, Pen } from "lucide-react";
-import { useState } from "react";
-import { CommandCombobox } from "~/components/combobox";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
 import { Label } from "~/ui/label";
@@ -15,7 +14,7 @@ import {
 } from "~/ui/sheet";
 import { ToastAction } from "~/ui/toast";
 import { useToast } from "~/ui/use-toast";
-import { type RouterOutputs, api } from "~/utils/api";
+import { api, type RouterOutputs } from "~/utils/api";
 import { wait } from "~/utils/wait";
 import {
   Select,
@@ -24,13 +23,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Category, UomType } from "@prisma/client";
 
-export function UpdateProduct(
-  props: RouterOutputs["product"]["getAll"][number]
-) {
+type UpdateProductProps = {
+  props: RouterOutputs["product"]["getAll"][0];
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export function UpdateProduct({ props, open, setOpen }: UpdateProductProps) {
   const { id, name, category, uom, countInStock, costPrice, salePrice } = props;
-  const [open, setOpen] = useState(false);
 
   const utils = api.useContext();
   const { toast } = useToast();
@@ -63,18 +64,18 @@ export function UpdateProduct(
     const name = formData.get("name")?.toString().toLowerCase() as string;
     const category = formData.get("category") as Category;
     const uom = formData.get("uom") as UomType;
-    const countInStock = formData.get("countInStock") as unknown as number;
-    const costPrice = formData.get("costPrice") as unknown as number;
-    const salePrice = formData.get("salePrice") as unknown as number;
+    const countInStock = formData.get("countInStock") as string;
+    const costPrice = formData.get("costPrice") as string;
+    const salePrice = formData.get("salePrice") as string;
 
     mutate({
       id,
       name,
       category,
       uom,
-      countInStock,
-      costPrice,
-      salePrice,
+      countInStock: +countInStock,
+      costPrice: +costPrice,
+      salePrice: +salePrice,
     });
   };
 
@@ -82,7 +83,7 @@ export function UpdateProduct(
 
   return (
     <Sheet>
-      <SheetTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+      <SheetTrigger className="flex w-full items-center">
         <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
         Edit
       </SheetTrigger>
@@ -92,11 +93,11 @@ export function UpdateProduct(
           <SheetTitle>Update Product</SheetTitle>
           <SheetDescription asChild>
             <p>
-              Edit
+              Edit product
               <span className="px-1.5 font-medium uppercase text-amber-300">
                 {name}
               </span>
-              of your product here. Click Update when you&apos;re done.
+              here. Click Update when you&apos;re done.
             </p>
           </SheetDescription>
         </SheetHeader>
@@ -129,8 +130,12 @@ export function UpdateProduct(
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={Category.Product}>pack</SelectItem>
-                  <SelectItem value={Category.Service}>m</SelectItem>
+                  <SelectItem value={Category.Product}>
+                    {Category.Product}
+                  </SelectItem>
+                  <SelectItem value={Category.Service}>
+                    {Category.Service}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               {error?.data?.zodError?.fieldErrors.category && (
@@ -197,6 +202,7 @@ export function UpdateProduct(
                 name="costPrice"
                 defaultValue={costPrice as unknown as string}
                 type="number"
+                step="0.01"
                 min={0}
                 placeholder="cost price"
                 className="col-span-3 capitalize"
@@ -217,6 +223,7 @@ export function UpdateProduct(
                 name="salePrice"
                 defaultValue={salePrice as unknown as string}
                 type="number"
+                step="0.01"
                 min={0}
                 placeholder="sale price"
                 className="col-span-3 capitalize"

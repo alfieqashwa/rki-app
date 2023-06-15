@@ -28,10 +28,17 @@ export function RowProductActions(
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <UpdateProduct {...props} />
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+          <UpdateProduct props={props} open={open} setOpen={setOpen} />
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <DeleteProduct id={props.id} name={props.name} />
+          <DeleteProduct
+            id={props.id}
+            name={props.name}
+            open={open}
+            setOpen={setOpen}
+          />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
