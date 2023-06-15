@@ -1,11 +1,10 @@
-import { type UomType } from "@prisma/client";
 import type { Table } from "@tanstack/react-table";
-import { Building, X } from "lucide-react";
+import { X } from "lucide-react";
 import { DataTableFacetedFilter } from "~/components/table/data-table-faceted-filter";
 import { DataTableViewOptions } from "~/components/table/data-table-view-options";
+import { categories } from "~/types";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
-import { api } from "~/utils/api";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -18,18 +17,6 @@ export function ProductTableToolbar<TData>({
     table.getPreFilteredRowModel().rows.length >
     table.getFilteredRowModel().rows.length;
 
-  const { data: unitOfMeasures, status } = api.product.getAll.useQuery(
-    undefined,
-    {
-      select: (data) =>
-        data.map((d) => ({
-          value: d.name as UomType,
-          label: d.name as UomType,
-          icon: Building,
-        })),
-    }
-  );
-
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
@@ -41,11 +28,11 @@ export function ProductTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {status === "success" && table.getColumn("uom") && (
+        {table.getColumn("category") && (
           <DataTableFacetedFilter
-            column={table.getColumn("uom")}
-            title="UoM"
-            options={unitOfMeasures}
+            column={table.getColumn("category")}
+            title="Category"
+            options={categories}
           />
         )}
         {isFiltered && (
