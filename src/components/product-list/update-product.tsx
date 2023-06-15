@@ -1,5 +1,6 @@
-import { Loader2, PlusCircle } from "lucide-react";
+import { Loader2, Pen } from "lucide-react";
 import { useState } from "react";
+import { CommandCombobox } from "~/components/combobox";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
 import { Label } from "~/ui/label";
@@ -13,8 +14,8 @@ import {
   SheetTrigger,
 } from "~/ui/sheet";
 import { ToastAction } from "~/ui/toast";
-import { toast } from "~/ui/use-toast";
-import { api } from "~/utils/api";
+import { useToast } from "~/ui/use-toast";
+import { type RouterOutputs, api } from "~/utils/api";
 import { wait } from "~/utils/wait";
 import {
   Select,
@@ -25,21 +26,24 @@ import {
 } from "../ui/select";
 import { Category, UomType } from "@prisma/client";
 
-export const AddProduct = (): JSX.Element => {
+export function UpdateProduct(
+  props: RouterOutputs["product"]["getAll"][number]
+) {
+  const { id, name, category, uom, countInStock, costPrice, salePrice } = props;
   const [open, setOpen] = useState(false);
 
-  // Mutations
   const utils = api.useContext();
+  const { toast } = useToast();
 
-  const { mutate, isLoading, error } = api.product.create.useMutation({
+  const { mutate, isLoading, error } = api.product.update.useMutation({
     async onSuccess() {
       toast({
         title: "Succeed!",
         variant: "default",
-        description: "Your form has been created.",
+        description: "Your product has been updated.",
       });
-
-      await wait().then(() => setOpen(false));
+      /* auto-closed after succeed submit the dialog form */
+      await wait().then(() => setOpen(!open));
       await utils.product.getAll.invalidate();
     },
     onError() {
@@ -59,36 +63,44 @@ export const AddProduct = (): JSX.Element => {
     const name = formData.get("name")?.toString().toLowerCase() as string;
     const category = formData.get("category") as Category;
     const uom = formData.get("uom") as UomType;
-    const countInStock = formData.get("countInStock") as string;
-    const costPrice = formData.get("costPrice") as string;
-    const salePrice = formData.get("salePrice") as string;
+    const countInStock = formData.get("countInStock") as unknown as number;
+    const costPrice = formData.get("costPrice") as unknown as number;
+    const salePrice = formData.get("salePrice") as unknown as number;
 
     mutate({
+      id,
       name,
       category,
       uom,
-      countInStock: +countInStock,
-      costPrice: +costPrice,
-      salePrice: +salePrice,
+      countInStock,
+      costPrice,
+      salePrice,
     });
   };
 
+  const disabled = false;
+
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild onSelect={(e) => e.preventDefault()}>
-        <Button className="whitespace-nowrap">
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add Product
-        </Button>
+    <Sheet>
+      <SheetTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
+        <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+        Edit
       </SheetTrigger>
-      <SheetContent position="right" size="sm">
+
+      <SheetContent className="sm:max-w-1/2">
         <SheetHeader>
-          <SheetTitle>Add New Product</SheetTitle>
-          <SheetDescription>
-            Fill the form to create new product and click the Submit button.
+          <SheetTitle>Update Product</SheetTitle>
+          <SheetDescription asChild>
+            <p>
+              Edit
+              <span className="px-1.5 font-medium uppercase text-amber-300">
+                {name}
+              </span>
+              of your product here. Click Update when you&apos;re done.
+            </p>
           </SheetDescription>
         </SheetHeader>
-        <form onSubmit={handleSubmit}>
+        <form className="grid gap-4 py-3" onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-right">
@@ -97,11 +109,12 @@ export const AddProduct = (): JSX.Element => {
               <Input
                 id="name"
                 name="name"
-                placeholder="product name"
+                defaultValue={name}
+                placeholder="company name"
                 className="col-span-3 capitalize"
               />
               {error?.data?.zodError?.fieldErrors.name && (
-                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
+                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
                   {error?.data?.zodError?.fieldErrors.name}
                 </span>
               )}
@@ -111,17 +124,13 @@ export const AddProduct = (): JSX.Element => {
               <Label htmlFor="category" className="text-right">
                 Category
               </Label>
-              <Select name="category">
+              <Select name="category" defaultValue={category}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={Category.Product}>
-                    {Category.Product}
-                  </SelectItem>
-                  <SelectItem value={Category.Service}>
-                    {Category.Service}
-                  </SelectItem>
+                  <SelectItem value={Category.Product}>pack</SelectItem>
+                  <SelectItem value={Category.Service}>m</SelectItem>
                 </SelectContent>
               </Select>
               {error?.data?.zodError?.fieldErrors.category && (
@@ -135,7 +144,7 @@ export const AddProduct = (): JSX.Element => {
               <Label htmlFor="uom" className="text-right">
                 UoM
               </Label>
-              <Select name="uom">
+              <Select name="uom" defaultValue={uom}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Unit of Measure" />
                 </SelectTrigger>
@@ -166,6 +175,7 @@ export const AddProduct = (): JSX.Element => {
               <Input
                 id="countInStock"
                 name="countInStock"
+                defaultValue={countInStock as unknown as string}
                 type="number"
                 min={0}
                 placeholder="count in stock"
@@ -185,9 +195,9 @@ export const AddProduct = (): JSX.Element => {
               <Input
                 id="costPrice"
                 name="costPrice"
+                defaultValue={costPrice as unknown as string}
                 type="number"
-                step="0.01"
-                min={1}
+                min={0}
                 placeholder="cost price"
                 className="col-span-3 capitalize"
               />
@@ -205,9 +215,9 @@ export const AddProduct = (): JSX.Element => {
               <Input
                 id="salePrice"
                 name="salePrice"
+                defaultValue={salePrice as unknown as string}
                 type="number"
-                step="0.01"
-                min={1}
+                min={0}
                 placeholder="sale price"
                 className="col-span-3 capitalize"
               />
@@ -218,15 +228,24 @@ export const AddProduct = (): JSX.Element => {
               )}
             </div>
           </div>
-          <SheetFooter className="absolute bottom-16 right-8 w-full">
+          <SheetFooter className="mt-4 flex flex-row items-center justify-end space-x-2">
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              // onClick={() => void wait().then(() => setOpen(!open))}
+              onClick={handleCancel}
+            >
+              Cancel
+            </Button>
             {isLoading ? (
-              <Button disabled className="w-1/3">
+              <Button disabled size="sm">
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please wait
               </Button>
             ) : (
-              <Button type="submit" size="lg">
-                Submit
+              <Button disabled={disabled} type="submit" size="sm">
+                Update
               </Button>
             )}
           </SheetFooter>
@@ -234,4 +253,9 @@ export const AddProduct = (): JSX.Element => {
       </SheetContent>
     </Sheet>
   );
-};
+
+  // wait for 800 miliseconds before close the dialog
+  function handleCancel() {
+    void wait(800).then(() => setOpen(!open));
+  }
+}

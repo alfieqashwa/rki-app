@@ -1,8 +1,9 @@
 import { Checkbox } from "@radix-ui/react-checkbox";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Layers, Package, Tag } from "lucide-react";
-import { type RouterOutputs } from "~/utils/api";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
+import { type RouterOutputs } from "~/utils/api";
+import { RowProductActions } from "./row-product-actions";
 
 export const columnsProduct: ColumnDef<
   RouterOutputs["product"]["getAll"][number]
@@ -72,5 +73,9 @@ export const columnsProduct: ColumnDef<
         </span>
       </div>
     ),
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <RowProductActions {...row.original} />,
   },
 ];
