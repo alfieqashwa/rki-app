@@ -121,9 +121,10 @@ enum Category {
 
 model Product {
     id           String      @id @default(cuid())
+    name         String
     countInStock Int?        @map("count_in_stock")
     category     Category    @default(Product)
-    uom          String?
+    uom          UomType     @default(other)
     salePrice    Float?      @map("sale_price")
     costPrice    Float?      @map("cost_price")
     orderItem    OrderItem[]
@@ -132,9 +133,24 @@ model Product {
     updatedAt DateTime @updatedAt @map("updated_at")
 }
 
+enum UomType {
+    pack
+    m
+    ea
+    set
+    box
+    ls
+    tb
+    sht
+    lot
+    roll
+    other
+}
+
 model OrderItem {
-    id       String @id @default(cuid())
-    quantity Int
+    id          String  @id @default(cuid())
+    quantity    Int
+    description String?
 
     product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
     productId String  @map("product_id")
