@@ -131,8 +131,12 @@ export function AddPic() {
                   {companyQuery.status === "success" &&
                     companyQuery.data &&
                     companyQuery.data.map((company) => (
-                      <SelectItem value={company.id} key={company.id}>
-                        {company.name.toUpperCase()}
+                      <SelectItem
+                        className="capitalize"
+                        value={company.id}
+                        key={company.id}
+                      >
+                        {company.name}
                       </SelectItem>
                     ))}
                 </SelectContent>
