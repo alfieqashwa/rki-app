@@ -4,6 +4,7 @@ import { DataTableColumnHeader } from "~/components/table/data-table-column-head
 import { Checkbox } from "~/ui/checkbox";
 import { type RouterOutputs } from "~/utils/api";
 import { RowProductActions } from "./row-product-actions";
+import { Tags } from "lucide-react";
 
 export const columnsProduct: ColumnDef<
   RouterOutputs["product"]["getAll"][number]
@@ -67,13 +68,10 @@ export const columnsProduct: ColumnDef<
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
-        <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
+        <Tags className="mr-2 h-4 w-4 text-muted-foreground" />
         <span>{row.getValue("uom")}</span>
       </div>
     ),
-    filterFn: (row, id, value: string) => {
-      return value.includes(row.getValue(id));
-    },
   },
   {
     accessorKey: "countInStock",
