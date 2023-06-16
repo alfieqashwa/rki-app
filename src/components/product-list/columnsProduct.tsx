@@ -64,7 +64,7 @@ export const columnsProduct: ColumnDef<
   {
     accessorKey: "uom",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Unit of Measure" />
+      <DataTableColumnHeader column={column} title="UoM" />
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
@@ -76,7 +76,7 @@ export const columnsProduct: ColumnDef<
   {
     accessorKey: "countInStock",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Count In Stock" />
+      <DataTableColumnHeader column={column} title="Stock" />
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
