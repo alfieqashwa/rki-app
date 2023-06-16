@@ -162,6 +162,9 @@ model OrderItem {
     purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
     purchaseOrderId String?        @map("purchase_order_id")
 
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
     @@map("order_items")
 }
 
