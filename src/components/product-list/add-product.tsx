@@ -5,6 +5,13 @@ import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
 import { Label } from "~/ui/label";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/ui/select";
+import {
   Sheet,
   SheetContent,
   SheetDescription,
@@ -17,16 +24,22 @@ import { ToastAction } from "~/ui/toast";
 import { toast } from "~/ui/use-toast";
 import { api } from "~/utils/api";
 import { wait } from "~/utils/wait";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 
 export const AddProduct = (): JSX.Element => {
   const [open, setOpen] = useState(false);
+  const [inputCostPrice, setInputCostPrice] = useState("");
+  const [inputSalePrice, setInputSalePrice] = useState("");
+
+  function formattedValue(input: string) {
+    return input.replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  const handleCostPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputCostPrice(formattedValue(e.target.value));
+  };
+  const handleSalePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputSalePrice(formattedValue(e.target.value));
+  };
 
   // Mutations
   const utils = api.useContext();
@@ -60,16 +73,17 @@ export const AddProduct = (): JSX.Element => {
     const category = formData.get("category") as Category;
     const uom = formData.get("uom") as UomType;
     const countInStock = formData.get("countInStock") as string;
-    const costPrice = formData.get("costPrice") as string;
-    const salePrice = formData.get("salePrice") as string;
+
+    const costPrice = parseFloat(inputCostPrice.replace(/,/g, ""));
+    const salePrice = parseFloat(inputSalePrice.replace(/,/g, ""));
 
     mutate({
       name,
       category,
       uom,
       countInStock: +countInStock,
-      costPrice: +costPrice,
-      salePrice: +salePrice,
+      costPrice,
+      salePrice,
     });
   };
 
@@ -179,17 +193,20 @@ export const AddProduct = (): JSX.Element => {
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="costPrice" className="text-right">
+              <Label
+                htmlFor="costPrice"
+                className="whitespace-nowrap text-right"
+              >
                 Cost Price
               </Label>
               <Input
                 id="costPrice"
                 name="costPrice"
-                type="number"
-                step="0.01"
-                min={1}
+                type="text"
+                value={inputCostPrice}
+                onChange={handleCostPriceChange}
                 placeholder="cost price"
-                className="col-span-3 capitalize"
+                className="col-span-3"
               />
               {error?.data?.zodError?.fieldErrors.costPrice && (
                 <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
@@ -199,17 +216,20 @@ export const AddProduct = (): JSX.Element => {
             </div>
 
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="salePrice" className="text-right">
+              <Label
+                htmlFor="salePrice"
+                className="whitespace-nowrap text-right"
+              >
                 Sale Price
               </Label>
               <Input
                 id="salePrice"
                 name="salePrice"
-                type="number"
-                step="0.01"
-                min={1}
+                type="text"
+                value={inputSalePrice}
+                onChange={handleSalePriceChange}
                 placeholder="sale price"
-                className="col-span-3 capitalize"
+                className="col-span-3"
               />
               {error?.data?.zodError?.fieldErrors.salePrice && (
                 <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">

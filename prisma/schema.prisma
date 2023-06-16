@@ -125,8 +125,8 @@ model Product {
     category     Category    @default(Product)
     uom          UomType     @default(other)
     countInStock Int?        @map("count_in_stock")
-    salePrice    Float?      @map("sale_price")
-    costPrice    Float?      @map("cost_price")
+    salePrice    Float       @map("sale_price")
+    costPrice    Float       @map("cost_price")
     orderItem    OrderItem[]
 
     createdAt DateTime @default(now()) @map("created_at")
