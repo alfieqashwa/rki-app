@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "~/ui/dropdown-menu";
 import { type RouterOutputs } from "~/utils/api";
-// import { DeleteSale } from "./delete-sale";
+import { DeleteSale } from "./delete-sale";
 // import { UpdateSale } from "./update-sale";
 
 export function RowSaleActions(props: RouterOutputs["sale"]["getAll"][0]) {
@@ -28,16 +28,16 @@ export function RowSaleActions(props: RouterOutputs["sale"]["getAll"][0]) {
       <DropdownMenuContent align="end" className="w-[160px]">
         {/* <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
           <UpdateSale props={props} open={open} setOpen={setOpen} />
-        </DropdownMenuItem>
+        </DropdownMenuItem> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
           <DeleteSale
             id={props.id}
-            name={props.name}
+            name={props.orderNumber}
             open={open}
             setOpen={setOpen}
           />
-        </DropdownMenuItem> */}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
