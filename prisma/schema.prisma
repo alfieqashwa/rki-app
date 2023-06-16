@@ -49,16 +49,17 @@ model Session {
 }
 
 model User {
-    id            String      @id @default(cuid())
-    name          String?
-    email         String?     @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    role          Role        @default(ADMIN)
-    saleOrders    SaleOrder[]
-    profile       Profile?
+    id             String          @id @default(cuid())
+    name           String?
+    email          String?         @unique
+    emailVerified  DateTime?
+    image          String?
+    accounts       Account[]
+    sessions       Session[]
+    role           Role            @default(ADMIN)
+    profile        Profile?
+    saleOrders     SaleOrder[]
+    purchaseOrders PurchaseOrder[]
 }
 
 model Profile {
@@ -96,8 +97,9 @@ model Company {
     isSupplier      Boolean?         @default(false) @map("is_supplier")
     address         Address          @relation(fields: [addressId], references: [id], onDelete: Cascade)
     addressId       String           @map("address_id")
-    saleOrders      SaleOrder[]
     personInCharges PersonInCharge[]
+    saleOrders      SaleOrder[]
+    purchaseOrders  PurchaseOrder[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
@@ -127,7 +129,7 @@ model Product {
     countInStock Int?        @map("count_in_stock")
     salePrice    Float       @map("sale_price")
     costPrice    Float       @map("cost_price")
-    orderItem    OrderItem[]
+    orderItems   OrderItem[]
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
@@ -155,26 +157,29 @@ model OrderItem {
     product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
     productId String  @map("product_id")
 
-    order   SaleOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
-    orderId String    @map("oreder_id")
+    saleOrder       SaleOrder?     @relation(fields: [saleOrderId], references: [id], onDelete: Cascade)
+    saleOrderId     String         @map("sale_order_id")
+    purchaseOrder   PurchaseOrder? @relation(fields: [purchaseOrderId], references: [id], onDelete: Cascade)
+    purchaseOrderId String?        @map("purchase_order_id")
 
     @@map("order_items")
 }
 
-enum Status {
+enum StatusSaleOrder {
     QUOTATION
     SOLD
+    ARCHIVE
 }
 
 model SaleOrder {
-    id          String      @id @default(cuid())
-    orderNumber String      @unique @map("order_number")
-    dateOrdered DateTime    @default(now()) @map("date_ordered")
-    company     Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
-    companyId   String      @map("company_id")
-    totalPrice  Float       @default(0) @map("total_price")
+    id          String          @id @default(cuid())
+    orderNumber String          @unique @map("order_number")
+    dateOrdered DateTime        @default(now()) @map("date_ordered")
+    company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    companyId   String          @map("company_id")
+    totalPrice  Float           @default(0) @map("total_price")
     orderItems  OrderItem[]
-    status      Status      @default(QUOTATION)
+    status      StatusSaleOrder @default(QUOTATION)
 
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @map("user_id")
@@ -183,6 +188,31 @@ model SaleOrder {
     updatedAt DateTime @updatedAt @map("updated_at")
 
     @@map("sale_orders")
+}
+
+enum StatusPurchaseOrder {
+    QUOTATION
+    PURCHASED
+    ARCHIVE
+}
+
+model PurchaseOrder {
+    id          String              @id @default(cuid())
+    orderNumber String              @unique @map("order_number")
+    dateOrdered DateTime            @default(now()) @map("date_ordered")
+    company     Company             @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    companyId   String              @map("company_id")
+    totalPrice  Float               @default(0) @map("total_price")
+    orderItems  OrderItem[]
+    status      StatusPurchaseOrder @default(QUOTATION)
+
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String @map("user_id")
+
+    createdAt DateTime @default(now()) @map("created_at")
+    updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@map("purchase_orders")
 }
 
 model Province {
