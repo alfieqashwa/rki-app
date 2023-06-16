@@ -92,28 +92,38 @@ export const columnsProduct: ColumnDef<
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Cost Price" />
     ),
-    cell: ({ row }) => (
-      <div className="flex items-center">
-        <Banknote className="mr-2 h-4 w-4 text-muted-foreground" />
-        <span className="whitespace-nowrap capitalize">
-          {row.getValue("costPrice") ?? "-"}
-        </span>
-      </div>
-    ),
+    cell: ({ row }) => {
+      const costPrice = row.getValue("costPrice");
+      const formatPrice = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }).format(Number(costPrice));
+      return (
+        <div className="flex items-center">
+          <Banknote className="mr-2 h-4 w-4 text-muted-foreground" />
+          <span className="whitespace-nowrap capitalize">{formatPrice}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "salePrice",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Sale Price" />
     ),
-    cell: ({ row }) => (
-      <div className="flex items-center">
-        <Banknote className="mr-2 h-4 w-4 text-muted-foreground" />
-        <span className="whitespace-nowrap capitalize">
-          {row.getValue("salePrice") ?? "-"}
-        </span>
-      </div>
-    ),
+    cell: ({ row }) => {
+      const salePrice = row.getValue("salePrice");
+      const formatPrice = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }).format(Number(salePrice));
+      return (
+        <div className="flex items-center">
+          <Banknote className="mr-2 h-4 w-4 text-muted-foreground" />
+          <span className="whitespace-nowrap capitalize">{formatPrice}</span>
+        </div>
+      );
+    },
   },
   {
     id: "actions",

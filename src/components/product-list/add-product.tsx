@@ -23,6 +23,7 @@ import {
 import { ToastAction } from "~/ui/toast";
 import { toast } from "~/ui/use-toast";
 import { api } from "~/utils/api";
+import { formattedInputValue } from "~/utils/formattedInputValue";
 import { wait } from "~/utils/wait";
 
 export const AddProduct = (): JSX.Element => {
@@ -30,15 +31,11 @@ export const AddProduct = (): JSX.Element => {
   const [inputCostPrice, setInputCostPrice] = useState("");
   const [inputSalePrice, setInputSalePrice] = useState("");
 
-  function formattedValue(input: string) {
-    return input.replace(/,/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-
   const handleCostPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputCostPrice(formattedValue(e.target.value));
+    setInputCostPrice(formattedInputValue(e.target.value));
   };
   const handleSalePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputSalePrice(formattedValue(e.target.value));
+    setInputSalePrice(formattedInputValue(e.target.value));
   };
 
   // Mutations
