@@ -1,7 +1,7 @@
-import { type NextPage } from "next"
-import { signIn, signOut, useSession } from "next-auth/react"
-import Head from "next/head"
-import Link from "next/link"
+import { type NextPage } from "next";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Head from "next/head";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   return (
@@ -22,13 +22,13 @@ const Home: NextPage = () => {
         </div>
       </main>
     </>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
 
 const AuthShowcase: React.FC = () => {
-  const { data: sessionData } = useSession()
+  const { data: sessionData } = useSession();
 
   return (
     <div className="flex flex-col items-center justify-center gap-4">
@@ -44,13 +44,13 @@ const AuthShowcase: React.FC = () => {
         </button>
         {sessionData && (
           <Link
-            href="/quotation"
+            href="/customer"
             className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
           >
-            Quotation
+            Customer
           </Link>
         )}
       </section>
     </div>
-  )
-}
+  );
+};

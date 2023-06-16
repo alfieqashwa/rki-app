@@ -51,16 +51,6 @@ export function Sidebar({ className }: SidebarProps) {
                 Products
               </Button>
             </Link>
-            <Link href="/quotation">
-              <Button
-                variant={`${pathname === "/quotation" ? "secondary" : "ghost"}`}
-                size="sm"
-                className="w-full justify-start"
-              >
-                <LayoutGrid className="mr-2 h-4 w-4" />
-                Quotations
-              </Button>
-            </Link>
             <Link href="/sale">
               <Button
                 variant={`${pathname === "/sale" ? "secondary" : "ghost"}`}
@@ -69,6 +59,16 @@ export function Sidebar({ className }: SidebarProps) {
               >
                 <LayoutGrid className="mr-2 h-4 w-4" />
                 Sales
+              </Button>
+            </Link>
+            <Link href="/purchase">
+              <Button
+                variant={`${pathname === "/purchase" ? "secondary" : "ghost"}`}
+                size="sm"
+                className="w-full justify-start"
+              >
+                <LayoutGrid className="mr-2 h-4 w-4" />
+                Purchases
               </Button>
             </Link>
             <Link href="/invoice">
