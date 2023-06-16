@@ -1,11 +1,10 @@
-import { PlusCircle } from "lucide-react";
 import { type GetServerSideProps, type NextPage } from "next";
 import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
 import { SaleList } from "~/components/quotation-list";
+import { AddQuotation } from "~/components/quotation-list/add-quotation";
 import Layout from "~/components/template/layout";
 import { authOptions } from "~/server/auth";
-import { Button } from "~/ui/button";
 import { Separator } from "~/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/ui/tabs";
 
@@ -44,10 +43,7 @@ const QuotationPage: NextPage = (): JSX.Element => {
               <TabsTrigger value="preview">Preview</TabsTrigger>
             </TabsList>
             <div className="ml-auto mr-4">
-              <Button>
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Add Quotation
-              </Button>
+              <AddQuotation />
             </div>
           </div>
           <TabsContent

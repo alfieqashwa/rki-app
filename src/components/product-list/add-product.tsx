@@ -23,7 +23,7 @@ import {
 import { ToastAction } from "~/ui/toast";
 import { toast } from "~/ui/use-toast";
 import { api } from "~/utils/api";
-import { formattedInputValue } from "~/utils/formattedInputValue";
+import { formattedInputPriceValue } from "~/utils/formattedInputValue";
 import { wait } from "~/utils/wait";
 
 export const AddProduct = (): JSX.Element => {
@@ -32,10 +32,10 @@ export const AddProduct = (): JSX.Element => {
   const [inputSalePrice, setInputSalePrice] = useState("");
 
   const handleCostPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputCostPrice(formattedInputValue(e.target.value));
+    setInputCostPrice(formattedInputPriceValue(e.target.value));
   };
   const handleSalePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputSalePrice(formattedInputValue(e.target.value));
+    setInputSalePrice(formattedInputPriceValue(e.target.value));
   };
 
   // Mutations
