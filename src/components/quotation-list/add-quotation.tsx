@@ -4,7 +4,6 @@ import {
   Calendar as CalendarIcon,
   Loader2,
   MinusCircle,
-  Package,
   PlusCircle,
   User,
 } from "lucide-react";
@@ -57,9 +56,21 @@ export const AddQuotation = (): JSX.Element => {
 
   const handleChange = (
     index: number,
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    console.log({ index, event });
+    type Values = {
+      [key: string]: string;
+      productId: string;
+      description: string;
+      quantity: string;
+    };
+
+    const values: Values[] = [...inputOrderItemsFields];
+    // values[index][event.target.name] = event.target.value;
+
+    (values[index] as Values)[event.target.name as keyof Values] =
+      event.target.value;
+    setInputOrderItemsFields([...values]);
   };
 
   // Mutations
@@ -112,15 +123,15 @@ export const AddQuotation = (): JSX.Element => {
       companyId,
       userId,
       status: "QUOTATION",
-      // orderItems,
+      orderItems: inputOrderItemsFields,
       totalPrice,
     });
   };
 
-  const disabled =
-    inputOrderItemsFields[0]?.quantity === "" ||
-    inputOrderItemsFields[0]?.description === "" ||
-    inputOrderItemsFields[0]?.productId === "";
+  const disabled = false;
+  // inputOrderItemsFields[0]?.quantity === "" ||
+  // inputOrderItemsFields[0]?.description === "" ||
+  // inputOrderItemsFields[0]?.productId === "";
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -264,28 +275,19 @@ export const AddQuotation = (): JSX.Element => {
                   <Label htmlFor="productId" className="text-right">
                     Product
                   </Label>
-                  <Select name="productId">
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Product" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {productsQuery.status === "success" &&
-                        productsQuery.data.map((product) => (
-                          <SelectItem
-                            className="whitespace-nowrap pl-2 capitalize"
-                            value={product.id}
-                            key={product.id}
-                          >
-                            <div className="flex w-full items-center">
-                              <Package className="mr-2 h-4 w-4 text-muted-foreground" />
-                              <span className="whitespace-nowrap capitalize">
-                                {product.name}
-                              </span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
+                  <select
+                    name="productId"
+                    value={input.productId}
+                    onChange={(e) => handleChange(i, e)}
+                  >
+                    {productsQuery.status === "success" &&
+                      productsQuery.data.map((product) => (
+                        <option value={product.id} key={product.id}>
+                          {product.name}
+                        </option>
+                      ))}
+                  </select>
+
                   {error?.data?.zodError?.fieldErrors.productId && (
                     <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
                       {error?.data?.zodError?.fieldErrors.productId}

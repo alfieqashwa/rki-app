@@ -4,6 +4,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc"
+import { createSaleSchema } from "~/types/schema"
 
 export const saleRouter = createTRPCRouter({
 
@@ -17,22 +18,7 @@ export const saleRouter = createTRPCRouter({
 
   // Mutations
   create: protectedProcedure
-    .input(z.object({
-      orderNumber: z.string(),
-      dateOrdered: z.date(),
-      companyId: z.string().cuid(),
-      status: z.nativeEnum(StatusSaleOrder),
-      userId: z.string().cuid(),
-      totalPrice: z.number(),
-      orderItems: z.array(
-        z.object({
-          quantity: z.number(),
-          description: z.string(),
-          productId: z.string().cuid(),
-          saleOrderId: z.string().cuid()
-        })
-      )
-    }))
+    .input(createSaleSchema)
     .mutation(async ({ ctx, input: {
       orderNumber,
       dateOrdered,

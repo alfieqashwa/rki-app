@@ -1,3 +1,4 @@
+import { StatusSaleOrder } from "@prisma/client"
 import { z } from "zod"
 
 export const updateCompanySchema = z.object({
@@ -45,3 +46,27 @@ export const upsertPicSchema = (z.object({
   createEmail: z.string().email().nullable(),
   createPosition: z.string().min(3, { message: "min length is 3" }).max(20, { message: "max length is 20" }).nullable(),
 }))
+
+export const createSaleSchema = z.object({
+  orderNumber: z.string(),
+  dateOrdered: z.date(),
+  companyId: z.string().cuid(),
+  status: z.nativeEnum(StatusSaleOrder),
+  userId: z.string().cuid(),
+  totalPrice: z.number(),
+  orderItems: z.array(
+    z.object({
+      quantity: z.number(),
+      description: z.string(),
+      productId: z.string().cuid(),
+      saleOrderId: z.string().cuid()
+    })
+  )
+})
+
+export const createOrderItemSchema = z.object({
+  quantity: z.number(),
+  description: z.string(),
+  productId: z.string().cuid(),
+  saleOrderId: z.string().cuid()
+})
