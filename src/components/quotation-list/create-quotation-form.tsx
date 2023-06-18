@@ -123,7 +123,11 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        // *NOTE https://github.com/orgs/react-hook-form/discussions/8622
+        onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
+        className="space-y-8"
+      >
         <div className="grid gap-4 py-4">
           <FormField
             control={form.control}
