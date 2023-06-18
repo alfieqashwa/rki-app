@@ -4,6 +4,8 @@ import { DataTableColumnHeader } from "~/components/table/data-table-column-head
 import { Checkbox } from "~/ui/checkbox";
 import { type RouterOutputs } from "~/utils/api";
 import { RowSaleActions } from "./row-sale-actions";
+import id from "date-fns/locale/id";
+import { format } from "date-fns";
 
 export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
   [
@@ -47,14 +49,19 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Date Order" />
       ),
-      cell: ({ row }) => (
-        <div className="flex items-center">
-          <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
-          <span className="whitespace-nowrap capitalize">
-            {row.getValue("dateOrdered")}
-          </span>
-        </div>
-      ),
+      cell: ({ row }) => {
+        const formattedDateOrder = format(row.getValue("dateOrdered"), "PPPP", {
+          locale: id,
+        });
+        return (
+          <div className="flex items-center">
+            <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
+            <span className="whitespace-nowrap capitalize">
+              {formattedDateOrder}
+            </span>
+          </div>
+        );
+      },
       filterFn: (row, id, value: string) => {
         return value.includes(row.getValue(id));
       },

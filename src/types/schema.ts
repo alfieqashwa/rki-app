@@ -59,7 +59,6 @@ export const createSaleSchema = z.object({
       quantity: z.number(),
       description: z.string(),
       productId: z.string().cuid(),
-      saleOrderId: z.string().cuid()
     })
   )
 })
