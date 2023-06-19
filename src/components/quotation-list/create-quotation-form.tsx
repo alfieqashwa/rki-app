@@ -31,6 +31,7 @@ import { api } from "~/utils/api";
 import { wait } from "~/utils/wait";
 import { ScrollArea } from "../ui/scroll-area";
 import { Fragment } from "react";
+import { Separator } from "@radix-ui/react-dropdown-menu";
 
 type Props = {
   open: boolean;
@@ -126,35 +127,39 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
       <form
         // *NOTE https://github.com/orgs/react-hook-form/discussions/8622
         onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
-        className="space-y-8"
+        className="kurt grid gap-4 py-4"
       >
-        <div className="grid gap-4 py-4">
+        <div className="grid grid-cols-2 items-center">
           <FormField
             control={form.control}
             name="orderNumber"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Order No</FormLabel>
+              <FormItem className="grid grid-cols-4 items-center gap-4">
+                <FormLabel className="mt-2 whitespace-nowrap text-right">
+                  Order No
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Order No" {...field} />
+                  <Input
+                    placeholder="Order No"
+                    {...field}
+                    className="col-span-3 w-[240px]"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          {error?.data?.zodError?.fieldErrors.name && (
-            <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
-              {error?.data?.zodError?.fieldErrors.name}
-            </span>
-          )}
-        </div>
-        <div className="grid gap-4 py-4">
+          {/* {error?.data?.zodError?.fieldErrors.name && (
+              <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
+                {error?.data?.zodError?.fieldErrors.name}
+              </span>
+            )} */}
           <FormField
             control={form.control}
             name="dateOrdered"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Date</FormLabel>
+              <FormItem className="grid grid-cols-4 items-center gap-4">
+                <FormLabel className="mt-2 text-right">Date</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -174,7 +179,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
+                  <PopoverContent className="w-[240px] p-0" align="start">
                     <Calendar
                       mode="single"
                       selected={field.value}
@@ -186,24 +191,23 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                     />
                   </PopoverContent>
                 </Popover>
-                <FormDescription>Your date order.</FormDescription>
-                <FormMessage />
               </FormItem>
             )}
           />
         </div>
-        <div className="grid gap-4 py-4">
+
+        <div className="grid grid-cols-2 items-center">
           <FormField
             control={form.control}
             name="companyId"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Customer</FormLabel>
+              <FormItem className="grid grid-cols-4 items-center gap-4">
+                <FormLabel className="mt-2 text-right">Customer</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl>
+                  <FormControl className="col-span-3 w-[240px]">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a customer to display" />
                     </SelectTrigger>
@@ -221,19 +225,17 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
               </FormItem>
             )}
           />
-        </div>
-        <div className="grid gap-4 py-4">
           <FormField
             control={form.control}
             name="userId"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>User</FormLabel>
+              <FormItem className="grid grid-cols-4 items-center gap-4">
+                <FormLabel className="mt-2 text-right">User</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl>
+                  <FormControl className="col-span-3 w-[240px]">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a user to display" />
                     </SelectTrigger>
@@ -252,22 +254,25 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
             )}
           />
         </div>
+        <div className="mt-4">
+          <h1 className="text-lg font-semibold">Order Items</h1>
+        </div>
 
-        <div>
+        <ScrollArea className="h-96">
           {fields.map((field, index) => (
-            <Fragment key={field.id}>
-              <ScrollArea onSelect={(e) => e.preventDefault()} className="h-96">
+            <div className="grid gap-4 py-4" key={field.id}>
+              <div className="grid grid-cols-2 items-center">
                 <FormField
                   control={form.control}
                   name={`orderItems.${index}.productId`}
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Product</FormLabel>
+                    <FormItem className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="mt-2 text-right">Product</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
-                        <FormControl>
+                        <FormControl className="col-span-3 w-[240px]">
                           <SelectTrigger>
                             <SelectValue placeholder="Select a product to display" />
                           </SelectTrigger>
@@ -289,53 +294,52 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                   control={form.control}
                   name={`orderItems.${index}.quantity`}
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className={cn(index !== 0 && "sr-only")}>
+                    <FormItem className="grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="mt-2 text-right">
                         Quantity
                       </FormLabel>
-                      <FormDescription className={cn(index !== 0 && "sr-only")}>
-                        Add quantity.
-                      </FormDescription>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} className="col-span-3 w-[240px]" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className="grid grid-cols-2 items-center">
                 <FormField
                   control={form.control}
                   name={`orderItems.${index}.description`}
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className={cn(index !== 0 && "sr-only")}>
+                    <FormItem className="thom grid grid-cols-4 items-center gap-4">
+                      <FormLabel className="mt-2 text-right">
                         Description
                       </FormLabel>
-                      <FormDescription className={cn(index !== 0 && "sr-only")}>
-                        Add description.
-                      </FormDescription>
                       <FormControl>
-                        <Input {...field} />
+                        <h2 className="text-rose-500">
+                          TODO: Change to text-area
+                        </h2>
+                        {/* <Input {...field} className="col-span-2" /> */}
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              </ScrollArea>
-            </Fragment>
+              </div>
+            </div>
           ))}
-          <Button
-            type="button"
-            variant="link"
-            size="sm"
-            className="mt-1"
-            onClick={() =>
-              append({ productId: "", quantity: 0, description: "" })
-            }
-          >
-            Add More
-          </Button>
-        </div>
+        </ScrollArea>
+        <Button
+          type="button"
+          variant="link"
+          size="sm"
+          className="mt-1"
+          onClick={() =>
+            append({ productId: "", quantity: 0, description: "" })
+          }
+        >
+          Add More
+        </Button>
 
         <div className="absolute bottom-16 right-8 w-full">
           <Button type="button" variant="ghost" onClick={handleCancel}>

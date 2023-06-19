@@ -22,7 +22,7 @@ export const AddQuotation = (): JSX.Element => {
           Add Quotation
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="w-2/3">
         <SheetHeader>
           <SheetTitle>Add New Quotation</SheetTitle>
           <SheetDescription>
