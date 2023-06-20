@@ -1,16 +1,30 @@
 import { format } from "date-fns"
 
-export function formattedOrderNumber(dateOrdered: Date | string): string {
+export function formattedOrderNumber(dateOrdered: Date | string | undefined): string {
+  if (typeof dateOrdered === "undefined") return ""
 
-  const formattedOrderDate = dateOrdered instanceof Date ? format(dateOrdered, `yyyyMMdd-000`) : dateOrdered
-  const threeLastNumber = formattedOrderDate.slice(-3)
-  const addOne = Number(threeLastNumber) + 1
-  const addCustomZero = addOne <= 9
-    ? "00"
-    : addOne >= 9 && addOne <= 99
-      ? "0"
-      : ""
-  return formattedOrderDate.slice(0, formattedOrderDate.length - 3) + addCustomZero + addOne.toString()
+  let formattedOrderDate: string
+
+  if (dateOrdered instanceof Date) {
+    formattedOrderDate = format(dateOrdered, "yyyyMMdd-000")
+  } else {
+    formattedOrderDate = dateOrdered
+  }
+
+  const threeLastCharacters = formattedOrderDate.slice(-3)
+  const incrementByOne = Number(threeLastCharacters) + 1
+
+  const addConditionalZero =
+    incrementByOne <= 9
+      ? "00"
+      : incrementByOne > 9 && incrementByOne <= 99
+        ? "0"
+        : ""
+
+  const len = formattedOrderDate.length
+  const generatedFormattedOrderNumber = formattedOrderDate.slice(0, len - 3) + addConditionalZero + incrementByOne.toString()
+
+  return generatedFormattedOrderNumber
 }
 
 // ========== TESTING ============

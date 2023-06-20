@@ -77,7 +77,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
   type CreateSaleSchema = z.infer<typeof createSaleSchema>;
 
   const defaultValues: CreateSaleSchema = {
-    orderNumber: "ordernumberdsd",
+    orderNumber: "defaultquotation",
     dateOrdered: new Date(),
     companyId: companiesQuery.data?.[0]?.id as string,
     userId: userIdfromSession,
@@ -86,7 +86,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
       {
         productId: productsQuery.data?.[0]?.id as string,
         quantity: 12,
-        description: "reree qffdfdf fdfdf",
+        description: "ddd fk ffffffff ",
       },
     ],
     totalPrice: 12345600,
@@ -109,17 +109,30 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
 
     // generate orderNumber
     const generateOrderNumber = formattedOrderNumber(dateOrdered);
+
+    // find order number based on dateOrdered
     const hasSameOrderNumber =
       getAllSaleOrderNumberQuery.status === "success" &&
-      getAllSaleOrderNumberQuery.data.some(
-        (orderNum) => orderNum === generateOrderNumber
-      );
+      getAllSaleOrderNumberQuery.data.some((orderNum) => {
+        const len = orderNum.length;
+        return orderNum.slice(0, len - 4) === format(dateOrdered, "yyyyMMdd");
+      });
+
+    // find the latest order number based on the orderedNumber
+    const generateNewOrderNumber =
+      getAllSaleOrderNumberQuery.data &&
+      getAllSaleOrderNumberQuery.data
+        .filter(
+          (f) => f.slice(0, f.length - 4) === format(dateOrdered, "yyyMMdd")
+        )
+        .sort((a, b) => b.localeCompare(a, undefined, { numeric: true }))[0];
+
     const orderNumber = hasSameOrderNumber
-      ? formattedOrderNumber(generateOrderNumber)
+      ? formattedOrderNumber(generateNewOrderNumber)
       : generateOrderNumber;
 
     // const totalPrice = parseFloat(inputTotalPrice.replace(/,/g, ""));
-    console.log({
+    mutate({
       orderNumber,
       dateOrdered,
       companyId,
