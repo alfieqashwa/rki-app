@@ -10,7 +10,6 @@ import { Calendar } from "~/ui/calendar";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -25,13 +24,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/ui/select";
+import { Separator } from "~/ui/separator";
+import { Textarea } from "~/ui/textarea";
 import { ToastAction } from "~/ui/toast";
 import { toast } from "~/ui/use-toast";
 import { api } from "~/utils/api";
 import { wait } from "~/utils/wait";
 import { ScrollArea } from "../ui/scroll-area";
-import { Fragment } from "react";
-import { Separator } from "@radix-ui/react-dropdown-menu";
 
 type Props = {
   open: boolean;
@@ -179,7 +178,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="w-[240px] p-0" align="start">
+                  <PopoverContent className="p-2" align="start">
                     <Calendar
                       mode="single"
                       selected={field.value}
@@ -207,7 +206,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl className="col-span-3 w-[240px]">
+                  <FormControl className="col-span-3 w-[240px] capitalize">
                     <SelectTrigger>
                       <SelectValue placeholder="Select a customer to display" />
                     </SelectTrigger>
@@ -215,7 +214,11 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                   <SelectContent>
                     {companiesQuery.status === "success" &&
                       companiesQuery.data.map((company) => (
-                        <SelectItem value={company.id} key={company.id}>
+                        <SelectItem
+                          className="capitalize"
+                          value={company.id}
+                          key={company.id}
+                        >
                           {company.name}
                         </SelectItem>
                       ))}
@@ -272,7 +275,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
-                        <FormControl className="col-span-3 w-[240px]">
+                        <FormControl className="col-span-3 w-[240px] capitalize">
                           <SelectTrigger>
                             <SelectValue placeholder="Select a product to display" />
                           </SelectTrigger>
@@ -280,7 +283,11 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                         <SelectContent>
                           {productsQuery.status === "success" &&
                             productsQuery.data.map((product) => (
-                              <SelectItem value={product.id} key={product.id}>
+                              <SelectItem
+                                className="capitalize"
+                                value={product.id}
+                                key={product.id}
+                              >
                                 {product.name}
                               </SelectItem>
                             ))}
@@ -306,26 +313,28 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                   )}
                 />
               </div>
-              <div className="grid grid-cols-2 items-center">
+              <div className="grid grid-cols-1 items-center pb-4">
                 <FormField
                   control={form.control}
                   name={`orderItems.${index}.description`}
                   render={({ field }) => (
-                    <FormItem className="thom grid grid-cols-4 items-center gap-4">
-                      <FormLabel className="mt-2 text-right">
+                    <FormItem className="grid grid-cols-8 items-center gap-4">
+                      <FormLabel className="col-span-1 mt-2 text-right">
                         Description
                       </FormLabel>
                       <FormControl>
-                        <h2 className="text-rose-500">
-                          TODO: Change to text-area
-                        </h2>
-                        {/* <Input {...field} className="col-span-2" /> */}
+                        <Textarea
+                          placeholder="Describe about this order."
+                          className="col-span-6 resize-none"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
+              <Separator />
             </div>
           ))}
         </ScrollArea>
