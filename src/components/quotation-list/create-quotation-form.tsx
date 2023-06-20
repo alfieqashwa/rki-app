@@ -91,7 +91,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
     mode: "onChange",
   });
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: "orderItems",
     control: form.control,
   });
@@ -257,13 +257,12 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
             )}
           />
         </div>
-        <div className="mt-4">
-          <h1 className="text-lg font-semibold">Order Items</h1>
-        </div>
-
-        <ScrollArea className="h-96">
+        <ScrollArea className="max-h-[36rem]">
           {fields.map((field, index) => (
-            <div className="grid gap-4 py-4" key={field.id}>
+            <section className="grid gap-4 py-4" key={field.id}>
+              <h1 className="text-lg font-semibold">
+                Order Item <span>{index + 1}</span>
+              </h1>
               <div className="grid grid-cols-2 items-center">
                 <FormField
                   control={form.control}
@@ -313,7 +312,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                   )}
                 />
               </div>
-              <div className="grid grid-cols-1 items-center pb-4">
+              <div className="relative mb-12 grid grid-cols-1 items-center">
                 <FormField
                   control={form.control}
                   name={`orderItems.${index}.description`}
@@ -333,16 +332,28 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                     </FormItem>
                   )}
                 />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  disabled={index === 0}
+                  onClick={() => remove(index)}
+                  className={cn(
+                    "absolute -bottom-12 right-40",
+                    index === 0 && "hidden"
+                  )}
+                >
+                  Remove
+                </Button>
               </div>
               <Separator />
-            </div>
+            </section>
           ))}
         </ScrollArea>
         <Button
           type="button"
           variant="link"
           size="sm"
-          className="mt-1"
           onClick={() =>
             append({ productId: "", quantity: 0, description: "" })
           }
