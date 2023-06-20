@@ -53,7 +53,7 @@ export const createSaleSchema = z.object({
   companyId: z.string().cuid(),
   status: z.nativeEnum(StatusSaleOrder),
   userId: z.string().cuid(),
-  totalPrice: z.number().min(1, { message: "min 1" }),
+  totalPrice: z.coerce.number().min(1, { message: "min 1" }),
   orderItems: z.array(
     z.object({
       quantity: z.coerce.number().min(1, { message: "min 1" }),

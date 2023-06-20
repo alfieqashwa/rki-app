@@ -53,7 +53,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
   // Mutations
   const utils = api.useContext();
 
-  const { mutate, isLoading, error } = api.sale.create.useMutation({
+  const { mutate, isLoading } = api.sale.create.useMutation({
     async onSuccess() {
       toast({
         title: "Succeed!",
@@ -85,11 +85,11 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
     orderItems: [
       {
         productId: productsQuery.data?.[0]?.id as string,
-        quantity: 12,
-        description: "ddd fk ffffffff ",
+        quantity: 0,
+        description: "",
       },
     ],
-    totalPrice: 12345600,
+    totalPrice: 123456,
   };
 
   const form = useForm<CreateSaleSchema>({
@@ -153,30 +153,6 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
         className="grid gap-4 py-4"
       >
         <div className="grid grid-cols-2 items-center">
-          {/* <FormField
-            control={form.control}
-            name="orderNumber"
-            render={({ field }) => (
-              <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormLabel className="mt-2 whitespace-nowrap text-right">
-                  Order No
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Order No"
-                    {...field}
-                    className="col-span-3 w-[240px]"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          /> */}
-          {/* {error?.data?.zodError?.fieldErrors.name && (
-              <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
-                {error?.data?.zodError?.fieldErrors.name}
-              </span>
-            )} */}
           <FormField
             control={form.control}
             name="dateOrdered"
@@ -276,7 +252,6 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                       ))}
                   </SelectContent>
                 </Select>
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -292,7 +267,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                   control={form.control}
                   name={`orderItems.${index}.productId`}
                   render={({ field }) => (
-                    <FormItem className="grid grid-cols-4 items-center gap-4">
+                    <FormItem className="grid grid-cols-4 items-center gap-x-4">
                       <FormLabel className="mt-2 text-right">Product</FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -316,7 +291,6 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                             ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -324,14 +298,13 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                   control={form.control}
                   name={`orderItems.${index}.quantity`}
                   render={({ field }) => (
-                    <FormItem className="grid grid-cols-4 items-center gap-4">
+                    <FormItem className="grid grid-cols-4 items-center gap-x-4">
                       <FormLabel className="mt-2 text-right">
                         Quantity
                       </FormLabel>
                       <FormControl>
                         <Input {...field} className="col-span-3 w-[240px]" />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -352,7 +325,6 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -385,17 +357,22 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
           Add More
         </Button>
 
-        <div className="absolute bottom-16 right-8 w-full">
-          <Button type="button" variant="ghost" onClick={handleCancel}>
+        <div className="absolute bottom-16 right-8 space-x-4">
+          <Button
+            type="button"
+            variant="ghost"
+            size="lg"
+            onClick={handleCancel}
+          >
             Cancel
           </Button>
           {isLoading ? (
-            <Button disabled className="w-1/3">
+            <Button disabled>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Please wait
             </Button>
           ) : (
-            <Button type="submit" disabled={disabled} size="lg">
+            <Button type="submit" size="lg" disabled={disabled}>
               Submit
             </Button>
           )}
