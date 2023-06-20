@@ -31,6 +31,8 @@ import { toast } from "~/ui/use-toast";
 import { api } from "~/utils/api";
 import { wait } from "~/utils/wait";
 import { ScrollArea } from "../ui/scroll-area";
+import { useSession } from "next-auth/react";
+import { formattedOrderNumber } from "~/utils/formattedOrderNumber";
 
 type Props = {
   open: boolean;
@@ -39,9 +41,14 @@ type Props = {
 
 export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
   // Queries
+  const session = useSession();
+  const userIdfromSession = session.data?.user.id as string;
   const companiesQuery = api.company.companyList.useQuery();
   const usersQuery = api.user.getAll.useQuery();
   const productsQuery = api.product.getAll.useQuery();
+  const getAllSaleOrderNumberQuery = api.sale.getAll.useQuery(undefined, {
+    select: (data) => data.map((data) => data.orderNumber),
+  });
 
   // Mutations
   const utils = api.useContext();
@@ -70,16 +77,16 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
   type CreateSaleSchema = z.infer<typeof createSaleSchema>;
 
   const defaultValues: CreateSaleSchema = {
-    orderNumber: "",
+    orderNumber: "ordernumberdsd",
     dateOrdered: new Date(),
-    companyId: undefined,
-    userId: "clitzadn80000xhpo0ita97o8",
+    companyId: companiesQuery.data?.[0]?.id as string,
+    userId: userIdfromSession,
     status: "QUOTATION",
     orderItems: [
       {
-        productId: undefined,
-        quantity: 0,
-        description: "",
+        productId: productsQuery.data?.[0]?.id as string,
+        quantity: 12,
+        description: "reree qffdfdf fdfdf",
       },
     ],
     totalPrice: 12345600,
@@ -97,18 +104,22 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
   });
 
   function onSubmit(values: z.infer<typeof createSaleSchema>) {
-    const {
-      orderNumber,
-      dateOrdered,
-      companyId,
-      userId,
-      status,
-      orderItems,
-      totalPrice,
-    } = values;
+    const { dateOrdered, companyId, userId, status, orderItems, totalPrice } =
+      values;
+
+    // generate orderNumber
+    const generateOrderNumber = formattedOrderNumber(dateOrdered);
+    const hasSameOrderNumber =
+      getAllSaleOrderNumberQuery.status === "success" &&
+      getAllSaleOrderNumberQuery.data.some(
+        (orderNum) => orderNum === generateOrderNumber
+      );
+    const orderNumber = hasSameOrderNumber
+      ? formattedOrderNumber(generateOrderNumber)
+      : generateOrderNumber;
 
     // const totalPrice = parseFloat(inputTotalPrice.replace(/,/g, ""));
-    mutate({
+    console.log({
       orderNumber,
       dateOrdered,
       companyId,
@@ -129,7 +140,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
         className="grid gap-4 py-4"
       >
         <div className="grid grid-cols-2 items-center">
-          <FormField
+          {/* <FormField
             control={form.control}
             name="orderNumber"
             render={({ field }) => (
@@ -147,7 +158,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           {/* {error?.data?.zodError?.fieldErrors.name && (
               <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
                 {error?.data?.zodError?.fieldErrors.name}
