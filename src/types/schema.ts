@@ -39,26 +39,26 @@ export const createPicListSchema = z.array(
 export const upsertPicSchema = (z.object({
   id: z.string().cuid(),
   companyId: z.string().cuid(),
-  name: z.string().min(3, { message: "min length is 3" }).max(20, { message: "max length is 20" }),
+  name: z.string().min(3, { message: "min 3 characters long" }).max(20, { message: "max length is 20" }),
   email: z.string().email().nullable(),
-  position: z.string().min(3, { message: "min length is 3" }).max(20, { message: "max length is 20" }).nullable(),
-  createName: z.string().min(3, { message: "min length is 3" }).max(20, { message: "max length is 20" }),
+  position: z.string().min(3, { message: "min 3 characters long" }).max(20, { message: "max length is 20" }).nullable(),
+  createName: z.string().min(3, { message: "min 3 characters long" }).max(20, { message: "max length is 20" }),
   createEmail: z.string().email().nullable(),
-  createPosition: z.string().min(3, { message: "min length is 3" }).max(20, { message: "max length is 20" }).nullable(),
+  createPosition: z.string().min(3, { message: "min 3 characters long" }).max(20, { message: "max length is 20" }).nullable(),
 }))
 
 export const createSaleSchema = z.object({
-  orderNumber: z.string(),
+  orderNumber: z.string().min(8),
   dateOrdered: z.date(),
-  companyId: z.string().cuid(),
+  companyId: z.string().cuid().optional(),
   status: z.nativeEnum(StatusSaleOrder),
   userId: z.string().cuid(),
-  totalPrice: z.number(),
+  totalPrice: z.number().min(1, { message: "min 1" }),
   orderItems: z.array(
     z.object({
-      quantity: z.number(),
-      description: z.string(),
-      productId: z.string().cuid(),
+      quantity: z.number().min(1, { message: "min 1" }),
+      description: z.string().min(8, { message: "min 8 characters long" }),
+      productId: z.string().cuid().optional(),
     })
   )
 })

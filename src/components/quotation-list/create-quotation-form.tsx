@@ -70,16 +70,16 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
   type CreateSaleSchema = z.infer<typeof createSaleSchema>;
 
   const defaultValues: CreateSaleSchema = {
-    orderNumber: "123fd",
+    orderNumber: "",
     dateOrdered: new Date(),
-    companyId: "cliv5hhii0009xha5xvyuj8l1",
+    companyId: undefined,
     userId: "clitzadn80000xhpo0ita97o8",
     status: "QUOTATION",
     orderItems: [
       {
-        productId: "cliyaf7c80000xh7fsbtflunh",
-        quantity: 12,
-        description: "descrip",
+        productId: undefined,
+        quantity: 0,
+        description: "",
       },
     ],
     totalPrice: 12345600,
@@ -126,7 +126,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
       <form
         // *NOTE https://github.com/orgs/react-hook-form/discussions/8622
         onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
-        className="kurt grid gap-4 py-4"
+        className="grid gap-4 py-4"
       >
         <div className="grid grid-cols-2 items-center">
           <FormField
@@ -208,7 +208,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                 >
                   <FormControl className="col-span-3 w-[240px] capitalize">
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a customer to display" />
+                      <SelectValue placeholder="Select customer" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -240,7 +240,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                 >
                   <FormControl className="col-span-3 w-[240px]">
                     <SelectTrigger>
-                      <SelectValue placeholder="Select a user to display" />
+                      <SelectValue placeholder="Select user" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -277,7 +277,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                       >
                         <FormControl className="col-span-3 w-[240px] capitalize">
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a product to display" />
+                            <SelectValue placeholder="Select product" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
