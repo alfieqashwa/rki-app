@@ -4,9 +4,9 @@ import id from "date-fns/locale/id";
 import { Building, Package, Tag, User } from "lucide-react";
 import Link from "next/link";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
+import { Button } from "~/ui/button";
 import { Checkbox } from "~/ui/checkbox";
 import { type RouterOutputs } from "~/utils/api";
-import { Button } from "../ui/button";
 import { RowSaleActions } from "./row-sale-actions";
 
 export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
@@ -122,6 +122,10 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
     },
     {
       id: "actions",
-      cell: ({ row }) => <RowSaleActions {...row.original} />,
+      cell: ({
+        row: {
+          original: { id, orderNumber },
+        },
+      }) => <RowSaleActions id={id} orderNumber={orderNumber} />,
     },
   ];

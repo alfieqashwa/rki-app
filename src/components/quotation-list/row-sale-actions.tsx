@@ -8,12 +8,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/ui/dropdown-menu";
-import { type RouterOutputs } from "~/utils/api";
 import { DeleteSale } from "./delete-sale";
 import { UpdateQuotation } from "./update-quotation";
-// import { UpdateSale } from "./update-sale";
 
-export function RowSaleActions(props: RouterOutputs["sale"]["getAll"][0]) {
+type Props = {
+  id: string;
+  orderNumber: string;
+};
+
+export function RowSaleActions(props: Props) {
   const [open, setOpen] = useState(false);
   console.log(`PROPS::: `, props);
 
