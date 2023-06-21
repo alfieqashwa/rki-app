@@ -10,10 +10,13 @@ import {
 } from "~/ui/dropdown-menu";
 import { type RouterOutputs } from "~/utils/api";
 import { DeleteSale } from "./delete-sale";
+import { UpdateQuotation } from "./update-quotation";
 // import { UpdateSale } from "./update-sale";
 
 export function RowSaleActions(props: RouterOutputs["sale"]["getAll"][0]) {
   const [open, setOpen] = useState(false);
+  console.log(`PROPS::: `, props);
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -26,9 +29,9 @@ export function RowSaleActions(props: RouterOutputs["sale"]["getAll"][0]) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        {/* <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <UpdateSale props={props} open={open} setOpen={setOpen} />
-        </DropdownMenuItem> */}
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+          <UpdateQuotation id={props.id} orderNumber={props.orderNumber} />
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
           <DeleteSale
