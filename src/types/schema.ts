@@ -53,13 +53,28 @@ export const createSaleSchema = z.object({
   companyId: z.string().cuid(),
   status: z.nativeEnum(StatusSaleOrder),
   userId: z.string().cuid(),
-  // totalPrice: z.coerce.number().min(1, { message: "min 1" }),
   orderItems: z.array(
     z.object({
       quantity: z.coerce.number().min(1, { message: "min 1" }),
       description: z.string().min(8, { message: "min 8 characters long" }),
       productId: z.string().cuid(),
     })
+  )
+})
+
+export const updateSaleSchema = z.object({
+  id: z.string().cuid(),
+  orderNumber: z.string().min(8),
+  dateOrdered: z.date(),
+  companyId: z.string().cuid(),
+  userId: z.string().cuid(),
+  orderItems: z.array(
+    z.object({
+      id: z.string().cuid(),
+      quantity: z.number().min(1, { message: "min 1" }),
+      description: z.string().min(8, { message: "min 8 characters long" }),
+      productId: z.string().cuid(),
+    }).required()
   )
 })
 

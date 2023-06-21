@@ -39,7 +39,6 @@ const SaleOrderByIdPage: NextPage = () => {
       enabled: !!saleOrderId,
       select: (data) => ({
         orderNumber: data.map((d) => d.saleOrder?.orderNumber)[0],
-        status: data.map((d) => d.saleOrder?.status)[0],
         orderItems: data,
         totalPrice: data.reduce(
           (acc, curr) => acc + curr.quantity * curr.product.salePrice,
@@ -108,6 +107,7 @@ const SaleOrderByIdPage: NextPage = () => {
           </TabsContent>
         </Tabs>
       </div>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </Layout>
   );
 };

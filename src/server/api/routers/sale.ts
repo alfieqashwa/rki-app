@@ -3,7 +3,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc"
-import { createSaleSchema } from "~/types/schema"
+import { createSaleSchema, updateSaleSchema } from "~/types/schema"
 
 export const saleRouter = createTRPCRouter({
 
@@ -36,6 +36,43 @@ export const saleRouter = createTRPCRouter({
             status,
             orderItems: {
               createMany: {
+                data: orderItems
+              }
+            }
+          }
+        })
+      } catch (err) {
+        console.error(err)
+      }
+    }),
+  update: protectedProcedure
+    .input(updateSaleSchema)
+    .mutation(async ({
+      ctx,
+      input: {
+        id,
+        orderNumber,
+        dateOrdered,
+        companyId,
+        userId,
+        orderItems
+      }
+    }) => {
+      try {
+        return await ctx.prisma.saleOrder.update({
+          where: { id },
+          data: {
+            orderNumber,
+            dateOrdered,
+            companyId,
+            userId,
+            orderItems: {
+              updateMany: {
+                where: {
+                  saleOrderId: {
+                    contains: id
+                  }
+                },
                 data: orderItems
               }
             }
