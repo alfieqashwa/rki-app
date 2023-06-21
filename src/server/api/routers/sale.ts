@@ -14,6 +14,14 @@ export const saleRouter = createTRPCRouter({
       orderBy: { updatedAt: "desc" }
     })
   }),
+  getById: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .query(async ({ ctx, input: { id } }) => {
+      return await ctx.prisma.saleOrder.findUnique({
+        where: { id },
+        include: { company: true, user: true, orderItems: true }
+      })
+    }),
 
   // Mutations
   create: protectedProcedure
