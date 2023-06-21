@@ -75,9 +75,15 @@ const SaleOrderByIdPage: NextPage = () => {
                 <h2 className="text-2xl font-semibold tracking-tight">
                   SO: {data?.orderNumber}
                 </h2>
-                <p className="text-muted-foreground">
-                  Total Price: {totalPrice}
-                </p>
+                <p className="text-muted-foreground">Detail of sale order.</p>
+              </div>
+              <div className="flex flex-col items-center space-y-1 rounded-lg border-2 px-3 py-2">
+                <h2 className="text-xl font-semibold tracking-tight">
+                  Total Price
+                </h2>
+                <h2 className="text-2xl font-semibold tracking-tight">
+                  {totalPrice}
+                </h2>
               </div>
             </div>
             <Separator className="my-4" />
