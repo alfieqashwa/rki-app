@@ -86,10 +86,9 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
       {
         productId: productsQuery.data?.[0]?.id as string,
         quantity: 0,
-        description: "",
+        description: "Lorem ipsum bla bla bla",
       },
     ],
-    totalPrice: 123456,
   };
 
   const form = useForm<CreateSaleSchema>({
@@ -104,8 +103,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
   });
 
   function onSubmit(values: z.infer<typeof createSaleSchema>) {
-    const { dateOrdered, companyId, userId, status, orderItems, totalPrice } =
-      values;
+    const { dateOrdered, companyId, userId, status, orderItems } = values;
 
     // generate orderNumber
     const generateOrderNumber = formattedOrderNumber(dateOrdered);
@@ -139,7 +137,6 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
       userId,
       status,
       orderItems,
-      totalPrice,
     });
   }
 

@@ -1,11 +1,13 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { Banknote, Building, Package, Tag, User } from "lucide-react";
+import { format } from "date-fns";
+import id from "date-fns/locale/id";
+import { Building, Package, Tag, User } from "lucide-react";
+import Link from "next/link";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
 import { Checkbox } from "~/ui/checkbox";
 import { type RouterOutputs } from "~/utils/api";
+import { Button } from "../ui/button";
 import { RowSaleActions } from "./row-sale-actions";
-import id from "date-fns/locale/id";
-import { format } from "date-fns";
 
 export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
   [
@@ -101,38 +103,20 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
       },
     },
     {
-      accessorKey: "orderItems",
-      accessorFn: (row) => row.orderItems?.map((order) => order.id),
+      accessorKey: "id",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Order Items" />
+        <DataTableColumnHeader
+          className="whitespace-nowrap"
+          column={column}
+          title="Order Items"
+        />
       ),
       cell: ({ row }) => {
+        const id = row.getValue("id");
         return (
-          <div className="flex items-center">
-            <Banknote className="mr-2 h-4 w-4 text-muted-foreground" />
-            <span className="whitespace-nowrap capitalize">
-              {row.getValue("orderItems")}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "totalPrice",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Total Price" />
-      ),
-      cell: ({ row }) => {
-        const totalPrice = row.getValue("totalPrice");
-        const formatPrice = new Intl.NumberFormat("id-ID", {
-          style: "currency",
-          currency: "IDR",
-        }).format(Number(totalPrice));
-        return (
-          <div className="flex items-center">
-            <Banknote className="mr-2 h-4 w-4 text-muted-foreground" />
-            <span className="whitespace-nowrap capitalize">{formatPrice}</span>
-          </div>
+          <Button variant="link" className="flex items-center">
+            <Link href={`/sale/${id as string}`}>Detail</Link>
+          </Button>
         );
       },
     },

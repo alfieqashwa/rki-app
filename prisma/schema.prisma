@@ -180,7 +180,7 @@ model SaleOrder {
     dateOrdered DateTime        @default(now()) @map("date_ordered")
     company     Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
     companyId   String          @map("company_id")
-    totalPrice  Float           @default(0) @map("total_price")
+    totalPrice  Float?          @default(0) @map("total_price")
     orderItems  OrderItem[]
     status      StatusSaleOrder @default(QUOTATION)
 

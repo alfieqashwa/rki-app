@@ -1,4 +1,3 @@
-import { StatusSaleOrder } from "@prisma/client"
 import { z } from "zod"
 import {
   createTRPCRouter,
@@ -11,7 +10,7 @@ export const saleRouter = createTRPCRouter({
   // Queries
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.saleOrder.findMany({
-      include: { company: true, orderItems: true, user: true },
+      include: { company: true, user: true, orderItems: { include: { product: true } } },
       orderBy: { updatedAt: "desc" }
     })
   }),
@@ -25,7 +24,6 @@ export const saleRouter = createTRPCRouter({
       companyId,
       userId,
       status,
-      totalPrice,
       orderItems,
     } }) => {
       try {
@@ -36,7 +34,6 @@ export const saleRouter = createTRPCRouter({
             companyId,
             userId,
             status,
-            totalPrice,
             orderItems: {
               createMany: {
                 data: orderItems
