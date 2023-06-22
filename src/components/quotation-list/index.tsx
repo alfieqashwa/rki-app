@@ -14,7 +14,6 @@ export const SaleList = (): JSX.Element => {
       {salesQuery.status === "success" && (
         <SaleTable data={salesQuery.data} columns={columnsSale} />
       )}
-      <pre>{JSON.stringify(salesQuery.data, null, 2)}</pre>
     </div>
   );
 };

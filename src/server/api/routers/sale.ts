@@ -59,31 +59,19 @@ export const saleRouter = createTRPCRouter({
       ctx,
       input: {
         id,
-        orderNumber,
         dateOrdered,
         companyId,
         userId,
-        orderItems
       }
     }) => {
       try {
+
         return await ctx.prisma.saleOrder.update({
           where: { id },
           data: {
-            orderNumber,
             dateOrdered,
             companyId,
             userId,
-            orderItems: {
-              updateMany: {
-                where: {
-                  saleOrderId: {
-                    contains: id
-                  }
-                },
-                data: orderItems
-              }
-            }
           }
         })
       } catch (err) {

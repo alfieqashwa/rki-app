@@ -1,15 +1,15 @@
-import { Pen, PlusCircle } from "lucide-react";
-import { Button } from "~/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "~/ui/sheet";
-import { UpdateQuotationForm } from "./update-quotation-form";
+import { Pen } from "lucide-react";
 import { useState } from "react";
+import { api } from "~/utils/api";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { UpdateQuotationForm } from "./update-quotation-form";
 
 type Props = {
   id: string;
@@ -18,23 +18,31 @@ type Props = {
 
 export const UpdateQuotation = ({ id, orderNumber }: Props): JSX.Element => {
   const [open, setOpen] = useState(false);
+  const { data, status } = api.sale.getById.useQuery({ id }, { enabled: !!id });
   return (
-    <Sheet>
-      <SheetTrigger className="flex w-full items-center">
-        <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-        Edit
-      </SheetTrigger>
-      <SheetContent className="w-2/3">
-        <SheetHeader>
-          <SheetTitle>
-            Update Quotation<span>{orderNumber}</span>
-          </SheetTitle>
-          <SheetDescription>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        asChild
+        className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+      >
+        <div>
+          <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+          Edit
+        </div>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>
+            Order No: <span>{orderNumber}</span>
+          </DialogTitle>
+          <DialogDescription>
             Fill the form to update quotation and click the Submit button.
-          </SheetDescription>
-        </SheetHeader>
-        <UpdateQuotationForm id={id} open={open} setOpen={setOpen} />
-      </SheetContent>
-    </Sheet>
+          </DialogDescription>
+        </DialogHeader>
+        {status === "success" && (
+          <UpdateQuotationForm data={data} open={open} setOpen={setOpen} />
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
