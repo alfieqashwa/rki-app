@@ -3,6 +3,7 @@ import { Package } from "lucide-react";
 import { DataTableColumnHeader } from "~/components/table/data-table-column-header";
 import { Checkbox } from "~/ui/checkbox";
 import { type RouterOutputs } from "~/utils/api";
+import { RowOrderItemActions } from "./row-order-item-actions";
 
 export const columnsOrderItem: ColumnDef<
   RouterOutputs["orderItem"]["getAllOrderItemBySaleId"][number]
@@ -131,82 +132,8 @@ export const columnsOrderItem: ColumnDef<
       );
     },
   },
-  // {
-  //   accessorKey: "Status",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Date Order" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const formattedDateOrder = format(row.getValue("dateOrdered"), "PPPP", {
-  //       locale: id,
-  //     });
-  //     return (
-  //       <div className="flex items-center">
-  //         <Tag className="mr-2 h-4 w-4 text-muted-foreground" />
-  //         <span className="whitespace-nowrap capitalize">
-  //           {formattedDateOrder}
-  //         </span>
-  //       </div>
-  //     );
-  //   },
-  //   filterFn: (row, id, value: string) => {
-  //     return value.includes(row.getValue(id));
-  //   },
-  // },
-  // {
-  //   accessorKey: "company",
-  //   accessorFn: (row) => row.company?.name,
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Customer" />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <div className="flex items-center">
-  //       <Building className="mr-2 h-4 w-4 text-muted-foreground" />
-  //       <span>{row.getValue("company")}</span>
-  //     </div>
-  //   ),
-  //   filterFn: (row, id, value: string) => {
-  //     return value.includes(row.getValue(id));
-  //   },
-  // },
-  // {
-  //   accessorKey: "user",
-  //   accessorFn: (row) => row.user?.name,
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="User" />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <div className="flex items-center">
-  //       <User className="mr-2 h-4 w-4 text-muted-foreground" />
-  //       <span className="whitespace-nowrap capitalize">
-  //         {row.getValue("user")}
-  //       </span>
-  //     </div>
-  //   ),
-  //   filterFn: (row, id, value: string) => {
-  //     return value.includes(row.getValue(id));
-  //   },
-  // },
-  // {
-  //   accessorKey: "id",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader
-  //       className="whitespace-nowrap"
-  //       column={column}
-  //       title="Order Items"
-  //     />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const id = row.getValue("id");
-  //     return (
-  //       <Button variant="link" className="flex items-center">
-  //         <Link href={`/sale/${id as string}`}>Detail</Link>
-  //       </Button>
-  //     );
-  //   },
-  // },
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => <RowOrderItemActions {...row.original} />,
-  // },
+  {
+    id: "actions",
+    cell: ({ row }) => <RowOrderItemActions {...row.original} />,
+  },
 ];

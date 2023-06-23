@@ -108,7 +108,7 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
         <DataTableColumnHeader
           className="whitespace-nowrap"
           column={column}
-          title="Order Items"
+          title="Order Item"
         />
       ),
       cell: ({ row }) => {

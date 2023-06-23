@@ -14,5 +14,16 @@ export const orderItemRouter = createTRPCRouter({
         where: { saleOrderId },
         include: { product: true, saleOrder: { select: { orderNumber: true, status: true } } }
       })
+    }),
+  delete: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ ctx, input: { id } }) => {
+      try {
+        return await ctx.prisma.orderItem.delete({
+          where: { id }
+        })
+      } catch (err) {
+        console.error(err)
+      }
     })
 })
