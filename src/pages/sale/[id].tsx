@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import { OrderItemList } from "~/components/order-item-list";
 import { AddOrderItem } from "~/components/order-item-list/add-order-item";
+import { TotalPrice } from "~/components/order-item-list/total-price";
 import Layout from "~/components/template/layout";
 import { authOptions } from "~/server/auth";
 import { Separator } from "~/ui/separator";
@@ -108,29 +109,6 @@ const SaleOrderByIdPage: NextPage = () => {
 
 export default SaleOrderByIdPage;
 
-type TotalPriceProps = {
-  totalPrice: number;
-};
-
-const TotalPrice = ({ totalPrice }: TotalPriceProps) => {
-  // Value Add Tax
-  const VAT = 11 / 100;
-  const sumOfTax = totalPrice * VAT;
-
-  const formattedTotalPrice = new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-  }).format(Number(totalPrice + sumOfTax));
-
-  return (
-    <div className="flex flex-col items-center space-y-1 rounded-xl border-4 px-6 py-2">
-      <h2 className="text-xl font-semibold tracking-tight">Total Price</h2>
-      <h2 className="tracking-tigh text-2xl font-semibold text-primary">
-        {formattedTotalPrice}
-      </h2>
-    </div>
-  );
-};
 /**
  * SaleOrderNumber,
  * Status,
