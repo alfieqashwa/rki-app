@@ -113,10 +113,14 @@ type TotalPriceProps = {
 };
 
 const TotalPrice = ({ totalPrice }: TotalPriceProps) => {
+  // Value Add Tax
+  const VAT = 11 / 100;
+  const sumOfTax = totalPrice * VAT;
+
   const formattedTotalPrice = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
-  }).format(Number(totalPrice));
+  }).format(Number(totalPrice + sumOfTax));
 
   return (
     <div className="flex flex-col items-center space-y-1 rounded-xl border-4 px-6 py-2">
