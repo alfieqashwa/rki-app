@@ -47,6 +47,13 @@ export const upsertPicSchema = (z.object({
   createPosition: z.string().min(3, { message: "min 3 characters long" }).max(20, { message: "max length is 20" }).nullable(),
 }))
 
+export const orderItemSchema = z.object({
+  id: z.string().cuid(),
+  productId: z.string().cuid(),
+  quantity: z.coerce.number().min(1, { message: "min 1" }),
+  description: z.string().min(8, { message: "min 8 characters long" }),
+})
+
 export const createSaleSchema = z.object({
   orderNumber: z.string().min(8),
   dateOrdered: z.date(),
@@ -55,11 +62,10 @@ export const createSaleSchema = z.object({
   userId: z.string().cuid(),
   orderItems: z.array(
     z.object({
+      productId: z.string().cuid(),
       quantity: z.coerce.number().min(1, { message: "min 1" }),
       description: z.string().min(8, { message: "min 8 characters long" }),
-      productId: z.string().cuid(),
-    })
-  )
+    }))
 })
 
 export const updateSaleSchema = z.object({

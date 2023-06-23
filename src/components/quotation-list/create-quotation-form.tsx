@@ -76,7 +76,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
 
   type CreateSaleSchema = z.infer<typeof createSaleSchema>;
 
-  const defaultValues: CreateSaleSchema = {
+  const defaultValues: Partial<CreateSaleSchema> = {
     orderNumber: "defaultquotation",
     dateOrdered: new Date(),
     companyId: companiesQuery.data?.[0]?.id as string,
