@@ -25,17 +25,17 @@ export function DeleteSale({ id, name, open, setOpen }: Props) {
   const utils = api.useContext();
   const { toast } = useToast();
 
-  const { mutate, isLoading } = api.product.delete.useMutation({
+  const { mutate, isLoading } = api.sale.deleteQuotation.useMutation({
     async onSuccess() {
       // delete user from team
       toast({
         title: "Succeed!",
         variant: "default",
-        description: "Your product has been deleted.",
+        description: "Your quotation has been deleted.",
       });
       /* auto-closed after succeed submit the dialog form */
       await wait().then(() => setOpen(!open));
-      await utils.product.getAll.invalidate();
+      await utils.sale.getAll.invalidate();
     },
     onError() {
       toast({
@@ -69,7 +69,7 @@ export function DeleteSale({ id, name, open, setOpen }: Props) {
             <DialogDescription asChild>
               <p>
                 You can&apos;t undo this changes. Click delete when you&apos;re
-                sure to delete product
+                sure to delete quotation
                 <span className="px-1.5 font-medium uppercase text-amber-300">
                   {name}.
                 </span>
