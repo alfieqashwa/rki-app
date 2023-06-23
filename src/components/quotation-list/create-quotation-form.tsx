@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, isValid } from "date-fns";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { type z } from "zod";
 import { cn } from "~/lib/utils";
@@ -17,6 +18,7 @@ import {
 } from "~/ui/form";
 import { Input } from "~/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "~/ui/popover";
+import { ScrollArea } from "~/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -28,17 +30,20 @@ import { Separator } from "~/ui/separator";
 import { Textarea } from "~/ui/textarea";
 import { ToastAction } from "~/ui/toast";
 import { toast } from "~/ui/use-toast";
-import { type RouterOutputs, api } from "~/utils/api";
-import { wait } from "~/utils/wait";
-import { ScrollArea } from "../ui/scroll-area";
-import { useSession } from "next-auth/react";
+import { api, type RouterOutputs } from "~/utils/api";
 import { formattedOrderNumber } from "~/utils/formattedOrderNumber";
-import { UpdateProduct } from "../product-list/update-product";
+import { wait } from "~/utils/wait";
 
 type Props = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
+type OrderItem = {
+  quantity: number;
+  description: string;
+  productId: string;
+};
+type Product = RouterOutputs["product"]["getAll"][0];
 
 export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
   // Queries
@@ -62,6 +67,40 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
     }
   );
 
+  function validateOrder(orderItems: OrderItem[], products: Product[]) {
+    return orderItems.reduce((isValid, orderItem) => {
+      const product = products.find((p) => p.id === orderItem.productId);
+
+      if (!product || !product.countInStock) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: `Product with ID ${orderItem.productId} not found.`,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+        console.error(`Product with ID ${orderItem.productId} not found.`);
+        return false;
+      }
+
+      if (
+        orderItem.quantity > product.countInStock ||
+        product.countInStock === 0
+      ) {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: `Product ${product.name} is not enough stock, Dude!`,
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+        console.error(
+          `Quantity for product with ID ${orderItem.productId} exceeds available stock.`
+        );
+        return false;
+      }
+
+      return isValid;
+    }, true);
+  }
   const { mutate, isLoading } = api.sale.create.useMutation({
     async onSuccess() {
       toast({
@@ -138,54 +177,12 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
       ? formattedOrderNumber(generateNewOrderNumber)
       : generateOrderNumber;
 
-    const json = JSON.stringify(orderItems, null, 22);
-    console.log(json);
-
-    type OrderItem = {
-      quantity: number;
-      description: string;
-      productId: string;
-    };
-    type Product = RouterOutputs["product"]["getAll"][0];
-
-    function validateOrder(orderItems: OrderItem[], products: Product[]) {
-      return orderItems.reduce((isValid, orderItem) => {
-        const product = products.find((p) => p.id === orderItem.productId);
-
-        if (!product || !product.countInStock) {
-          toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: `Product with ID ${orderItem.productId} not found.`,
-            action: <ToastAction altText="Try again">Try again</ToastAction>,
-          });
-          console.error(`Product with ID ${orderItem.productId} not found.`);
-          return false;
-        }
-
-        if (
-          orderItem.quantity > product.countInStock ||
-          product.countInStock === 0
-        ) {
-          toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: `Product ${product.name} is not enough stock, Dude!`,
-            action: <ToastAction altText="Try again">Try again</ToastAction>,
-          });
-          console.error(
-            `Quantity for product with ID ${orderItem.productId} exceeds available stock.`
-          );
-          return false;
-        }
-
-        return isValid;
-      }, true);
-    }
+    // const json = JSON.stringify(orderItems, null, 22);
+    // console.log(json);
 
     // stockInCount validation
     const isValidOrder = validateOrder(orderItems, productsQuery.data as []);
-    console.log(isValidOrder);
+    // console.log(isValidOrder);
 
     if (isValidOrder) {
       orderItems.forEach((orderItem) => {
@@ -199,6 +196,14 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
             countInStock: (product.countInStock -= orderItem.quantity),
           });
         }
+        mutate({
+          orderNumber,
+          dateOrdered,
+          companyId,
+          userId,
+          status,
+          orderItems,
+        });
       });
     } else {
       toast({
@@ -207,22 +212,9 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
         description: "Invalid order. Stock count not updated.",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
-      console.log("Invalid order. Stock count not updated.");
+      console.error("Invalid order. Stock count not updated.");
     }
-
-    console.log(`PRODUCTS::: `, productsQuery.data);
-
-    console.log({
-      orderNumber,
-      dateOrdered,
-      companyId,
-      userId,
-      status,
-      orderItems,
-    });
   }
-
-  const disabled = false;
 
   return (
     <Form {...form}>
@@ -451,7 +443,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
               Please wait
             </Button>
           ) : (
-            <Button type="submit" size="lg" disabled={disabled}>
+            <Button type="submit" size="lg">
               Submit
             </Button>
           )}
