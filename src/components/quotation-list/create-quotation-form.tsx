@@ -33,6 +33,7 @@ import { wait } from "~/utils/wait";
 import { ScrollArea } from "../ui/scroll-area";
 import { useSession } from "next-auth/react";
 import { formattedOrderNumber } from "~/utils/formattedOrderNumber";
+import { UpdateProduct } from "../product-list/update-product";
 
 type Props = {
   open: boolean;
@@ -145,21 +146,22 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
       description: string;
       productId: string;
     };
+    type Product = RouterOutputs["product"]["getAll"][0];
 
-    function validateOrder(
-      orderItems: OrderItem[],
-      products: RouterOutputs["product"]["getAll"]
-    ) {
+    function validateOrder(orderItems: OrderItem[], products: Product[]) {
       return orderItems.reduce((isValid, orderItem) => {
         const product = products.find((p) => p.id === orderItem.productId);
 
         if (!product || !product.countInStock) {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: `Product with ID ${orderItem.productId} not found.`,
+            action: <ToastAction altText="Try again">Try again</ToastAction>,
+          });
           console.error(`Product with ID ${orderItem.productId} not found.`);
           return false;
         }
-
-        const updatedCountInStock = (product.countInStock -=
-          orderItem.quantity);
 
         if (
           orderItem.quantity > product.countInStock ||
@@ -171,12 +173,10 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
             description: `Product ${product.name} is not enough stock, Dude!`,
             action: <ToastAction altText="Try again">Try again</ToastAction>,
           });
-        } else {
-          // Update the stockInCount based on the ordered quantity
-          void updateProductStockMutation.mutateAsync({
-            id: product.id,
-            countInStock: updatedCountInStock,
-          });
+          console.error(
+            `Quantity for product with ID ${orderItem.productId} exceeds available stock.`
+          );
+          return false;
         }
 
         return isValid;
@@ -185,8 +185,32 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
 
     // stockInCount validation
     const isValidOrder = validateOrder(orderItems, productsQuery.data as []);
-    console.log(`Is the order valid? ${JSON.stringify(isValidOrder)}`);
-    console.log(productsQuery.data);
+    console.log(isValidOrder);
+
+    if (isValidOrder) {
+      orderItems.forEach((orderItem) => {
+        const product = productsQuery.data?.find(
+          (p) => p.id === orderItem.productId
+        );
+
+        if (product && product.countInStock) {
+          void updateProductStockMutation.mutateAsync({
+            id: product.id,
+            countInStock: (product.countInStock -= orderItem.quantity),
+          });
+        }
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Invalid order. Stock count not updated.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+      console.log("Invalid order. Stock count not updated.");
+    }
+
+    console.log(`PRODUCTS::: `, productsQuery.data);
 
     console.log({
       orderNumber,
