@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { type z } from "zod";
@@ -28,7 +28,7 @@ import { Separator } from "~/ui/separator";
 import { Textarea } from "~/ui/textarea";
 import { ToastAction } from "~/ui/toast";
 import { toast } from "~/ui/use-toast";
-import { api } from "~/utils/api";
+import { type RouterOutputs, api } from "~/utils/api";
 import { wait } from "~/utils/wait";
 import { ScrollArea } from "../ui/scroll-area";
 import { useSession } from "next-auth/react";
@@ -52,6 +52,14 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
 
   // Mutations
   const utils = api.useContext();
+
+  const updateProductStockMutation = api.product.updateCountInStock.useMutation(
+    {
+      async onSuccess() {
+        await utils.product.getAll.invalidate();
+      },
+    }
+  );
 
   const { mutate, isLoading } = api.sale.create.useMutation({
     async onSuccess() {
@@ -86,7 +94,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
       {
         productId: productsQuery.data?.[0]?.id as string,
         quantity: 0,
-        description: "Lorem ipsum bla bla bla",
+        description: "",
       },
     ],
   };
@@ -129,8 +137,58 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
       ? formattedOrderNumber(generateNewOrderNumber)
       : generateOrderNumber;
 
-    // const totalPrice = parseFloat(inputTotalPrice.replace(/,/g, ""));
-    mutate({
+    const json = JSON.stringify(orderItems, null, 22);
+    console.log(json);
+
+    type OrderItem = {
+      quantity: number;
+      description: string;
+      productId: string;
+    };
+
+    function validateOrder(
+      orderItems: OrderItem[],
+      products: RouterOutputs["product"]["getAll"]
+    ) {
+      return orderItems.reduce((isValid, orderItem) => {
+        const product = products.find((p) => p.id === orderItem.productId);
+
+        if (!product || !product.countInStock) {
+          console.error(`Product with ID ${orderItem.productId} not found.`);
+          return false;
+        }
+
+        const updatedCountInStock = (product.countInStock -=
+          orderItem.quantity);
+
+        if (
+          orderItem.quantity > product.countInStock ||
+          product.countInStock === 0
+        ) {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: `Product ${product.name} is not enough stock, Dude!`,
+            action: <ToastAction altText="Try again">Try again</ToastAction>,
+          });
+        } else {
+          // Update the stockInCount based on the ordered quantity
+          void updateProductStockMutation.mutateAsync({
+            id: product.id,
+            countInStock: updatedCountInStock,
+          });
+        }
+
+        return isValid;
+      }, true);
+    }
+
+    // stockInCount validation
+    const isValidOrder = validateOrder(orderItems, productsQuery.data as []);
+    console.log(`Is the order valid? ${JSON.stringify(isValidOrder)}`);
+    console.log(productsQuery.data);
+
+    console.log({
       orderNumber,
       dateOrdered,
       companyId,

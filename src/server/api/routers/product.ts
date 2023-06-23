@@ -9,9 +9,7 @@ export const productRouter = createTRPCRouter({
   // Queries
   getAll: protectedProcedure
     .query(async ({ ctx }) => {
-      return await ctx.prisma.product.findMany({
-        orderBy: { createdAt: "desc" }
-      })
+      return await ctx.prisma.product.findMany()
     }),
   // Mutations
   create: protectedProcedure
@@ -43,9 +41,7 @@ export const productRouter = createTRPCRouter({
           }
         },
       }),
-      countInStock: z.number().min(1, {
-        message: "min count in stock is 1"
-      }),
+      countInStock: z.number(),
       costPrice: z.number().min(1, {
         message: "min price in stock is 1"
       }),
@@ -99,9 +95,7 @@ export const productRouter = createTRPCRouter({
           }
         },
       }),
-      countInStock: z.number().min(1, {
-        message: "min count in stock is 1"
-      }),
+      countInStock: z.number(),
       costPrice: z.number().min(1, {
         message: "min price in stock is 1"
       }),
@@ -121,6 +115,21 @@ export const productRouter = createTRPCRouter({
             costPrice,
             salePrice
           }
+        })
+      } catch (err) {
+        console.error(err)
+      }
+    }),
+  updateCountInStock: protectedProcedure
+    .input(z.object({
+      id: z.string().cuid(),
+      countInStock: z.number()
+    }))
+    .mutation(async ({ ctx, input: { id, countInStock } }) => {
+      try {
+        return await ctx.prisma.product.update({
+          where: { id },
+          data: { countInStock }
         })
       } catch (err) {
         console.error(err)
