@@ -2,6 +2,7 @@ import { type GetServerSideProps, type NextPage } from "next";
 import { getServerSession } from "next-auth";
 import { useRouter } from "next/router";
 import { OrderItemList } from "~/components/order-item-list";
+import { AddOrderItem } from "~/components/order-item-list/add-order-item";
 import Layout from "~/components/template/layout";
 import { authOptions } from "~/server/auth";
 import { Separator } from "~/ui/separator";
@@ -48,10 +49,6 @@ const SaleOrderByIdPage: NextPage = () => {
     }
   );
 
-  const totalPrice = new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-  }).format(Number(data?.totalPrice));
   return (
     <Layout title="sale-order">
       <div className="h-full px-4 py-6 lg:px-8">
@@ -63,7 +60,9 @@ const SaleOrderByIdPage: NextPage = () => {
                 Preview
               </TabsTrigger>
             </TabsList>
-            <div className="ml-auto mr-4">{/* <AddQuotation /> */}</div>
+            <div className="ml-auto mr-4">
+              <AddOrderItem />
+            </div>
           </div>
           <TabsContent
             value="quotation"
@@ -76,14 +75,9 @@ const SaleOrderByIdPage: NextPage = () => {
                 </h2>
                 <p className="text-muted-foreground">Detail of sale order.</p>
               </div>
-              <div className="flex flex-col items-center space-y-1 rounded-lg border-2 px-3 py-2">
-                <h2 className="text-xl font-semibold tracking-tight">
-                  Total Price
-                </h2>
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  {totalPrice}
-                </h2>
-              </div>
+              {status === "success" && (
+                <TotalPrice totalPrice={data?.totalPrice} />
+              )}
             </div>
             <Separator className="my-4" />
             <OrderItemList orderItems={data?.orderItems} status={status} />
@@ -114,6 +108,25 @@ const SaleOrderByIdPage: NextPage = () => {
 
 export default SaleOrderByIdPage;
 
+type TotalPriceProps = {
+  totalPrice: number;
+};
+
+const TotalPrice = ({ totalPrice }: TotalPriceProps) => {
+  const formattedTotalPrice = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+  }).format(Number(totalPrice));
+
+  return (
+    <div className="flex flex-col items-center space-y-1 rounded-xl border-4 px-6 py-2">
+      <h2 className="text-xl font-semibold tracking-tight">Total Price</h2>
+      <h2 className="tracking-tigh text-2xl font-semibold text-primary">
+        {formattedTotalPrice}
+      </h2>
+    </div>
+  );
+};
 /**
  * SaleOrderNumber,
  * Status,

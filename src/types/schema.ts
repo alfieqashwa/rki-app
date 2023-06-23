@@ -54,6 +54,13 @@ export const orderItemSchema = z.object({
   description: z.string().min(8, { message: "min 8 characters long" }),
 })
 
+export const createOrderItemSchema = z.object({
+  quantity: z.coerce.number(),
+  description: z.string(),
+  productId: z.string().cuid(),
+  saleOrderId: z.string().cuid()
+})
+
 export const createSaleSchema = z.object({
   orderNumber: z.string().min(8),
   dateOrdered: z.date(),
@@ -73,11 +80,4 @@ export const updateSaleSchema = z.object({
   dateOrdered: z.date(),
   companyId: z.string().cuid(),
   userId: z.string().cuid(),
-})
-
-export const createOrderItemSchema = z.object({
-  quantity: z.number(),
-  description: z.string(),
-  productId: z.string().cuid(),
-  saleOrderId: z.string().cuid()
 })
