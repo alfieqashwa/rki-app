@@ -80,7 +80,7 @@ export const CreateOrderItemForm = ({ open, setOpen }: Props): JSX.Element => {
   });
 
   const getProductId = form.getValues("productId");
-  const getProductById = api.product.getById.useQuery(
+  const getCurrentStock = api.product.getById.useQuery(
     {
       id: getProductId,
     },
@@ -97,7 +97,7 @@ export const CreateOrderItemForm = ({ open, setOpen }: Props): JSX.Element => {
 
     // calculate new Stock In Count based on new updat update qty
     const CURRENT_QTY = 0 as const;
-    const currentStock = getProductById?.data as number;
+    const currentStock = getCurrentStock.data as number;
     const newStock = calculateNewStock(currentStock, CURRENT_QTY, quantity);
 
     if (newStock < 0) {
