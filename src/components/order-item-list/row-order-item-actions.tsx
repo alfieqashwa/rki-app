@@ -19,6 +19,8 @@ export function RowOrderItemActions(
 ) {
   const [open, setOpen] = useState(false);
 
+  console.log(`PROPS::: `, props);
+
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -37,6 +39,9 @@ export function RowOrderItemActions(
           <DeleteOrderItem
             id={props.id}
             name={props.product.name}
+            currentQty={props.quantity}
+            productId={props.productId}
+            currentStockInCount={props.product?.countInStock as number}
             open={open}
             setOpen={setOpen}
           />

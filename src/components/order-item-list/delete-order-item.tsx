@@ -12,18 +12,39 @@ import {
 import { ToastAction } from "~/ui/toast";
 import { useToast } from "~/ui/use-toast";
 import { api } from "~/utils/api";
+import { calculateNewStock } from "~/utils/new-stock";
 import { wait } from "~/utils/wait";
 
 type Props = {
   id: string;
   name: string;
+  currentQty: number;
+  productId: string;
+  currentStockInCount: number;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function DeleteOrderItem({ id, name, open, setOpen }: Props) {
+export function DeleteOrderItem({
+  id,
+  name,
+  currentQty,
+  productId,
+  currentStockInCount,
+  open,
+  setOpen,
+}: Props) {
   const utils = api.useContext();
   const { toast } = useToast();
+
+  // Mutations
+  const updateProductStockMutation = api.product.updateCountInStock.useMutation(
+    {
+      async onSuccess() {
+        await utils.product.getAll.invalidate();
+      },
+    }
+  );
 
   const { mutate, isLoading } = api.orderItem.delete.useMutation({
     async onSuccess() {
@@ -49,9 +70,30 @@ export function DeleteOrderItem({ id, name, open, setOpen }: Props) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    mutate({
-      id,
-    });
+    const UPDATED_QTY = 0 as const;
+
+    const newStock = calculateNewStock(
+      currentStockInCount,
+      currentQty,
+      UPDATED_QTY
+    );
+    // just in case, but actually no-need this validation on delete.
+    if (newStock < 0) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `Product ${name} is not enough stock, Dude!`,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    } else {
+      void updateProductStockMutation.mutateAsync({
+        id: productId,
+        countInStock: newStock,
+      });
+      mutate({
+        id,
+      });
+    }
   };
 
   return (
