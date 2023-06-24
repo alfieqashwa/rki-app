@@ -11,6 +11,14 @@ export const productRouter = createTRPCRouter({
     .query(async ({ ctx }) => {
       return await ctx.prisma.product.findMany()
     }),
+  getById: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .query(async ({ ctx, input: { id } }) => {
+      return await ctx.prisma.product.findUnique({
+        where: { id }
+      })
+    }),
+
   // Mutations
   create: protectedProcedure
     .input(z.object({

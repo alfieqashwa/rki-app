@@ -40,7 +40,6 @@ export const orderItemRouter = createTRPCRouter({
         })
       } catch (err) {
         console.error(err)
-
       }
     }),
   update: protectedProcedure

@@ -18,6 +18,7 @@ import { Textarea } from "~/ui/textarea";
 import { ToastAction } from "~/ui/toast";
 import { toast } from "~/ui/use-toast";
 import { api } from "~/utils/api";
+import { calculateNewStock } from "~/utils/new-stock";
 import { wait } from "~/utils/wait";
 
 type Props = {
@@ -33,6 +34,14 @@ export const CreateOrderItemForm = ({ open, setOpen }: Props): JSX.Element => {
   const { query } = useRouter();
   const saleOrderId = query.id as string;
   const utils = api.useContext();
+
+  const updateProductStockMutation = api.product.updateCountInStock.useMutation(
+    {
+      async onSuccess() {
+        await utils.product.getAll.invalidate();
+      },
+    }
+  );
 
   const { mutate, isLoading } = api.orderItem.create.useMutation({
     async onSuccess() {
@@ -70,17 +79,46 @@ export const CreateOrderItemForm = ({ open, setOpen }: Props): JSX.Element => {
     mode: "onChange",
   });
 
+  const getProductId = form.getValues("productId");
+  const getProductById = api.product.getById.useQuery(
+    {
+      id: getProductId,
+    },
+    {
+      enabled: !!getProductId,
+      select: (data) => data?.countInStock as number,
+    }
+  );
+
   function onSubmit(values: Partial<CreateOrderItemSchema>) {
     const productId = values.productId as string;
     const quantity = values.quantity as number;
     const description = values.description as string;
 
-    mutate({
-      saleOrderId,
-      productId,
-      quantity,
-      description,
-    });
+    // calculate new Stock In Count based on new updat update qty
+    const CURRENT_QTY = 0 as const;
+    const currentStock = getProductById?.data as number;
+    const newStock = calculateNewStock(currentStock, CURRENT_QTY, quantity);
+
+    if (newStock < 0) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `Not enough stock, Dude!`,
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    } else {
+      void updateProductStockMutation.mutateAsync({
+        id: productId,
+        countInStock: newStock,
+      });
+      mutate({
+        saleOrderId,
+        productId,
+        quantity,
+        description,
+      });
+    }
   }
 
   const disabled = false;

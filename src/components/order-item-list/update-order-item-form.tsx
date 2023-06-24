@@ -91,18 +91,10 @@ export const UpdateOrderItemForm = ({
     const { productId, quantity, description } = values;
     const id = data?.id as string;
 
-    console.log(`ProductID::: `, data?.productId);
-
-    console.log(`CurrentStock::: `, data?.product.countInStock);
-
-    console.log(`CurrentQty::: `, data?.quantity);
-    console.log(`UpdatedQty::: `, quantity);
-
     const currentStock = data?.product.countInStock as number;
     const currentQty = data?.quantity as number;
     const newStock = calculateNewStock(currentStock, currentQty, quantity);
     const productName = data?.product.name as string;
-    console.log(`New_Stock::: `, newStock);
 
     if (newStock < 0) {
       toast({

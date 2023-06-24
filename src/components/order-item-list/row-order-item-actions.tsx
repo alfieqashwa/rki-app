@@ -19,8 +19,6 @@ export function RowOrderItemActions(
 ) {
   const [open, setOpen] = useState(false);
 
-  console.log(`PROPS::: `, props);
-
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
