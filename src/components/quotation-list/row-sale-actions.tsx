@@ -4,7 +4,6 @@ import { Button } from "~/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/ui/dropdown-menu";
@@ -17,10 +16,9 @@ type Props = {
 };
 
 export function RowSaleActions(props: Props) {
-  const [isOpen, setIsOpen] = useState(false);
-
+  const [open, setOpen] = useState(false);
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -34,14 +32,12 @@ export function RowSaleActions(props: Props) {
         {/* //* Don't surround the UpdateComponent with <DropdownMenuItem /> when use fields date-picker on dialog/modal (BUGS)  */}
         <UpdateQuotation id={props.id} orderNumber={props.orderNumber} />
         <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <DeleteSale
-            id={props.id}
-            name={props.orderNumber}
-            open={isOpen}
-            setOpen={setIsOpen}
-          />
-        </DropdownMenuItem>
+        <DeleteSale
+          id={props.id}
+          name={props.orderNumber}
+          open={open}
+          setOpen={setOpen}
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -25,9 +25,34 @@ export function DeleteSale({ id, name, open, setOpen }: Props) {
   const utils = api.useContext();
   const { toast } = useToast();
 
+  // Queries
+  const { data: products } = api.product.getAll.useQuery();
+  const { data: orderItems } = api.sale.getById.useQuery(
+    { id },
+    {
+      enabled: !!id,
+      select: (data) => data?.orderItems,
+    }
+  );
+
+  // Mutations
+  const updateProductStockMutation =
+    api.product.updateCountInStock.useMutation();
+
   const { mutate, isLoading } = api.sale.deleteQuotation.useMutation({
     async onSuccess() {
-      // delete user from team
+      orderItems?.forEach((orderItem) => {
+        const product = products?.find((p) => p.id === orderItem.productId);
+
+        if (product && product.countInStock) {
+          void updateProductStockMutation.mutateAsync({
+            id: product.id,
+            // add each stock with qty's back to previous amount when the quot-order has been deleted
+            countInStock: (product.countInStock += orderItem.quantity),
+          });
+        }
+        return;
+      });
       toast({
         title: "Succeed!",
         variant: "default",
@@ -57,7 +82,7 @@ export function DeleteSale({ id, name, open, setOpen }: Props) {
 
   return (
     <Dialog>
-      <DialogTrigger className="flex w-full items-center">
+      <DialogTrigger className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
         <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
         Delete
       </DialogTrigger>
