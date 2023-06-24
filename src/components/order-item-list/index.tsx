@@ -15,6 +15,7 @@ export const OrderItemList = ({ orderItems, status }: Props): JSX.Element => {
       {status === "success" && (
         <OrderItemTable data={orderItems as []} columns={columnsOrderItem} />
       )}
+      <pre>{JSON.stringify(orderItems, null, 2)}</pre>
     </div>
   );
 };

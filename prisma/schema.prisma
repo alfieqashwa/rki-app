@@ -123,7 +123,7 @@ enum Category {
 
 model Product {
     id           String      @id @default(cuid())
-    name         String
+    name         String      @unique
     category     Category    @default(Product)
     uom          UomType     @default(other)
     countInStock Int?        @map("count_in_stock")

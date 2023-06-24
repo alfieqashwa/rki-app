@@ -52,7 +52,7 @@ export const orderItemRouter = createTRPCRouter({
           data: {
             productId,
             quantity,
-            description
+            description,
           }
         })
       } catch (err) {
