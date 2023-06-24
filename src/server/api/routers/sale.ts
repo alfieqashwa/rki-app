@@ -1,3 +1,4 @@
+import { StatusSaleOrder } from "@prisma/client"
 import { z } from "zod"
 import {
   createTRPCRouter,
@@ -73,6 +74,21 @@ export const saleRouter = createTRPCRouter({
             companyId,
             userId,
           }
+        })
+      } catch (err) {
+        console.error(err)
+      }
+    }),
+  updateStatus: protectedProcedure
+    .input(z.object({
+      id: z.string().cuid(),
+      status: z.nativeEnum(StatusSaleOrder)
+    }))
+    .mutation(async ({ ctx, input: { id, status } }) => {
+      try {
+        return await ctx.prisma.saleOrder.update({
+          where: { id },
+          data: { status }
         })
       } catch (err) {
         console.error(err)

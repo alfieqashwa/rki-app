@@ -9,6 +9,7 @@ import {
 } from "~/ui/dropdown-menu";
 import { DeleteSale } from "./delete-sale";
 import { UpdateQuotation } from "./update-quotation";
+import { UpdateStatus } from "./update-status";
 
 type Props = {
   id: string;
@@ -29,6 +30,13 @@ export function RowSaleActions(props: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
+        <UpdateStatus
+          id={props.id}
+          name={props.orderNumber}
+          open={open}
+          setOpen={setOpen}
+        />
+        <DropdownMenuSeparator />
         {/* //* Don't surround the UpdateComponent with <DropdownMenuItem /> when use fields date-picker on dialog/modal (BUGS)  */}
         <UpdateQuotation id={props.id} orderNumber={props.orderNumber} />
         <DropdownMenuSeparator />
