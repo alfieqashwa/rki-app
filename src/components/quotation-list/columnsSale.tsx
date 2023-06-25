@@ -124,8 +124,12 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
       id: "actions",
       cell: ({
         row: {
-          original: { id, orderNumber },
+          original: { id, orderNumber, status },
         },
-      }) => <RowSaleActions id={id} orderNumber={orderNumber} />,
+      }) => {
+        return (
+          <RowSaleActions id={id} orderNumber={orderNumber} status={status} />
+        );
+      },
     },
   ];

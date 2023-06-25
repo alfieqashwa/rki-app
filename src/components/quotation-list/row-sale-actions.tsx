@@ -10,10 +10,12 @@ import {
 import { DeleteSale } from "./delete-sale";
 import { UpdateQuotation } from "./update-quotation";
 import { UpdateStatus } from "./update-status";
+import { type StatusSaleOrder } from "@prisma/client";
 
 type Props = {
   id: string;
   orderNumber: string;
+  status: StatusSaleOrder;
 };
 
 export function RowSaleActions(props: Props) {
@@ -29,24 +31,26 @@ export function RowSaleActions(props: Props) {
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <UpdateStatus
-          id={props.id}
-          name={props.orderNumber}
-          open={open}
-          setOpen={setOpen}
-        />
-        <DropdownMenuSeparator />
-        {/* //* Don't surround the UpdateComponent with <DropdownMenuItem /> when use fields date-picker on dialog/modal (BUGS)  */}
-        <UpdateQuotation id={props.id} orderNumber={props.orderNumber} />
-        <DropdownMenuSeparator />
-        <DeleteSale
-          id={props.id}
-          name={props.orderNumber}
-          open={open}
-          setOpen={setOpen}
-        />
-      </DropdownMenuContent>
+      {props.status === "QUOTATION" && (
+        <DropdownMenuContent align="end" className="w-[160px]">
+          <UpdateStatus
+            id={props.id}
+            name={props.orderNumber}
+            open={open}
+            setOpen={setOpen}
+          />
+          <DropdownMenuSeparator />
+          {/* //* Don't surround the UpdateComponent with <DropdownMenuItem /> when use fields date-picker on dialog/modal (BUGS)  */}
+          <UpdateQuotation id={props.id} orderNumber={props.orderNumber} />
+          <DropdownMenuSeparator />
+          <DeleteSale
+            id={props.id}
+            name={props.orderNumber}
+            open={open}
+            setOpen={setOpen}
+          />
+        </DropdownMenuContent>
+      )}
     </DropdownMenu>
   );
 }

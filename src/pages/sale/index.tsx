@@ -7,6 +7,7 @@ import Layout from "~/components/template/layout";
 import { authOptions } from "~/server/auth";
 import { Separator } from "~/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/ui/tabs";
+import { api } from "~/utils/api";
 
 const QuotPdf = dynamic(() => import("~/components/pdf/pdf-quotation"), {
   ssr: false,
@@ -33,6 +34,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 const QuotationPage: NextPage = (): JSX.Element => {
+  const { data, status } = api.sale.getAll.useQuery(undefined, {
+    select: (sales) => ({
+      quotations: sales.filter((sale) => sale.status === "QUOTATION"),
+      sales: sales.filter((sale) => sale.status === "SOLD"),
+    }),
+  });
+
   return (
     <Layout title="Sale Order">
       <div className="h-full px-4 py-6 lg:px-8">
@@ -41,6 +49,7 @@ const QuotationPage: NextPage = (): JSX.Element => {
             <TabsList>
               <TabsTrigger value="quotation">Quotation</TabsTrigger>
               <TabsTrigger value="preview">Preview</TabsTrigger>
+              <TabsTrigger value="sale">Sale</TabsTrigger>
             </TabsList>
             <div className="ml-auto mr-4">
               <AddQuotation />
@@ -61,7 +70,7 @@ const QuotationPage: NextPage = (): JSX.Element => {
               </div>
             </div>
             <Separator className="my-4" />
-            <SaleList />
+            <SaleList data={data?.quotations as []} status={status} />
           </TabsContent>
           <TabsContent
             value="preview"
@@ -79,6 +88,20 @@ const QuotationPage: NextPage = (): JSX.Element => {
             </div>
             <Separator className="my-4" />
             <QuotPdf />
+          </TabsContent>
+          <TabsContent value="sale" className="border-none p-0 outline-none">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <h2 className="text-2xl font-semibold tracking-tight">
+                  List of Sales
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  The list information of sale orders.
+                </p>
+              </div>
+            </div>
+            <Separator className="my-4" />
+            <SaleList data={data?.sales as []} status={status} />
           </TabsContent>
         </Tabs>
       </div>
