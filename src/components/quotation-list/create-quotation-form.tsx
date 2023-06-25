@@ -356,7 +356,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
                 >
                   <FormControl className="col-span-3 w-[240px] capitalize">
                     <SelectTrigger>
-                      <SelectValue placeholder="Select user" />
+                      <SelectValue placeholder="Select pic" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>

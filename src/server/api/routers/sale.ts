@@ -64,6 +64,7 @@ export const saleRouter = createTRPCRouter({
         id,
         dateOrdered,
         companyId,
+        personInChargeId,
         userId,
       }
     }) => {
@@ -74,6 +75,7 @@ export const saleRouter = createTRPCRouter({
           data: {
             dateOrdered,
             companyId,
+            personInChargeId,
             userId,
           }
         })

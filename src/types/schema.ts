@@ -80,5 +80,6 @@ export const updateSaleSchema = z.object({
   id: z.string().cuid(),
   dateOrdered: z.date(),
   companyId: z.string().cuid(),
+  personInChargeId: z.string().cuid(),
   userId: z.string().cuid(),
 })

@@ -73,6 +73,7 @@ export const UpdateQuotationForm = ({
     id: data?.id as string,
     dateOrdered: data?.dateOrdered as Date,
     companyId: data?.companyId as string,
+    personInChargeId: data?.personInChargeId as string,
     userId: data?.user.id as string,
   };
 
@@ -82,14 +83,22 @@ export const UpdateQuotationForm = ({
     mode: "onChange",
   });
 
+  // get PiC by selected companyId
+  const getCompanyId = form.getValues("companyId");
+  const personInChargesQuery = api.pic.getByCompanyId.useQuery(
+    { companyId: getCompanyId },
+    { enabled: !!getCompanyId }
+  );
+
   function onSubmit(values: z.infer<typeof updateSaleSchema>) {
-    const { dateOrdered, companyId, userId } = values;
+    const { dateOrdered, companyId, personInChargeId, userId } = values;
     const id = data?.id as string;
 
     mutate({
       id,
       dateOrdered,
       companyId,
+      personInChargeId,
       userId,
     });
   }
@@ -107,7 +116,7 @@ export const UpdateQuotationForm = ({
           control={form.control}
           name="dateOrdered"
           render={({ field }) => (
-            <FormItem className="grid grid-cols-6 items-center gap-4">
+            <FormItem className="grid grid-cols-4 items-center gap-4">
               <FormLabel className="mt-2 text-right">Date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -148,7 +157,7 @@ export const UpdateQuotationForm = ({
           control={form.control}
           name="companyId"
           render={({ field }) => (
-            <FormItem className="grid grid-cols-6 items-center gap-4">
+            <FormItem className="grid grid-cols-4 items-center gap-4">
               <FormLabel className="mt-2 text-right">Customer</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl className="col-span-3 w-[240px] capitalize">
@@ -175,9 +184,39 @@ export const UpdateQuotationForm = ({
         />
         <FormField
           control={form.control}
+          name="personInChargeId"
+          render={({ field }) => (
+            <FormItem className="grid grid-cols-4 items-center gap-4">
+              <FormLabel className="mt-2 text-right">
+                Person In Charge
+              </FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl className="col-span-3 w-[240px] capitalize">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select pic" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {personInChargesQuery.status === "success" &&
+                    personInChargesQuery.data.map((pic) => (
+                      <SelectItem
+                        className="capitalize"
+                        value={pic.id}
+                        key={pic.id}
+                      >
+                        {pic.name}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
           name="userId"
           render={({ field }) => (
-            <FormItem className="grid grid-cols-6 items-center gap-4">
+            <FormItem className="grid grid-cols-4 items-center gap-4">
               <FormLabel className="mt-2 text-right">User</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl className="col-span-3 w-[240px]">
