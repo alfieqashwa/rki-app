@@ -31,16 +31,16 @@ export function UpdateCustomer({ id, open, setOpen }: Props) {
   );
 
   const [provinceValue, setProvinceValue] = useState(
-    customer?.address.province as string
+    customer?.address?.province as string
   );
   const [regencyValue, setRegencyValue] = useState(
-    customer?.address.regency as string
+    customer?.address?.regency as string
   );
   const [districtValue, setDistrictValue] = useState(
-    customer?.address.district as string
+    customer?.address?.district as string
   );
   const [villageValue, setVillageValue] = useState(
-    customer?.address.village as string
+    customer?.address?.village as string
   );
 
   // Queries
@@ -185,7 +185,7 @@ export function UpdateCustomer({ id, open, setOpen }: Props) {
                 <Input
                   id="phone"
                   name="phone"
-                  defaultValue={customer.phone}
+                  defaultValue={customer?.phone}
                   placeholder="phone number"
                   className="col-span-3 capitalize"
                 />
@@ -204,7 +204,7 @@ export function UpdateCustomer({ id, open, setOpen }: Props) {
               <Input
                 id="street"
                 name="street"
-                defaultValue={customer?.address.street}
+                defaultValue={customer?.address?.street}
                 placeholder="street"
                 className="col-span-3 capitalize"
               />
@@ -269,7 +269,7 @@ export function UpdateCustomer({ id, open, setOpen }: Props) {
               <Input
                 id="postalCode"
                 name="postalCode"
-                defaultValue={customer?.address.postalCode}
+                defaultValue={customer?.address?.postalCode}
                 placeholder="postal code"
                 className="col-span-3"
               />
