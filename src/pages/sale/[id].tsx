@@ -98,11 +98,10 @@ const SaleOrderByIdPage: NextPage = () => {
               </div>
             </div>
             <Separator className="my-4" />
-            {/* <QuotPdf /> */}
+            {/* content... */}
           </TabsContent>
         </Tabs>
       </div>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
     </Layout>
   );
 };

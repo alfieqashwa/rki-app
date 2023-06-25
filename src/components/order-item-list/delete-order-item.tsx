@@ -122,7 +122,7 @@ export function DeleteOrderItem({
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setOpen(!open)}
+              onClick={handleCancel}
             >
               Cancel
             </Button>
@@ -141,4 +141,7 @@ export function DeleteOrderItem({
       </DialogContent>
     </Dialog>
   );
+  function handleCancel() {
+    void wait(800).then(() => setOpen(!open));
+  }
 }

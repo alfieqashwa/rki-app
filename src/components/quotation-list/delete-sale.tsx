@@ -106,7 +106,7 @@ export function DeleteSale({ id, name, open, setOpen }: Props) {
               type="button"
               variant="ghost"
               size="sm"
-              onClick={() => setOpen(!open)}
+              onClick={handleCancel}
             >
               Cancel
             </Button>
@@ -125,4 +125,8 @@ export function DeleteSale({ id, name, open, setOpen }: Props) {
       </DialogContent>
     </Dialog>
   );
+  // wait for 800 miliseconds before close the dialog
+  function handleCancel() {
+    void wait(800).then(() => setOpen(!open));
+  }
 }
