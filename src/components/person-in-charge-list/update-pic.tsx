@@ -19,12 +19,20 @@ import { wait } from "~/utils/wait";
 type Props = {
   id: string;
   name: string;
+  companyName: string;
   position: string | null;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function UpdatePic({ id, name, position, open, setOpen }: Props) {
+export function UpdatePic({
+  id,
+  name,
+  companyName,
+  position,
+  open,
+  setOpen,
+}: Props) {
   const utils = api.useContext();
   const { toast } = useToast();
 
@@ -84,7 +92,11 @@ export function UpdatePic({ id, name, position, open, setOpen }: Props) {
               <span className="px-1.5 font-medium uppercase text-amber-300">
                 {name}
               </span>
-              of your customer here. Click Update when you&apos;re done.
+              form customer
+              <span className="px-1.5 font-medium uppercase text-amber-300">
+                {companyName}
+              </span>
+              here. Click Update when you&apos;re done.
             </p>
           </SheetDescription>
         </SheetHeader>

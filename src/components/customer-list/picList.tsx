@@ -4,6 +4,7 @@ import { Button } from "~/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "~/ui/popover";
 import { Separator } from "~/ui/separator";
 import { CreatePersonInCharge } from "./create-person-in-charge";
+import { ScrollArea } from "../ui/scroll-area";
 
 type Props = {
   customerId: string;
@@ -21,7 +22,7 @@ export function PicList({ customerId, customerName, personInCharges }: Props) {
         </Button>
       </PopoverTrigger>
       {personInCharges.length > 0 ? (
-        <PopoverContent className="w-80">
+        <PopoverContent>
           <div className="grid gap-4">
             <div className="space-y-2">
               <h4 className="font-medium leading-none">Person in Charge</h4>
@@ -33,24 +34,26 @@ export function PicList({ customerId, customerName, personInCharges }: Props) {
                 .
               </p>
             </div>
-            {personInCharges?.map((pic) => (
-              <div className="grid gap-2" key={pic.id}>
-                <div className="grid grid-cols-3 items-center gap-4">
-                  <p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    Name
-                  </p>
-                  <p className="col-span-2 h-8 capitalize">{pic.name}</p>
+            <ScrollArea className="h-[210px] scroll-smooth py-2">
+              {personInCharges?.map((pic) => (
+                <div className="grid" key={pic.id}>
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Name
+                    </p>
+                    <p className="col-span-2 capitalize">{pic.name}</p>
+                  </div>
+                  <div className="grid grid-cols-3 items-center">
+                    <p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Position
+                    </p>
+                    <p className="col-span-2 capitalize">{pic.position}</p>
+                  </div>
+                  <Separator className="my-2" />
                 </div>
-                <div className="grid grid-cols-3 items-center gap-4">
-                  <p className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                    Position
-                  </p>
-                  <p className="col-span-2 h-8 capitalize">{pic.position}</p>
-                </div>
-                <Separator />
-              </div>
-            ))}
-            <div className="mt-3">
+              ))}
+            </ScrollArea>
+            <div className="">
               <CreatePersonInCharge
                 id={customerId}
                 customerName={customerName}

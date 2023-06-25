@@ -128,7 +128,7 @@ export const AddCustomer = (): JSX.Element => {
                 id="name"
                 name="name"
                 placeholder="company name"
-                className="col-span-3 capitalize"
+                className="col-span-3 w-[240px] capitalize"
               />
               {error?.data?.zodError?.fieldErrors.name && (
                 <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
@@ -145,7 +145,7 @@ export const AddCustomer = (): JSX.Element => {
                 id="phone"
                 name="phone"
                 placeholder="phone number"
-                className="col-span-3 capitalize"
+                className="col-span-3 w-[240px] capitalize"
               />
               {error?.data?.zodError?.fieldErrors.phone && (
                 <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
@@ -153,29 +153,6 @@ export const AddCustomer = (): JSX.Element => {
                 </span>
               )}
             </div>
-
-            {/* //! DO NOT REMOVE THIS COMMENTED-OUT BELOW!! */}
-            {/* <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="status" className="text-right">
-                Status
-              </Label>
-              <Select name="status">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Company Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="CUSTOMER">CUSTOMER</SelectItem>
-                  <SelectItem value="SUPPLIER">SUPPLIER</SelectItem>
-                  <SelectItem value="BOTH">BOTH</SelectItem>
-                  <SelectItem value="NONE">NONE</SelectItem>
-                </SelectContent>
-              </Select>
-              {error?.data?.zodError?.fieldErrors.status && (
-                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.status}
-                </span>
-              )}
-            </div> */}
 
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="street" className="text-right">
@@ -185,7 +162,7 @@ export const AddCustomer = (): JSX.Element => {
                 id="street"
                 name="street"
                 placeholder="street"
-                className="col-span-3 capitalize"
+                className="col-span-3 w-[240px] capitalize"
               />
               {error?.data?.zodError?.fieldErrors.street && (
                 <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
@@ -250,7 +227,7 @@ export const AddCustomer = (): JSX.Element => {
                 id="postalCode"
                 name="postalCode"
                 placeholder="postal code"
-                className="col-span-3"
+                className="col-span-3 w-[240px]"
               />
               {error?.data?.zodError?.fieldErrors.postalCode && (
                 <span className="col-span-4 -mt-2.5 text-right text-xs text-destructive">

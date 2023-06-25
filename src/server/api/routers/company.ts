@@ -8,7 +8,7 @@ export const companyRouter = createTRPCRouter({
     return await ctx.prisma.company.findMany({
       where: { isCustomer: true },
       include: { address: true, personInCharges: true },
-      orderBy: { createdAt: "desc" }
+      orderBy: { updatedAt: "desc" }
     })
   }),
   // for filtering pic-table based on company name

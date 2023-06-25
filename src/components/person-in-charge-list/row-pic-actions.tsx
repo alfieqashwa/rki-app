@@ -15,8 +15,9 @@ type Props = {
   id: string;
   name: string;
   position: string | null;
+  companyName: string;
 };
-export function RowPicActions({ id, name, position }: Props) {
+export function RowPicActions({ id, name, position, companyName }: Props) {
   const [open, setOpen] = useState(false);
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -34,13 +35,20 @@ export function RowPicActions({ id, name, position }: Props) {
         <UpdatePic
           id={id}
           name={name}
+          companyName={companyName}
           position={position}
           open={open}
           setOpen={setOpen}
         />
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <DeletePic id={id} name={name} open={open} setOpen={setOpen} />
+          <DeletePic
+            id={id}
+            name={name}
+            companyName={companyName}
+            open={open}
+            setOpen={setOpen}
+          />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

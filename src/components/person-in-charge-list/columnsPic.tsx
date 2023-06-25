@@ -79,9 +79,21 @@ export const columnsPic: ColumnDef<RouterOutputs["pic"]["picList"][0]>[] = [
     id: "actions",
     cell: ({ row }) => {
       const {
-        original: { id, name, position },
+        original: {
+          id,
+          name,
+          position,
+          company: { name: companyName },
+        },
       } = row;
-      return <RowPicActions id={id} name={name} position={position} />;
+      return (
+        <RowPicActions
+          id={id}
+          name={name}
+          position={position}
+          companyName={companyName}
+        />
+      );
     },
   },
 ];

@@ -17,11 +17,12 @@ import { wait } from "~/utils/wait";
 type Props = {
   id: string;
   name: string;
+  companyName: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function DeletePic({ id, name, open, setOpen }: Props) {
+export function DeletePic({ id, name, companyName, open, setOpen }: Props) {
   const utils = api.useContext();
   const { toast } = useToast();
 
@@ -71,7 +72,11 @@ export function DeletePic({ id, name, open, setOpen }: Props) {
                 You can&apos;t undo this changes. Click delete when you&apos;re
                 sure to delete PiC
                 <span className="px-1.5 font-medium uppercase text-amber-300">
-                  {name}.
+                  {name}
+                </span>
+                from company
+                <span className="px-1.5 font-medium uppercase text-amber-300">
+                  {companyName}.
                 </span>
               </p>
             </DialogDescription>
