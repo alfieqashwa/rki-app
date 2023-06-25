@@ -1,10 +1,12 @@
 import { type GetServerSideProps, type NextPage } from "next";
 import { getServerSession } from "next-auth";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 import Layout from "~/components/template/layout";
 import { Separator } from "~/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { authOptions } from "~/server/auth";
+import { api } from "~/utils/api";
 
 const PdfPreview = dynamic(() => import("~/components/pdf/pdf-quotation"), {
   ssr: false,
@@ -30,8 +32,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 const PreviewSaleOrderByIdPage: NextPage = () => {
+  const { query } = useRouter();
+  const id = query.id as string;
+
+  // Queries
+  const { data, status } = api.sale.getById.useQuery({ id }, { enabled: !!id });
+
   return (
     <Layout title="preview">
+      {status === "success" && <pre>{JSON.stringify(data, null, 4)}</pre>}
       <div className="h-full px-4 py-6 lg:px-8">
         <Tabs defaultValue="preview" className="h-full space-y-6">
           <div className="space-between flex items-center">

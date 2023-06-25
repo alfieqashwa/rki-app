@@ -20,7 +20,14 @@ export const saleRouter = createTRPCRouter({
     .query(async ({ ctx, input: { id } }) => {
       return await ctx.prisma.saleOrder.findUnique({
         where: { id },
-        include: { company: true, user: true, orderItems: true }
+        include: {
+          company: {
+            include: { address: true }
+          },
+          personInCharge: true,
+          user: true,
+          orderItems: true
+        }
       })
     }),
 
