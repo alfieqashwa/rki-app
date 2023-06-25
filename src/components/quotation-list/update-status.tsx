@@ -1,4 +1,4 @@
-import { Folder, Loader2, Trash } from "lucide-react";
+import { Folder, Loader2 } from "lucide-react";
 import { Button } from "~/ui/button";
 import {
   Dialog,

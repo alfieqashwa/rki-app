@@ -1,6 +1,5 @@
 import { type GetServerSideProps, type NextPage } from "next";
 import { getServerSession } from "next-auth";
-import dynamic from "next/dynamic";
 import { SaleList } from "~/components/quotation-list";
 import { AddQuotation } from "~/components/quotation-list/add-quotation";
 import Layout from "~/components/template/layout";
@@ -8,10 +7,6 @@ import { authOptions } from "~/server/auth";
 import { Separator } from "~/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/ui/tabs";
 import { api } from "~/utils/api";
-
-const QuotPdf = dynamic(() => import("~/components/pdf/pdf-quotation"), {
-  ssr: false,
-});
 
 // If No Authenticated, then redirect to Home Page. Else, enter this page.
 export const getServerSideProps: GetServerSideProps = async (ctx) => {

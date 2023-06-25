@@ -1,5 +1,6 @@
 import { type StatusSaleOrder } from "@prisma/client";
-import { MoreHorizontal } from "lucide-react";
+import { FileText, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { Button } from "~/ui/button";
 import {
@@ -33,6 +34,14 @@ export function RowSaleActions(props: Props) {
       </DropdownMenuTrigger>
       {props.status === "QUOTATION" && (
         <DropdownMenuContent align="end" className="w-[160px]">
+          <Link
+            href={`/sale/preview/${props.id}`}
+            className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
+          >
+            <FileText className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            Preview
+          </Link>
+
           <UpdateStatus
             id={props.id}
             name={props.orderNumber}
