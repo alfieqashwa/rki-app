@@ -106,12 +106,13 @@ model Company {
 }
 
 model PersonInCharge {
-    id        String  @id @default(cuid())
-    name      String  @unique()
-    position  String?
-    email     String? @unique
-    company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
-    companyId String
+    id         String      @id @default(cuid())
+    name       String      @unique()
+    position   String?
+    email      String?     @unique
+    company    Company     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+    companyId  String      @map("company_id")
+    saleOrders SaleOrder[]
 
     @@map("person_in_charges")
 }
@@ -187,8 +188,10 @@ model SaleOrder {
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String @map("user_id")
 
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+    createdAt        DateTime        @default(now()) @map("created_at")
+    updatedAt        DateTime        @updatedAt @map("updated_at")
+    personInCharge   PersonInCharge? @relation(fields: [personInChargeId], references: [id], onDelete: Cascade)
+    personInChargeId String?         @map("person_in_charge_id")
 
     @@map("sale_orders")
 }
