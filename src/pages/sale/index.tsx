@@ -38,6 +38,7 @@ const QuotationPage: NextPage = (): JSX.Element => {
     select: (sales) => ({
       quotations: sales.filter((sale) => sale.status === "QUOTATION"),
       sales: sales.filter((sale) => sale.status === "SOLD"),
+      noSale: sales.filter((sale) => sale.status === "SOLD").length === 0,
     }),
   });
 
@@ -48,8 +49,9 @@ const QuotationPage: NextPage = (): JSX.Element => {
           <div className="space-between flex items-center">
             <TabsList>
               <TabsTrigger value="quotation">Quotation</TabsTrigger>
-              <TabsTrigger value="preview">Preview</TabsTrigger>
-              <TabsTrigger value="sale">Sale</TabsTrigger>
+              <TabsTrigger disabled={data?.noSale} value="sale">
+                Sale
+              </TabsTrigger>
             </TabsList>
             <div className="ml-auto mr-4">
               <AddQuotation />
@@ -72,23 +74,7 @@ const QuotationPage: NextPage = (): JSX.Element => {
             <Separator className="my-4" />
             <SaleList data={data?.quotations as []} status={status} />
           </TabsContent>
-          <TabsContent
-            value="preview"
-            className="h-full flex-col border-none p-0 data-[state=active]:flex"
-          >
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  PDF Preview
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  You can check preview and download the pdf.
-                </p>
-              </div>
-            </div>
-            <Separator className="my-4" />
-            <QuotPdf />
-          </TabsContent>
+
           <TabsContent value="sale" className="border-none p-0 outline-none">
             <div className="flex items-center justify-between">
               <div className="space-y-1">

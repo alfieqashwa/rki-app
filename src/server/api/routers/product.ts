@@ -9,7 +9,9 @@ export const productRouter = createTRPCRouter({
   // Queries
   getAll: protectedProcedure
     .query(async ({ ctx }) => {
-      return await ctx.prisma.product.findMany()
+      return await ctx.prisma.product.findMany({
+        orderBy: { updatedAt: "desc" }
+      })
     }),
   getById: protectedProcedure
     .input(z.object({ id: z.string().cuid() }))

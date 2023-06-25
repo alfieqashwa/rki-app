@@ -131,7 +131,7 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
         const id = row.getValue("id");
         return (
           <Button variant="link" className="flex items-center">
-            <Link href={`/sale/${id as string}`}>Detail</Link>
+            <Link href={`/sale/order-item/${id as string}`}>Detail</Link>
           </Button>
         );
       },
