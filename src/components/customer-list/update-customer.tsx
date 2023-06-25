@@ -20,37 +20,31 @@ import { wait } from "~/utils/wait";
 
 type Props = {
   id: string;
-  name: string;
-  phone: string | null;
-  street: string;
-  province: string;
-  regency: string;
-  district: string;
-  village: string;
-  postalCode: string;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export function UpdateCustomer({
-  id,
-  name,
-  phone,
-  street,
-  province,
-  regency,
-  district,
-  village,
-  postalCode,
-  open,
-  setOpen,
-}: Props) {
-  const [provinceValue, setProvinceValue] = useState(province);
-  const [regencyValue, setRegencyValue] = useState(regency);
-  const [districtValue, setDistrictValue] = useState(district);
-  const [villageValue, setVillageValue] = useState(village);
+export function UpdateCustomer({ id, open, setOpen }: Props) {
+  const { data: customer } = api.company.getCompanyById.useQuery(
+    { id },
+    { enabled: !!id }
+  );
+
+  const [provinceValue, setProvinceValue] = useState(
+    customer?.address.province as string
+  );
+  const [regencyValue, setRegencyValue] = useState(
+    customer?.address.regency as string
+  );
+  const [districtValue, setDistrictValue] = useState(
+    customer?.address.district as string
+  );
+  const [villageValue, setVillageValue] = useState(
+    customer?.address.village as string
+  );
 
   // Queries
+
   const provincesQuery = api.address.provinces.useQuery();
 
   const provinceId = provincesQuery?.data?.find(
@@ -87,26 +81,28 @@ export function UpdateCustomer({
   const utils = api.useContext();
   const { toast } = useToast();
 
-  const { mutate, isLoading, error } = api.company.updateCompany.useMutation({
-    async onSuccess() {
-      toast({
-        title: "Succeed!",
-        variant: "default",
-        description: "Your form has been updated.",
-      });
-      /* auto-closed after succeed submit the dialog form */
-      await wait().then(() => setOpen(!open));
-      await utils.company.customerList.invalidate();
-    },
-    onError() {
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
-        action: <ToastAction altText="Try again">Try again</ToastAction>,
-      });
-    },
-  });
+  // Mutations
+  const { mutate, isLoading, error } =
+    api.company.updateCompanyById.useMutation({
+      async onSuccess() {
+        toast({
+          title: "Succeed!",
+          variant: "default",
+          description: "Your form has been updated.",
+        });
+        /* auto-closed after succeed submit the dialog form */
+        await wait().then(() => setOpen(!open));
+        await utils.company.customerList.invalidate();
+      },
+      onError() {
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with your request.",
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+      },
+    });
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -116,16 +112,20 @@ export function UpdateCustomer({
     const phone = formData.get("phone") as string;
     const street = formData.get("street")?.toString().toLowerCase() as string;
     const postalCode = formData.get("postalCode") as string;
+    const province = provinceValue;
+    const regency = regencyValue;
+    const district = districtValue;
+    const village = villageValue;
 
     mutate({
       id,
       name,
       phone,
       street,
-      province: provinceValue,
-      regency: regencyValue,
-      district: districtValue,
-      village: villageValue,
+      province,
+      regency,
+      district,
+      village,
       postalCode,
     });
   };
@@ -151,7 +151,7 @@ export function UpdateCustomer({
             <p>
               Edit
               <span className="px-1.5 font-medium uppercase text-amber-300">
-                {name}
+                {customer?.name}
               </span>
               of your customer here. Click Update when you&apos;re done.
             </p>
@@ -166,7 +166,7 @@ export function UpdateCustomer({
               <Input
                 id="name"
                 name="name"
-                defaultValue={name}
+                defaultValue={customer?.name}
                 placeholder="company name"
                 className="col-span-3 capitalize"
               />
@@ -177,7 +177,7 @@ export function UpdateCustomer({
               )}
             </div>
 
-            {!!phone && (
+            {!!customer?.phone && (
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="phone" className="text-right">
                   Phone
@@ -185,7 +185,7 @@ export function UpdateCustomer({
                 <Input
                   id="phone"
                   name="phone"
-                  defaultValue={phone}
+                  defaultValue={customer.phone}
                   placeholder="phone number"
                   className="col-span-3 capitalize"
                 />
@@ -204,7 +204,7 @@ export function UpdateCustomer({
               <Input
                 id="street"
                 name="street"
-                defaultValue={street}
+                defaultValue={customer?.address.street}
                 placeholder="street"
                 className="col-span-3 capitalize"
               />
@@ -269,7 +269,7 @@ export function UpdateCustomer({
               <Input
                 id="postalCode"
                 name="postalCode"
-                defaultValue={postalCode}
+                defaultValue={customer?.address.postalCode}
                 placeholder="postal code"
                 className="col-span-3"
               />

@@ -240,33 +240,9 @@ export const columnsCustomer: ColumnDef<
     id: "actions",
     cell: ({ row }) => {
       const {
-        original: {
-          id,
-          name,
-          phone,
-          isCustomer,
-          isSupplier,
-          personInCharges,
-          address,
-          addressId,
-          createdAt,
-          updatedAt,
-        },
+        original: { id, name },
       } = row;
-      return (
-        <RowCustomerActions
-          id={id}
-          name={name}
-          isCustomer={isCustomer}
-          isSupplier={isSupplier}
-          phone={phone}
-          personInCharges={personInCharges}
-          address={address}
-          addressId={addressId}
-          createdAt={createdAt}
-          updatedAt={updatedAt}
-        />
-      );
+      return <RowCustomerActions id={id} name={name} />;
     },
   },
 ];

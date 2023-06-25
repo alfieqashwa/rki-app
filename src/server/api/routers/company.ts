@@ -19,6 +19,14 @@ export const companyRouter = createTRPCRouter({
         orderBy: { name: "asc" }
       })
     }),
+  getCompanyById: protectedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .query(async ({ ctx, input: { id } }) => {
+      return await ctx.prisma.company.findUnique({
+        where: { id },
+        include: { address: true, personInCharges: true }
+      })
+    }),
 
   // Mutations
   createCustomer: protectedProcedure
@@ -56,7 +64,7 @@ export const companyRouter = createTRPCRouter({
         console.error(err)
       }
     }),
-  updateCompany: protectedProcedure
+  updateCompanyById: protectedProcedure
     .input(updateCompanySchema)
     .mutation(async ({ ctx, input: { id, name, street, province, regency, district, village, postalCode } }) => {
       try {

@@ -8,19 +8,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/ui/dropdown-menu";
-import { type RouterOutputs } from "~/utils/api";
 import { DeleteCustomer } from "./delete-customer";
 import { UpdateCustomer } from "./update-customer";
 
-export function RowCustomerActions(
-  props: RouterOutputs["company"]["customerList"][0]
-) {
-  const {
-    id,
-    name,
-    phone,
-    address: { street, province, regency, district, village, postalCode },
-  } = props;
+type Props = {
+  id: string;
+  name: string;
+};
+
+export const RowCustomerActions = ({ id, name }: Props) => {
   const [open, setOpen] = useState(false);
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -34,19 +30,7 @@ export function RowCustomerActions(
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <UpdateCustomer
-          id={id}
-          name={name}
-          phone={phone}
-          street={street}
-          province={province}
-          regency={regency}
-          district={district}
-          village={village}
-          postalCode={postalCode}
-          open={open}
-          setOpen={setOpen}
-        />
+        <UpdateCustomer id={id} open={open} setOpen={setOpen} />
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
           <DeleteCustomer id={id} name={name} open={open} setOpen={setOpen} />
@@ -54,4 +38,4 @@ export function RowCustomerActions(
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};
