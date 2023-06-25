@@ -1,4 +1,4 @@
-import { Copy, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/ui/button";
 import {
@@ -11,7 +11,6 @@ import {
 import { type RouterOutputs } from "~/utils/api";
 import { DeleteCustomer } from "./delete-customer";
 import { UpdateCustomer } from "./update-customer";
-import { CreatePersonInCharge } from "./create-person-in-charge";
 
 export function RowCustomerActions(
   props: RouterOutputs["company"]["customerList"][0]

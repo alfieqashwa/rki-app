@@ -8,7 +8,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/ui/dropdown-menu";
-import { CreatePersonInCharge } from "./create-person-in-charge";
 import { DeletePic } from "./delete-pic";
 import { UpdatePic } from "./update-pic";
 
@@ -31,11 +30,17 @@ export function RowPicActions({ id, name, position }: Props) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <CreatePersonInCharge id={id} customerName={name} />
-        <UpdatePic id={id} name={name} position={position} />
+        {/* <CreatePersonInCharge id={id} customerName={name} /> */}
+        <UpdatePic
+          id={id}
+          name={name}
+          position={position}
+          open={open}
+          setOpen={setOpen}
+        />
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <DeletePic id={id} name={name} />
+          <DeletePic id={id} name={name} open={open} setOpen={setOpen} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

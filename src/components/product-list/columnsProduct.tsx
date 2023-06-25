@@ -69,7 +69,7 @@ export const columnsProduct: ColumnDef<
     cell: ({ row }) => (
       <div className="flex items-center">
         <Tags className="mr-2 h-4 w-4 text-muted-foreground" />
-        <span>{row.getValue("uom")}</span>
+        <span className="capitalize">{row.getValue("uom")}</span>
       </div>
     ),
   },

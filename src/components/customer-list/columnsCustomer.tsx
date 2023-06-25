@@ -233,7 +233,7 @@ export const columnsCustomer: ColumnDef<
           // locale: id,
         }
       );
-      return <div className="whitespace-nowrap">{date}</div>;
+      return <div className="whitespace-nowrap capitalize">{date}</div>;
     },
   },
   {
