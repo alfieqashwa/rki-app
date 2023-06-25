@@ -65,6 +65,7 @@ export const createSaleSchema = z.object({
   orderNumber: z.string().min(8),
   dateOrdered: z.date(),
   companyId: z.string().cuid(),
+  personInChargeId: z.string().cuid(),
   status: z.nativeEnum(StatusSaleOrder),
   userId: z.string().cuid(),
   orderItems: z.array(

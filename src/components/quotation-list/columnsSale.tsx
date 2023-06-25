@@ -75,9 +75,25 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
         <DataTableColumnHeader column={column} title="Customer" />
       ),
       cell: ({ row }) => (
-        <div className="flex items-center">
+        <div className="flex items-center capitalize">
           <Building className="mr-2 h-4 w-4 text-muted-foreground" />
           <span>{row.getValue("company")}</span>
+        </div>
+      ),
+      filterFn: (row, id, value: string) => {
+        return value.includes(row.getValue(id));
+      },
+    },
+    {
+      accessorKey: "personInCharge",
+      accessorFn: (row) => row.personInCharge?.name,
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Person In Charge" />
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center capitalize">
+          <Building className="mr-2 h-4 w-4 text-muted-foreground" />
+          <span>{row.getValue("personInCharge")}</span>
         </div>
       ),
       filterFn: (row, id, value: string) => {

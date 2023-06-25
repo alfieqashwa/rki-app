@@ -128,6 +128,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
     orderNumber: "defaultquotation",
     dateOrdered: new Date(),
     companyId: companiesQuery.data?.[0]?.id as string,
+    personInChargeId: "",
     userId: userIdfromSession,
     status: "QUOTATION",
     orderItems: [
@@ -145,13 +146,27 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
     mode: "onChange",
   });
 
+  // get PiC by selected companyId
+  const getCompanyId = form.getValues("companyId");
+  const personInChargesQuery = api.pic.getByCompanyId.useQuery(
+    { companyId: getCompanyId },
+    { enabled: !!getCompanyId }
+  );
+
   const { fields, append, remove } = useFieldArray({
     name: "orderItems",
     control: form.control,
   });
 
   function onSubmit(values: z.infer<typeof createSaleSchema>) {
-    const { dateOrdered, companyId, userId, status, orderItems } = values;
+    const {
+      dateOrdered,
+      companyId,
+      personInChargeId,
+      userId,
+      status,
+      orderItems,
+    } = values;
 
     // generate orderNumber
     const generateOrderNumber = formattedOrderNumber(dateOrdered);
@@ -200,6 +215,7 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
           orderNumber,
           dateOrdered,
           companyId,
+          personInChargeId,
           userId,
           status,
           orderItems,
@@ -264,6 +280,33 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="userId"
+            render={({ field }) => (
+              <FormItem className="grid grid-cols-4 items-center gap-4">
+                <FormLabel className="mt-2 text-right">User</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl className="col-span-3 w-[240px]">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select user" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {usersQuery.status === "success" &&
+                      usersQuery.data.map((user) => (
+                        <SelectItem value={user.id} key={user.id}>
+                          {user.name}
+                        </SelectItem>
+                      ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="grid grid-cols-2 items-center">
@@ -301,24 +344,30 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
           />
           <FormField
             control={form.control}
-            name="userId"
+            name="personInChargeId"
             render={({ field }) => (
               <FormItem className="grid grid-cols-4 items-center gap-4">
-                <FormLabel className="mt-2 text-right">User</FormLabel>
+                <FormLabel className="mt-2 text-right">
+                  Person In Charge
+                </FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
-                  <FormControl className="col-span-3 w-[240px]">
+                  <FormControl className="col-span-3 w-[240px] capitalize">
                     <SelectTrigger>
                       <SelectValue placeholder="Select user" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {usersQuery.status === "success" &&
-                      usersQuery.data.map((user) => (
-                        <SelectItem value={user.id} key={user.id}>
-                          {user.name}
+                    {personInChargesQuery.status === "success" &&
+                      personInChargesQuery.data.map((pic) => (
+                        <SelectItem
+                          className="capitalize"
+                          value={pic.id}
+                          key={pic.id}
+                        >
+                          {pic.name}
                         </SelectItem>
                       ))}
                   </SelectContent>

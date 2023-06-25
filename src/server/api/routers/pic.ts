@@ -14,7 +14,13 @@ export const picRouter = createTRPCRouter({
         orderBy: { name: "asc" }
       })
     }),
-
+  getByCompanyId: protectedProcedure
+    .input(z.object({ companyId: z.string().cuid() }))
+    .query(async ({ ctx, input: { companyId } }) => {
+      return await ctx.prisma.personInCharge.findMany(({
+        where: { companyId },
+      }))
+    }),
   // Mutations
   create: protectedProcedure
     .input(createPicSchema)

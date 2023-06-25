@@ -11,7 +11,7 @@ export const saleRouter = createTRPCRouter({
   // Queries
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.saleOrder.findMany({
-      include: { company: true, user: true, orderItems: { include: { product: true } } },
+      include: { company: true, personInCharge: true, user: true, orderItems: { include: { product: true } } },
       orderBy: { updatedAt: "desc" }
     })
   }),
@@ -31,6 +31,7 @@ export const saleRouter = createTRPCRouter({
       orderNumber,
       dateOrdered,
       companyId,
+      personInChargeId,
       userId,
       status,
       orderItems,
@@ -41,6 +42,7 @@ export const saleRouter = createTRPCRouter({
             orderNumber,
             dateOrdered,
             companyId,
+            personInChargeId,
             userId,
             status,
             orderItems: {
@@ -48,7 +50,7 @@ export const saleRouter = createTRPCRouter({
                 data: orderItems
               }
             }
-          }
+          },
         })
       } catch (err) {
         console.error(err)
