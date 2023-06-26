@@ -1,6 +1,12 @@
 import { Loader2, PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { CommandCombobox } from "~/components/combobox";
+import {
+  type District,
+  type Province,
+  type Regency,
+  type Village,
+} from "~/types/address";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
 import { Label } from "~/ui/label";
@@ -27,34 +33,56 @@ export const AddCustomer = (): JSX.Element => {
   const [villageValue, setVillageValue] = useState("");
 
   // Queries
-  const provincesQuery = api.address.provinces.useQuery();
-
-  const provinceId = provincesQuery?.data?.find(
-    (province) => province.name.toLowerCase() === provinceValue
-  )?.id;
-
-  const regenciesQuery = api.address.regencies.useQuery(undefined, {
-    enabled: provinceValue !== "" || provinceId != undefined,
-    select: (data) => data.filter((d) => d.provinceId === provinceId),
+  const provincesQuery = api.address.provinces.useQuery(undefined, {
+    select: (data: Province[]) =>
+      data.sort((a, b) => a.name.localeCompare(b.name)),
   });
+  const provincesData = provincesQuery.data as Province[];
+
+  const provinceId = provincesData?.find(
+    (province) => province.name.toLowerCase() === provinceValue
+  )?.id as string;
+
+  const regenciesQuery = api.address.regencies.useQuery(
+    { provinceId },
+    {
+      enabled: provinceValue !== "" && !!provinceId,
+      select: (regencies: Regency[]) =>
+        regencies
+          .filter((d) => d.province_id === provinceId)
+          .sort((a, b) => a.name.localeCompare(b.name)),
+    }
+  );
 
   const regencyId = regenciesQuery?.data?.find(
     (regency) => regency.name.toLowerCase() === regencyValue
-  )?.id;
+  )?.id as string;
 
-  const districtsQuery = api.address.districts.useQuery(undefined, {
-    enabled: regencyValue !== "" || regencyId != undefined,
-    select: (data) => data.filter((d) => d.regencyId === regencyId),
-  });
+  const districtsQuery = api.address.districts.useQuery(
+    { regencyId },
+    {
+      enabled: regencyValue !== "" && !!regencyId,
+      select: (districts: District[]) =>
+        districts
+          .filter((district) => district.regency_id === regencyId)
+          .sort((a, b) => a.name.localeCompare(b.name)),
+    }
+  );
 
   const districtId = districtsQuery?.data?.find(
     (district) => district.name.toLowerCase() === districtValue
-  )?.id;
+  )?.id as string;
 
-  const villagesQuery = api.address.villages.useQuery(undefined, {
-    enabled: districtValue !== "" || districtId != undefined,
-    select: (data) => data.filter((d) => d.districtId === districtId),
-  });
+  const villagesQuery = api.address.villages.useQuery(
+    { districtId },
+    {
+      enabled: districtValue !== "" && !!districtId,
+      select: (villages: Village[]) =>
+        villages
+          .filter((village) => village.district_id === districtId)
+          .sort((a, b) => a.name.localeCompare(b.name)),
+    }
+  );
 
   // Mutations
   const utils = api.useContext();
@@ -176,7 +204,7 @@ export const AddCustomer = (): JSX.Element => {
                 Province
               </Label>
               <CommandCombobox
-                datas={provincesQuery.data}
+                datas={provincesData}
                 value={provinceValue}
                 setValue={setProvinceValue}
                 placeholder="province"
