@@ -35,7 +35,9 @@ const ProductPage: NextPage = (): JSX.Element => {
           <div className="space-between flex items-center">
             <TabsList>
               <TabsTrigger value="product">Product</TabsTrigger>
-              <TabsTrigger value="pic">Order Item</TabsTrigger>
+              <TabsTrigger disabled value="order-item">
+                Order Item
+              </TabsTrigger>
             </TabsList>
             <div className="ml-auto mr-4">
               <AddProduct />
@@ -55,7 +57,10 @@ const ProductPage: NextPage = (): JSX.Element => {
             <Separator className="my-4" />
             <ProductList />
           </TabsContent>
-          <TabsContent value="pic" className="border-none p-0 outline-none">
+          <TabsContent
+            value="order-item"
+            className="border-none p-0 outline-none"
+          >
             <div className="flex items-center justify-between pr-4">
               <div className="space-y-1">
                 <h2 className="text-2xl font-semibold tracking-tight">

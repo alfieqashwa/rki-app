@@ -147,20 +147,43 @@ export const AddProduct = (): JSX.Element => {
                 UoM
               </Label>
               <Select name="uom">
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[180px] capitalize">
                   <SelectValue placeholder="Unit of Measure" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={UomType.pack}>pack</SelectItem>
-                  <SelectItem value={UomType.m}>m</SelectItem>
-                  <SelectItem value={UomType.set}>set</SelectItem>
-                  <SelectItem value={UomType.box}>box</SelectItem>
-                  <SelectItem value={UomType.ls}>ls</SelectItem>
-                  <SelectItem value={UomType.tb}>tb</SelectItem>
-                  <SelectItem value={UomType.sht}>sht</SelectItem>
-                  <SelectItem value={UomType.lot}>lot</SelectItem>
-                  <SelectItem value={UomType.roll}>roll</SelectItem>
-                  <SelectItem value={UomType.other}>other</SelectItem>
+                  <SelectItem className="capitalize" value={UomType.pack}>
+                    pack
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.m}>
+                    m
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.set}>
+                    set
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.box}>
+                    box
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.ls}>
+                    ls
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.tb}>
+                    tb
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.sht}>
+                    sht
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.lot}>
+                    lot
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.roll}>
+                    roll
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.other}>
+                    other
+                  </SelectItem>
+                  <SelectItem className="capitalize" value={UomType.service}>
+                    service
+                  </SelectItem>
                 </SelectContent>
               </Select>
               {error?.data?.zodError?.fieldErrors.uom && (

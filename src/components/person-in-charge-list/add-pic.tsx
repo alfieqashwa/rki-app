@@ -1,8 +1,15 @@
-import { FilePlus2, Loader2, Pen } from "lucide-react";
+import { FilePlus2, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
 import { Label } from "~/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/ui/select";
 import {
   Sheet,
   SheetContent,
@@ -16,13 +23,6 @@ import { ToastAction } from "~/ui/toast";
 import { useToast } from "~/ui/use-toast";
 import { api } from "~/utils/api";
 import { wait } from "~/utils/wait";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 
 export function AddPic() {
   const [open, setOpen] = useState(false);

@@ -25,7 +25,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/ui/table";
-import { OrderItemTableToolbar } from "./order-item-table-toolbar";
 
 // import { DataTablePagination } from "~/components/table/data-table-pagination";
 // import { EventTableToolbar } from "./event-table-toolbar";
