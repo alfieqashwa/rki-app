@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { type SelectSingleEventHandler } from "react-day-picker";
 import { useForm } from "react-hook-form";
 import { type z } from "zod";
 import { cn } from "~/lib/utils";
@@ -141,7 +142,7 @@ export const UpdateQuotationForm = ({
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={field.onChange as SelectSingleEventHandler} // fix the undefined type
                     disabled={(date) =>
                       date < new Date() || date < new Date("1900-01-01")
                     }
