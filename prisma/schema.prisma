@@ -1,24 +1,23 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// datasource db {
+//     provider = "postgresql"
+//     // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+//     // Further reading:
+//     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+//     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+//     url      = env("DATABASE_URL")
+// }
+
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["jsonProtocol"]
+    provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
-}
-
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
 }
 
 // Necessary for Next auth
@@ -38,6 +37,7 @@ model Account {
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 model Session {
@@ -46,6 +46,8 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
 model User {
@@ -103,6 +105,8 @@ model Company {
 
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
+
+    @@index([addressId])
 }
 
 model PersonInCharge {
@@ -114,6 +118,7 @@ model PersonInCharge {
     companyId  String      @map("company_id")
     saleOrders SaleOrder[]
 
+    @@index([companyId])
     @@map("person_in_charges")
 }
 
@@ -147,13 +152,14 @@ enum UomType {
     sht
     lot
     roll
+    service
     other
 }
 
 model OrderItem {
     id          String  @id @default(cuid())
     quantity    Int
-    description String?
+    description String? @db.Text
 
     product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
     productId String  @map("product_id")
@@ -166,6 +172,9 @@ model OrderItem {
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
+    @@index([productId])
+    @@index([saleOrderId])
+    @@index([purchaseOrderId])
     @@map("order_items")
 }
 
@@ -193,6 +202,9 @@ model SaleOrder {
     personInCharge   PersonInCharge? @relation(fields: [personInChargeId], references: [id], onDelete: Cascade)
     personInChargeId String?         @map("person_in_charge_id")
 
+    @@index([companyId])
+    @@index([userId])
+    @@index([personInChargeId])
     @@map("sale_orders")
 }
 
@@ -218,30 +230,38 @@ model PurchaseOrder {
     createdAt DateTime @default(now()) @map("created_at")
     updatedAt DateTime @updatedAt @map("updated_at")
 
+    @@index([companyId])
+    @@index([userId])
     @@map("purchase_orders")
 }
 
 model Province {
-    id   String @id
+    id   String @id @unique
     name String
 }
 
 model Regency {
-    id         String @id
+    id         String @id @unique
     provinceId String @map("province_id")
     name       String
+
+    @@index([provinceId])
 }
 
 model District {
-    id        String @id
+    id        String @id @unique
     regencyId String @map("regency_id")
     name      String
+
+    @@index([regencyId])
 }
 
 model Village {
-    id         String @id
+    id         String @id @unique
     districtId String @map("district_id")
     name       String
+
+    @@index([districtId])
 }
 
 enum Role {
