@@ -2,6 +2,12 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "~/lib/utils";
+import {
+  type District,
+  type Province,
+  type Regency,
+  type Village,
+} from "~/types/address";
 import { Button } from "~/ui/button";
 import {
   Command,
@@ -11,14 +17,9 @@ import {
   CommandItem,
 } from "~/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "~/ui/popover";
-import type { RouterOutputs } from "~/utils/api";
 
 type CommandComboboxProps = {
-  datas?:
-    | RouterOutputs["address"]["provinces"]
-    | RouterOutputs["address"]["regencies"]
-    | RouterOutputs["address"]["districts"]
-    | RouterOutputs["address"]["villages"];
+  datas?: Province[] | Regency[] | District[] | Village[];
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   placeholder: string;
@@ -41,7 +42,7 @@ export function CommandCombobox({
           aria-expanded={open}
           className="w-60 justify-between whitespace-nowrap"
         >
-          {value
+          {!!value
             ? datas?.find((data) => data.name === value?.toUpperCase())?.name
             : `Select ${placeholder}...`}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
