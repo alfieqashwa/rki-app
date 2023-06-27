@@ -1,5 +1,6 @@
-import { Category, UomType } from "@prisma/client";
+import { Category, type UomType } from "@prisma/client";
 import { Loader2, Pen } from "lucide-react";
+import { UOM_TYPES } from "~/constants/uom-types";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
 import { Label } from "~/ui/label";
@@ -154,39 +155,15 @@ export function UpdateProduct({ props, open, setOpen }: UpdateProductProps) {
                   <SelectValue placeholder="Unit of Measure" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem className="capitalize" value={UomType.pack}>
-                    pack
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.m}>
-                    m
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.set}>
-                    set
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.box}>
-                    box
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.ls}>
-                    ls
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.tb}>
-                    tb
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.sht}>
-                    sht
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.lot}>
-                    lot
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.roll}>
-                    roll
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.other}>
-                    other
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.service}>
-                    service
-                  </SelectItem>
+                  {UOM_TYPES.map((uom) => (
+                    <SelectItem
+                      className="capitalize"
+                      value={uom.value}
+                      key={uom.id}
+                    >
+                      {uom.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {error?.data?.zodError?.fieldErrors.uom && (
