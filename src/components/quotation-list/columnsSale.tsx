@@ -35,7 +35,11 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
     {
       accessorKey: "orderNumber",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Order No" />
+        <DataTableColumnHeader
+          className="whitespace-nowrap"
+          column={column}
+          title="Order No"
+        />
       ),
       cell: ({ row }) => (
         <div className="flex items-center">
@@ -49,7 +53,11 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
     {
       accessorKey: "dateOrdered",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Date Order" />
+        <DataTableColumnHeader
+          className="whitespace-nowrap"
+          column={column}
+          title="Date Order"
+        />
       ),
       cell: ({ row }) => {
         const formattedDateOrder = format(row.getValue("dateOrdered"), "PPPP", {
@@ -88,7 +96,7 @@ export const columnsSale: ColumnDef<RouterOutputs["sale"]["getAll"][number]>[] =
       accessorKey: "personInCharge",
       accessorFn: (row) => row.personInCharge?.name,
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Person In Charge" />
+        <DataTableColumnHeader column={column} title="PIC" />
       ),
       cell: ({ row }) => (
         <div className="flex items-center capitalize">

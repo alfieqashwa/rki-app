@@ -78,10 +78,10 @@ export const updateProductSchema = z.object({
   }),
   countInStock: z.coerce.number(),
   costPrice: z.coerce.number().min(1, {
-    message: "min price in stock is 1"
+    message: "min cost price in is 1"
   }),
   salePrice: z.coerce.number().min(1, {
-    message: "min price in stock is 1"
+    message: "min sale price in is 1"
   }),
 })
 

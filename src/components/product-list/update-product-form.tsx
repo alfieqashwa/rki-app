@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Category, type UomType } from "@prisma/client";
+import { Category, UomType } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { type z } from "zod";
+import { z } from "zod";
 import { UOM_TYPES } from "~/constants/uom-types";
-import { updateProductSchema } from "~/types/schema";
 import { Button } from "~/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "~/ui/form";
 import { Input } from "~/ui/input";
 import {
   Select,
@@ -17,15 +17,8 @@ import {
 import { ToastAction } from "~/ui/toast";
 import { useToast } from "~/ui/use-toast";
 import { api, type RouterOutputs } from "~/utils/api";
+import { formattedInputPriceValue } from "~/utils/formattedInputValue";
 import { wait } from "~/utils/wait";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/ui/form";
 
 type UpdateProductFormProps = {
   data: RouterOutputs["product"]["getById"];
@@ -62,27 +55,72 @@ export function UpdateProductForm({
     },
   });
 
-  type UpdateProductSchema = z.infer<typeof updateProductSchema>;
+  /**
+   * The different between productSchema and updateProductSchema is
+   * the costPrice & salePrice types converted (number -> string)
+   */
+  const productSchema = z.object({
+    id: z.string().cuid(),
+    name: z
+      .string()
+      .min(3, {
+        message: "at least have 3 characters",
+      })
+      .max(20),
+    category: z.nativeEnum(Category, {
+      errorMap: (issue, _ctx) => {
+        switch (issue.code) {
+          case "invalid_type":
+            return { message: "Please select one of the options" };
+          case "invalid_enum_value":
+            return { message: "Invalid value." };
+          default:
+            return { message: "This is a mandatory fields" };
+        }
+      },
+    }),
+    uom: z.nativeEnum(UomType, {
+      errorMap: (issue, _ctx) => {
+        switch (issue.code) {
+          case "invalid_type":
+            return { message: "Please select one of the options" };
+          case "invalid_enum_value":
+            return { message: "Invalid value." };
+          default:
+            return { message: "This is a mandatory fields" };
+        }
+      },
+    }),
 
-  const defaultValues: UpdateProductSchema = {
+    countInStock: z.coerce.number(),
+    costPrice: z.string(),
+    salePrice: z.string(),
+  });
+
+  type ProductSchema = z.infer<typeof productSchema>;
+
+  const defaultValues: ProductSchema = {
     id: data?.id as string,
     name: data?.name as string,
     category: data?.category as Category,
     uom: data?.uom as UomType,
     countInStock: data?.countInStock as number,
-    costPrice: data?.costPrice as number,
-    salePrice: data?.salePrice as number,
+    costPrice: data?.costPrice.toString() as string,
+    salePrice: data?.salePrice.toString() as string,
   };
 
-  const form = useForm<UpdateProductSchema>({
-    resolver: zodResolver(updateProductSchema),
+  const form = useForm<ProductSchema>({
+    resolver: zodResolver(productSchema),
     defaultValues,
     mode: "onChange",
   });
 
-  function onSubmit(values: UpdateProductSchema) {
+  function onSubmit(values: ProductSchema) {
     const { id, name, category, uom, countInStock, costPrice, salePrice } =
       values;
+
+    const costPriceFloat = parseFloat(costPrice.toString().replace(/,/g, ""));
+    const salePriceFloat = parseFloat(salePrice.toString().replace(/,/g, ""));
 
     mutate({
       id,
@@ -90,8 +128,8 @@ export function UpdateProductForm({
       category,
       uom,
       countInStock,
-      costPrice,
-      salePrice,
+      costPrice: costPriceFloat,
+      salePrice: salePriceFloat,
     });
   }
 
@@ -134,7 +172,6 @@ export function UpdateProductForm({
                   </SelectItem>
                 </SelectContent>
               </Select>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -162,7 +199,6 @@ export function UpdateProductForm({
                   ))}
                 </SelectContent>
               </Select>
-              <FormMessage />
             </FormItem>
           )}
         />
@@ -173,7 +209,11 @@ export function UpdateProductForm({
             <FormItem className="grid grid-cols-6 items-center gap-x-4">
               <FormLabel className="mt-2 text-right">Stock</FormLabel>
               <FormControl>
-                <Input {...field} className="col-span-3 w-[240px]" />
+                <Input
+                  {...field}
+                  type="number"
+                  className="col-span-3 w-[240px]"
+                />
               </FormControl>
             </FormItem>
           )}
@@ -181,11 +221,16 @@ export function UpdateProductForm({
         <FormField
           control={form.control}
           name="costPrice"
-          render={({ field }) => (
+          render={({ field: { onChange, name, value } }) => (
             <FormItem className="grid grid-cols-6 items-center gap-x-4">
               <FormLabel className="mt-2 text-right">Cost Price</FormLabel>
               <FormControl>
-                <Input {...field} className="col-span-3 w-[240px]" />
+                <Input
+                  className="col-span-3 w-[240px]"
+                  name={name}
+                  value={formattedInputPriceValue(value)}
+                  onChange={onChange}
+                />
               </FormControl>
             </FormItem>
           )}
@@ -193,11 +238,16 @@ export function UpdateProductForm({
         <FormField
           control={form.control}
           name="salePrice"
-          render={({ field }) => (
+          render={({ field: { onChange, name, value } }) => (
             <FormItem className="grid grid-cols-6 items-center gap-x-4">
               <FormLabel className="mt-2 text-right">Sale Price</FormLabel>
               <FormControl>
-                <Input {...field} className="col-span-3 w-[240px]" />
+                <Input
+                  className="col-span-3 w-[240px]"
+                  name={name}
+                  value={formattedInputPriceValue(value)}
+                  onChange={onChange}
+                />
               </FormControl>
             </FormItem>
           )}
