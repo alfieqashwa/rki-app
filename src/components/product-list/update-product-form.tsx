@@ -164,8 +164,8 @@ export function UpdateProductForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="Product">Product</SelectItem>
-                  <SelectItem value="Service">Service</SelectItem>
+                  <SelectItem value={Category.Product}>Product</SelectItem>
+                  <SelectItem value={Category.Service}>Service</SelectItem>
                 </SelectContent>
               </Select>
             </FormItem>
