@@ -164,11 +164,17 @@ export function UpdateProductForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem className="capitalize" value={Category.Product}>
-                    {Category.Product}
+                  <SelectItem
+                    className="capitalize"
+                    value={Category.Product as string}
+                  >
+                    {Category.Product as string}
                   </SelectItem>
-                  <SelectItem className="capitalize" value={Category.Service}>
-                    {Category.Service}
+                  <SelectItem
+                    className="capitalize"
+                    value={Category.Service as string}
+                  >
+                    {Category.Service as string}
                   </SelectItem>
                 </SelectContent>
               </Select>
