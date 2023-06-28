@@ -164,18 +164,8 @@ export function UpdateProductForm({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem
-                    className="capitalize"
-                    value={Category.Product as string}
-                  >
-                    {Category.Product as string}
-                  </SelectItem>
-                  <SelectItem
-                    className="capitalize"
-                    value={Category.Service as string}
-                  >
-                    {Category.Service as string}
-                  </SelectItem>
+                  <SelectItem value="Product">Product</SelectItem>
+                  <SelectItem value="Service">Service</SelectItem>
                 </SelectContent>
               </Select>
             </FormItem>
