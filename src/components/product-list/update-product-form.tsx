@@ -55,10 +55,6 @@ export function UpdateProductForm({
     },
   });
 
-  /**
-   * The different between productSchema and updateProductSchema is
-   * the costPrice & salePrice types converted (number -> string)
-   */
   const productSchema = z.object({
     id: z.string().cuid(),
     name: z
