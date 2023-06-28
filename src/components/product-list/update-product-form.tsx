@@ -67,8 +67,30 @@ export function UpdateProductForm({
         message: "at least have 3 characters",
       })
       .max(20),
-    category: z.nativeEnum(Category),
-    uom: z.nativeEnum(UomType),
+    category: z.nativeEnum(Category, {
+      errorMap: (issue, _ctx) => {
+        switch (issue.code) {
+          case "invalid_type":
+            return { message: "Please select one of the options" };
+          case "invalid_enum_value":
+            return { message: "Invalid value." };
+          default:
+            return { message: "This is a mandatory fields" };
+        }
+      },
+    }),
+    uom: z.nativeEnum(UomType, {
+      errorMap: (issue, _ctx) => {
+        switch (issue.code) {
+          case "invalid_type":
+            return { message: "Please select one of the options" };
+          case "invalid_enum_value":
+            return { message: "Invalid value." };
+          default:
+            return { message: "This is a mandatory fields" };
+        }
+      },
+    }),
     countInStock: z.coerce.number(),
     costPrice: z.string(),
     salePrice: z.string(),
