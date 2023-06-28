@@ -8,13 +8,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/ui/dropdown-menu";
-import { type RouterOutputs } from "~/utils/api";
 import { DeleteProduct } from "./delete-product";
 import { UpdateProduct } from "./update-product";
 
-export function RowProductActions(
-  props: RouterOutputs["product"]["getAll"][0]
-) {
+export function RowProductActions({
+  id,
+  name,
+}: {
+  id: string;
+  name: string;
+}): JSX.Element {
   const [open, setOpen] = useState(false);
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -28,17 +31,10 @@ export function RowProductActions(
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <UpdateProduct props={props} open={open} setOpen={setOpen} />
-        </DropdownMenuItem>
+        <UpdateProduct id={id} name={name} open={open} setOpen={setOpen} />
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <DeleteProduct
-            id={props.id}
-            name={props.name}
-            open={open}
-            setOpen={setOpen}
-          />
+          <DeleteProduct id={id} name={name} open={open} setOpen={setOpen} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

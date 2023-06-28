@@ -4,6 +4,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "~/server/api/trpc"
+import { updateProductSchema } from "~/types/schema"
 
 export const productRouter = createTRPCRouter({
   // Queries
@@ -76,43 +77,7 @@ export const productRouter = createTRPCRouter({
       }
     }),
   update: protectedProcedure
-    .input(z.object({
-      id: z.string().cuid(),
-      name: z.string().min(3, {
-        message: "at least have 3 characters"
-      }).max(20),
-      category: z.nativeEnum(Category, {
-        errorMap: (issue, _ctx) => {
-          switch (issue.code) {
-            case 'invalid_type':
-              return { message: "Please select one of the options" }
-            case "invalid_enum_value":
-              return { message: "Invalid value." }
-            default:
-              return { message: "This is a mandatory fields" }
-          }
-        },
-      }),
-      uom: z.nativeEnum(UomType, {
-        errorMap: (issue, _ctx) => {
-          switch (issue.code) {
-            case 'invalid_type':
-              return { message: "Please select one of the options" }
-            case "invalid_enum_value":
-              return { message: "Invalid value." }
-            default:
-              return { message: "This is a mandatory fields" }
-          }
-        },
-      }),
-      countInStock: z.number(),
-      costPrice: z.number().min(1, {
-        message: "min price in stock is 1"
-      }),
-      salePrice: z.number().min(1, {
-        message: "min price in stock is 1"
-      }),
-    }))
+    .input(updateProductSchema)
     .mutation(async ({ ctx, input: { id, name, category, uom, countInStock, costPrice, salePrice } }) => {
       try {
         return await ctx.prisma.product.update({

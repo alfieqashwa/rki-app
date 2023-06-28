@@ -117,8 +117,6 @@ export const UpdateOrderItemForm = ({
     }
   }
 
-  const disabled = false;
-
   return (
     <Form {...form}>
       <form
@@ -199,7 +197,7 @@ export const UpdateOrderItemForm = ({
               Please wait
             </Button>
           ) : (
-            <Button type="submit" size="lg" disabled={disabled}>
+            <Button type="submit" size="lg">
               Submit
             </Button>
           )}

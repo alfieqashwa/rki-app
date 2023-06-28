@@ -127,6 +127,11 @@ export const columnsProduct: ColumnDef<
   },
   {
     id: "actions",
-    cell: ({ row }) => <RowProductActions {...row.original} />,
+    cell: ({ row }) => {
+      const {
+        original: { id, name },
+      } = row;
+      return <RowProductActions id={id} name={name} />;
+    },
   },
 ];
