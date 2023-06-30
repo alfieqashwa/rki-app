@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "~/ui/select";
 import { ToastAction } from "~/ui/toast";
-import { useToast } from "~/ui/use-toast";
+import { toast } from "~/ui/use-toast";
 import { api, type RouterOutputs } from "~/utils/api";
 import { formattedInputPriceValue } from "~/utils/formattedInputValue";
 import { wait } from "~/utils/wait";
@@ -32,7 +32,6 @@ export function UpdateProductForm({
   setOpen,
 }: UpdateProductFormProps) {
   const utils = api.useContext();
-  const { toast } = useToast();
 
   const { mutate, isLoading } = api.product.update.useMutation({
     async onSuccess() {
@@ -151,7 +150,7 @@ export function UpdateProductForm({
           name="category"
           render={({ field }) => (
             <FormItem className="grid grid-cols-6 items-center gap-4">
-              <FormLabel className="mt-2 text-right">Customer</FormLabel>
+              <FormLabel className="mt-2 text-right">Category</FormLabel>
               <Select
                 onValueChange={(value) => field.onChange(value as Category)}
                 defaultValue={field.value}
@@ -174,7 +173,7 @@ export function UpdateProductForm({
           name="uom"
           render={({ field }) => (
             <FormItem className="grid grid-cols-6 items-center gap-4">
-              <FormLabel className="mt-2 text-right">Customer</FormLabel>
+              <FormLabel className="mt-2 text-right">UoM</FormLabel>
               <Select
                 onValueChange={(value) => field.onChange(value as UomType)}
                 defaultValue={field.value}

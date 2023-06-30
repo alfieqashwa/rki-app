@@ -1,9 +1,10 @@
-import { Category, UomType } from "@prisma/client";
-import { Loader2, PlusCircle } from "lucide-react";
+import { type z } from "zod";
+import { Category } from "@prisma/client";
 import { useState } from "react";
+import { Loader2, PlusCircle } from "lucide-react";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
-import { Label } from "~/ui/label";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "~/ui/form";
 import {
   Select,
   SelectContent,
@@ -15,33 +16,26 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from "~/ui/sheet";
 import { ToastAction } from "~/ui/toast";
 import { toast } from "~/ui/use-toast";
-import { api } from "~/utils/api";
-import { formattedInputPriceValue } from "~/utils/formattedInputValue";
 import { wait } from "~/utils/wait";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UOM_TYPES } from "~/constants/uom-types";
+import { formattedInputPriceValue } from "~/utils/formattedInputValue";
+import { api } from "~/utils/api";
+import { createProductSchema } from "~/types/schema";
 
 export const AddProduct = (): JSX.Element => {
   const [open, setOpen] = useState(false);
-  const [inputCostPrice, setInputCostPrice] = useState("");
-  const [inputSalePrice, setInputSalePrice] = useState("");
-
-  const handleCostPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputCostPrice(formattedInputPriceValue(e.target.value));
-  };
-  const handleSalePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputSalePrice(formattedInputPriceValue(e.target.value));
-  };
 
   // Mutations
   const utils = api.useContext();
-
-  const { mutate, isLoading, error } = api.product.create.useMutation({
+  const { mutate, isLoading } = api.product.create.useMutation({
     async onSuccess() {
       toast({
         title: "Succeed!",
@@ -62,27 +56,38 @@ export const AddProduct = (): JSX.Element => {
     },
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  type CreateProductSchema = z.infer<typeof createProductSchema>;
 
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get("name")?.toString().toLowerCase() as string;
-    const category = formData.get("category") as Category;
-    const uom = formData.get("uom") as UomType;
-    const countInStock = formData.get("countInStock") as string;
+  const defaultValues: CreateProductSchema = {
+    name: "",
+    category: "Product",
+    uom: "pack",
+    countInStock: 0,
+    costPrice: "",
+    salePrice: "",
+  };
 
-    const costPrice = parseFloat(inputCostPrice.replace(/,/g, ""));
-    const salePrice = parseFloat(inputSalePrice.replace(/,/g, ""));
+  const form = useForm<CreateProductSchema>({
+    resolver: zodResolver(createProductSchema),
+    defaultValues,
+    mode: "onChange",
+  });
+
+  function onSubmit(values: CreateProductSchema) {
+    const { name, category, uom, countInStock, costPrice, salePrice } = values;
+
+    const costPriceFloat = parseFloat(costPrice.toString().replace(/,/g, ""));
+    const salePriceFloat = parseFloat(salePrice.toString().replace(/,/g, ""));
 
     mutate({
       name,
       category,
       uom,
       countInStock: +countInStock,
-      costPrice,
-      salePrice,
+      costPrice: costPriceFloat,
+      salePrice: salePriceFloat,
     });
-  };
+  }
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -99,179 +104,154 @@ export const AddProduct = (): JSX.Element => {
             Fill the form to create new product and click the Submit button.
           </SheetDescription>
         </SheetHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
-                Name
-              </Label>
-              <Input
-                id="name"
-                name="name"
-                placeholder="product name"
-                className="col-span-3 capitalize"
-              />
-              {error?.data?.zodError?.fieldErrors.name && (
-                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.name}
-                </span>
+        <Form {...form}>
+          <form
+            onSubmit={(event) => void form.handleSubmit(onSubmit)(event)}
+            className="grid gap-4"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-6 items-center gap-x-4">
+                  <FormLabel className="mt-2 text-right">Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="col-span-3 w-[240px]" />
+                  </FormControl>
+                </FormItem>
               )}
-            </div>
+            />
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="category" className="text-right">
-                Category
-              </Label>
-              <Select name="category">
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={Category.Product}>
-                    {Category.Product}
-                  </SelectItem>
-                  <SelectItem value={Category.Service}>
-                    {Category.Service}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              {error?.data?.zodError?.fieldErrors.category && (
-                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.category}
-                </span>
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-6 items-center gap-x-4">
+                  <FormLabel className="mt-2 text-right">Category</FormLabel>
+                  <Select
+                    onValueChange={(value) => field.onChange(value)}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="col-span-3 w-[240px] capitalize">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select product" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value={Category.Product}>Product</SelectItem>
+                      <SelectItem value={Category.Service}>Service</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </FormItem>
               )}
-            </div>
+            />
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="uom" className="text-right">
-                UoM
-              </Label>
-              <Select name="uom">
-                <SelectTrigger className="w-[180px] capitalize">
-                  <SelectValue placeholder="Unit of Measure" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem className="capitalize" value={UomType.pack}>
-                    pack
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.m}>
-                    m
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.set}>
-                    set
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.box}>
-                    box
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.ls}>
-                    ls
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.tb}>
-                    tb
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.sht}>
-                    sht
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.lot}>
-                    lot
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.roll}>
-                    roll
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.other}>
-                    other
-                  </SelectItem>
-                  <SelectItem className="capitalize" value={UomType.service}>
-                    service
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              {error?.data?.zodError?.fieldErrors.uom && (
-                <span className="col-span-4 -mt-4 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.uom}
-                </span>
+            <FormField
+              control={form.control}
+              name="uom"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-6 items-center gap-x-4">
+                  <FormLabel className="mt-2 text-right">UoM</FormLabel>
+                  <Select
+                    onValueChange={(value) => field.onChange(value)}
+                    defaultValue={field.value}
+                  >
+                    <FormControl className="col-span-3 w-[240px] capitalize">
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select product" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {UOM_TYPES.map((uom) => (
+                        <SelectItem value={uom.value} key={uom.id}>
+                          {uom.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FormItem>
               )}
-            </div>
+            />
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="countInStock" className="text-right">
-                Stock
-              </Label>
-              <Input
-                id="countInStock"
-                name="countInStock"
-                type="number"
-                min={0}
-                placeholder="count in stock"
-                className="col-span-3 capitalize"
-              />
-              {error?.data?.zodError?.fieldErrors.countInStock && (
-                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.countInStock}
-                </span>
+            <FormField
+              control={form.control}
+              name="countInStock"
+              render={({ field }) => (
+                <FormItem className="grid grid-cols-6 items-center gap-x-4">
+                  <FormLabel className="mt-2 text-right">Stock</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="number"
+                      className="col-span-3 w-[240px]"
+                    />
+                  </FormControl>
+                </FormItem>
               )}
-            </div>
+            />
 
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="costPrice"
-                className="whitespace-nowrap text-right"
+            <FormField
+              control={form.control}
+              name="costPrice"
+              render={({ field: { onChange, name, value } }) => (
+                <FormItem className="grid grid-cols-6 items-center gap-x-4">
+                  <FormLabel className="mt-2 text-right">Cost Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="col-span-3 w-[240px]"
+                      name={name}
+                      value={formattedInputPriceValue(value)}
+                      onChange={onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="salePrice"
+              render={({ field: { onChange, name, value } }) => (
+                <FormItem className="grid grid-cols-6 items-center gap-x-4">
+                  <FormLabel className="mt-2 text-right">Sale Price</FormLabel>
+                  <FormControl>
+                    <Input
+                      className="col-span-3 w-[240px]"
+                      name={name}
+                      value={formattedInputPriceValue(value)}
+                      onChange={onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <div className="absolute bottom-8 right-8 space-x-2">
+              <Button
+                type="button"
+                variant="ghost"
+                size="lg"
+                onClick={handleCancel}
               >
-                Cost Price
-              </Label>
-              <Input
-                id="costPrice"
-                name="costPrice"
-                type="text"
-                value={inputCostPrice}
-                onChange={handleCostPriceChange}
-                placeholder="cost price"
-                className="col-span-3"
-              />
-              {error?.data?.zodError?.fieldErrors.costPrice && (
-                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.costPrice}
-                </span>
+                Cancel
+              </Button>
+              {isLoading ? (
+                <Button disabled>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Please wait
+                </Button>
+              ) : (
+                <Button type="submit" size="lg">
+                  Submit
+                </Button>
               )}
             </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="salePrice"
-                className="whitespace-nowrap text-right"
-              >
-                Sale Price
-              </Label>
-              <Input
-                id="salePrice"
-                name="salePrice"
-                type="text"
-                value={inputSalePrice}
-                onChange={handleSalePriceChange}
-                placeholder="sale price"
-                className="col-span-3"
-              />
-              {error?.data?.zodError?.fieldErrors.salePrice && (
-                <span className="col-span-4 -mt-2.5 text-right text-sm text-destructive">
-                  {error?.data?.zodError?.fieldErrors.salePrice}
-                </span>
-              )}
-            </div>
-          </div>
-          <SheetFooter className="absolute bottom-16 right-8 w-full">
-            {isLoading ? (
-              <Button disabled className="w-1/3">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Please wait
-              </Button>
-            ) : (
-              <Button type="submit" size="lg">
-                Submit
-              </Button>
-            )}
-          </SheetFooter>
-        </form>
+          </form>
+        </Form>
       </SheetContent>
     </Sheet>
   );
+  function handleCancel() {
+    void wait(500).then(() => setOpen(!open));
+  }
 };
