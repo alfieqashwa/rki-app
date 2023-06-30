@@ -28,7 +28,9 @@ type Props = {
 
 export const CreateOrderItemForm = ({ open, setOpen }: Props): JSX.Element => {
   // Queries
-  const productsQuery = api.product.getAll.useQuery();
+  const productsQuery = api.product.getAll.useQuery(undefined, {
+    select: (p) => p.sort((a, b) => a.name.localeCompare(b.name)),
+  });
 
   // Mutations
   const { query } = useRouter();

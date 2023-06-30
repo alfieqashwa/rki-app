@@ -52,7 +52,9 @@ export const CreateQuotationForm = ({ open, setOpen }: Props): JSX.Element => {
   const userIdfromSession = session.data?.user.id as string;
   const companiesQuery = api.company.companyList.useQuery();
   const usersQuery = api.user.getAll.useQuery();
-  const productsQuery = api.product.getAll.useQuery();
+  const productsQuery = api.product.getAll.useQuery(undefined, {
+    select: (p) => p.sort((a, b) => a.name.localeCompare(b.name)),
+  });
   const getAllSaleOrderNumberQuery = api.sale.getAll.useQuery(undefined, {
     select: (data) => data.map((data) => data.orderNumber),
   });
