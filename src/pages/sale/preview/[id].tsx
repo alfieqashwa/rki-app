@@ -37,10 +37,9 @@ const PreviewSaleOrderByIdPage: NextPage = () => {
 
   // Queries
   const { data, status } = api.sale.getById.useQuery({ id }, { enabled: !!id });
-
   return (
     <Layout title="preview">
-      {status === "success" && <pre>{JSON.stringify(data, null, 4)}</pre>}
+      <pre>{JSON.stringify(data, null, 4)}</pre>
       <div className="h-full px-4 py-6 lg:px-8">
         <Tabs defaultValue="preview" className="h-full space-y-6">
           <div className="space-between flex items-center">
@@ -63,7 +62,7 @@ const PreviewSaleOrderByIdPage: NextPage = () => {
               </div>
             </div>
             <Separator className="my-4" />
-            <PdfPreview />
+            {status === "success" && data != null && <PdfPreview data={data} />}
           </TabsContent>
         </Tabs>
       </div>

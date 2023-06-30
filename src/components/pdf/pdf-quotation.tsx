@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+import { type RouterOutputs } from "~/utils/api";
 import {
   Document,
   Image,
@@ -68,11 +70,25 @@ const styles = StyleSheet.create({
     width: "6%",
     fontSize: config.normalFontSize,
   },
+  cellName: {
+    fontWeight: "heavy",
+    white: "#fff",
+    textTransform: "capitalize",
+    width: "15%",
+    fontSize: config.normalFontSize,
+  },
+  cellCategory: {
+    fontWeight: "heavy",
+    white: "#fff",
+    textTransform: "capitalize",
+    width: "15%",
+    fontSize: config.normalFontSize,
+  },
   cellDesc: {
     fontWeight: "heavy",
     white: "#fff",
     textTransform: "capitalize",
-    width: "50%",
+    width: "35%",
     fontSize: config.normalFontSize,
   },
   cellPrice: {
@@ -84,41 +100,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const DATA = [
-  {
-    no: 1,
-    desc: "UNITRONIC BUS DN THIN Y,DifaceNet",
-    qty: 80,
-    unit: "M",
-    price: 81_000,
-    amount: 6_480_000,
-  },
-  {
-    no: 2,
-    desc: "Terminal Weidmuller Tingkat",
-    qty: 100,
-    unit: "Pcs",
-    price: 31_000,
-    amount: 3_100_000,
-  },
-  {
-    no: 3,
-    desc: "Cable Ties CV- 150 ( 3,6X150mm) Putih KSS",
-    qty: 10,
-    unit: "Pack",
-    price: 22_000,
-    amount: 220_000,
-  },
-  {
-    no: 4,
-    desc: "Cable Ties CV- 150 ( 2,5X100mm) Putih KSS",
-    qty: 10,
-    unit: "Pack",
-    price: 12_000,
-    amount: 9_920_000,
-  },
-] as const;
-
 const formatter = new Intl.NumberFormat("id-ID", {
   style: "currency",
   currency: "IDR",
@@ -129,7 +110,20 @@ const formatter = new Intl.NumberFormat("id-ID", {
   //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 });
 
-export default function PdfPreview() {
+type Props = {
+  data: RouterOutputs["sale"]["getById"];
+};
+
+export default function PdfPreview({ data }: Props): JSX.Element {
+  // TODO: TypeScript is yelling when i tried nested-destructured the data
+
+  const { orderNumber, dateOrdered, company, orderItems } = data ?? {};
+
+  const companyName = company?.name;
+  const address = company?.address;
+  const { street, village, district, regency, province, postalCode } =
+    address ?? {};
+
   return (
     <PDFViewer width="100%" height="650px">
       <Document>
@@ -204,21 +198,38 @@ export default function PdfPreview() {
                   marginTop: "4px",
                   fontSize: "12px",
                   fontWeight: "bold",
+                  textTransform: "capitalize",
                 }}
               >
-                PT. Tetra Pak Indonesia
+                {companyName}
               </Text>
-              <View>
-                <Text
-                  style={{
-                    marginTop: "4px",
-                    fontSize: "10px",
-                  }}
-                >
-                  Tetra Pak Building 3rd Floor Jl. Buncit Raya Kav. 100 Pejaten
-                  Barat Pasar Minggu Jakarta Selatan 12510
-                </Text>
-              </View>
+              <Text
+                style={{
+                  marginTop: "4px",
+                  fontSize: "10px",
+                  textTransform: "capitalize",
+                }}
+              >
+                {street} {village} {district}
+              </Text>
+              <Text
+                style={{
+                  marginTop: "4px",
+                  fontSize: "10px",
+                  textTransform: "capitalize",
+                }}
+              >
+                {regency} {province}
+              </Text>
+              <Text
+                style={{
+                  marginTop: "4px",
+                  fontSize: "10px",
+                  textTransform: "capitalize",
+                }}
+              >
+                {postalCode}
+              </Text>
             </View>
 
             <View style={{ width: "33.333333%" }}>
@@ -231,41 +242,41 @@ export default function PdfPreview() {
                   padding: "2px",
                 }}
               >
-                <Text>NUM : QT230510-201/R0</Text>
-                <Text>DATE : 05/10/2023</Text>
+                <Text>NUM : {orderNumber}</Text>
+                <Text>DATE : {format(dateOrdered as Date, "dd/MM/yyyy")}</Text>
               </View>
-              <View style={{ marginTop: "16px" }}>
-                <Text
-                  style={{
-                    marginTop: "4px",
-                    fontSize: "10px",
-                  }}
-                >
-                  REFFERENCE
-                </Text>
-                <View
-                  style={{
-                    fontSize: "10px",
-                    display: "flex",
-                    flexDirection: "row",
-                    columnGap: 8,
-                  }}
-                >
-                  <Text>INQ NUM :</Text>
-                  <Text>By Email</Text>
-                </View>
-                <View
-                  style={{
-                    fontSize: "10px",
-                    display: "flex",
-                    flexDirection: "row",
-                    columnGap: 8,
-                  }}
-                >
-                  <Text>INQ DATE :</Text>
-                  <Text>-</Text>
-                </View>
-              </View>
+              {/* <View style={{ marginTop: "16px" }}> */}
+              {/*   <Text */}
+              {/*     style={{ */}
+              {/*       marginTop: "4px", */}
+              {/*       fontSize: "10px", */}
+              {/*     }} */}
+              {/*   > */}
+              {/*     REFFERENCE */}
+              {/*   </Text> */}
+              {/*   <View */}
+              {/*     style={{ */}
+              {/*       fontSize: "10px", */}
+              {/*       display: "flex", */}
+              {/*       flexDirection: "row", */}
+              {/*       columnGap: 8, */}
+              {/*     }} */}
+              {/*   > */}
+              {/*     <Text>INQ NUM :</Text> */}
+              {/*     <Text>By Email</Text> */}
+              {/*   </View> */}
+              {/*   <View */}
+              {/*     style={{ */}
+              {/*       fontSize: "10px", */}
+              {/*       display: "flex", */}
+              {/*       flexDirection: "row", */}
+              {/*       columnGap: 8, */}
+              {/*     }} */}
+              {/*   > */}
+              {/*     <Text>INQ DATE :</Text> */}
+              {/*     <Text>-</Text> */}
+              {/*   </View> */}
+              {/* </View> */}
             </View>
           </View>
 
@@ -278,6 +289,8 @@ export default function PdfPreview() {
             <View style={{ width: "100%" }}>
               <View style={styles.header}>
                 <Text style={styles.cellNo}>no</Text>
+                <Text style={styles.cellName}>Name</Text>
+                <Text style={styles.cellCategory}>Category</Text>
                 <Text style={styles.cellDesc}>description</Text>
                 <Text style={styles.cellNo}>qty</Text>
                 <Text style={styles.cellNo}>unit</Text>
@@ -285,16 +298,24 @@ export default function PdfPreview() {
                 <Text style={styles.cellPrice}>amount</Text>
               </View>
               <View style={styles.body}>
-                {DATA.map((data) => {
-                  const { no, desc, qty, unit, price, amount } = data;
-                  const formattedPrice = formatter.format(price);
+                {orderItems?.map((item, index) => {
+                  const {
+                    id,
+                    quantity,
+                    description,
+                    product: { name, category, uom, salePrice },
+                  } = item;
+                  const amount = quantity * salePrice;
+                  const formattedPrice = formatter.format(salePrice);
                   const formattedAmount = formatter.format(amount);
                   return (
-                    <View style={styles.row} key={no}>
-                      <Text style={styles.cellNo}>{no}</Text>
-                      <Text style={styles.cellDesc}>{desc}</Text>
-                      <Text style={styles.cellNo}>{qty}</Text>
-                      <Text style={styles.cellNo}>{unit}</Text>
+                    <View style={styles.row} key={id}>
+                      <Text style={styles.cellNo}>{index + 1}</Text>
+                      <Text style={styles.cellName}>{name}</Text>
+                      <Text style={styles.cellCategory}>{category}</Text>
+                      <Text style={styles.cellDesc}>{description}</Text>
+                      <Text style={styles.cellNo}>{quantity}</Text>
+                      <Text style={styles.cellNo}>{uom}</Text>
                       <Text style={styles.cellPrice}>{formattedPrice}</Text>
                       <Text style={styles.cellPrice}>{formattedAmount}</Text>
                     </View>

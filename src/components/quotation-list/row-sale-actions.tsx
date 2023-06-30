@@ -41,7 +41,7 @@ export function RowSaleActions(props: Props) {
             <FileText className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Preview
           </Link>
-
+          <DropdownMenuSeparator />
           <UpdateStatus
             id={props.id}
             name={props.orderNumber}

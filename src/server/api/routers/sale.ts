@@ -1,19 +1,20 @@
-import { StatusSaleOrder } from "@prisma/client"
-import { z } from "zod"
-import {
-  createTRPCRouter,
-  protectedProcedure,
-} from "~/server/api/trpc"
-import { createSaleSchema, updateSaleSchema } from "~/types/schema"
+import { StatusSaleOrder } from "@prisma/client";
+import { z } from "zod";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { createSaleSchema, updateSaleSchema } from "~/types/schema";
 
 export const saleRouter = createTRPCRouter({
-
   // Queries
   getAll: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.saleOrder.findMany({
-      include: { company: true, personInCharge: true, user: true, orderItems: { include: { product: true } } },
-      orderBy: { updatedAt: "desc" }
-    })
+      include: {
+        company: true,
+        personInCharge: true,
+        user: true,
+        orderItems: { include: { product: true } },
+      },
+      orderBy: { updatedAt: "desc" },
+    });
   }),
   getById: protectedProcedure
     .input(z.object({ id: z.string().cuid() }))
@@ -22,100 +23,108 @@ export const saleRouter = createTRPCRouter({
         where: { id },
         include: {
           company: {
-            include: { address: true }
+            include: { address: true },
           },
           personInCharge: true,
           user: true,
-          orderItems: true
-        }
-      })
+          orderItems: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      });
     }),
 
   // Mutations
   create: protectedProcedure
     .input(createSaleSchema)
-    .mutation(async ({ ctx, input: {
-      orderNumber,
-      dateOrdered,
-      companyId,
-      personInChargeId,
-      userId,
-      status,
-      orderItems,
-    } }) => {
-      try {
-        return await ctx.prisma.saleOrder.create({
-          data: {
-            orderNumber,
-            dateOrdered,
-            companyId,
-            personInChargeId,
-            userId,
-            status,
-            orderItems: {
-              createMany: {
-                data: orderItems
-              }
-            }
-          },
-        })
-      } catch (err) {
-        console.error(err)
+    .mutation(
+      async ({
+        ctx,
+        input: {
+          orderNumber,
+          dateOrdered,
+          companyId,
+          personInChargeId,
+          userId,
+          status,
+          orderItems,
+        },
+      }) => {
+        try {
+          return await ctx.prisma.saleOrder.create({
+            data: {
+              orderNumber,
+              dateOrdered,
+              companyId,
+              personInChargeId,
+              userId,
+              status,
+              orderItems: {
+                createMany: {
+                  data: orderItems,
+                },
+              },
+            },
+          });
+        } catch (err) {
+          console.error(err);
+        }
       }
-    }),
+    ),
   update: protectedProcedure
     .input(updateSaleSchema)
-    .mutation(async ({
-      ctx,
-      input: {
-        id,
-        dateOrdered,
-        companyId,
-        personInChargeId,
-        userId,
+    .mutation(
+      async ({
+        ctx,
+        input: { id, dateOrdered, companyId, personInChargeId, userId },
+      }) => {
+        try {
+          return await ctx.prisma.saleOrder.update({
+            where: { id },
+            data: {
+              dateOrdered,
+              companyId,
+              personInChargeId,
+              userId,
+            },
+          });
+        } catch (err) {
+          console.error(err);
+        }
       }
-    }) => {
-      try {
-
-        return await ctx.prisma.saleOrder.update({
-          where: { id },
-          data: {
-            dateOrdered,
-            companyId,
-            personInChargeId,
-            userId,
-          }
-        })
-      } catch (err) {
-        console.error(err)
-      }
-    }),
+    ),
   updateStatus: protectedProcedure
-    .input(z.object({
-      id: z.string().cuid(),
-      status: z.nativeEnum(StatusSaleOrder)
-    }))
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        status: z.nativeEnum(StatusSaleOrder),
+      })
+    )
     .mutation(async ({ ctx, input: { id, status } }) => {
       try {
         return await ctx.prisma.saleOrder.update({
           where: { id },
-          data: { status }
-        })
+          data: { status },
+        });
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
     }),
   deleteQuotation: protectedProcedure
-    .input(z.object({
-      id: z.string().cuid()
-    }))
+    .input(
+      z.object({
+        id: z.string().cuid(),
+      })
+    )
     .mutation(async ({ ctx, input: { id } }) => {
       try {
         return await ctx.prisma.saleOrder.delete({
-          where: { id }
-        })
+          where: { id },
+        });
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
-    })
-})
+    }),
+});
