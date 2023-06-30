@@ -1,4 +1,3 @@
-import { Pen } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -9,6 +8,7 @@ import {
 } from "~/ui/sheet";
 import { api } from "~/utils/api";
 import { UpdateProductForm } from "./update-product-form";
+import { Pen } from "lucide-react";
 
 type UpdateProductProps = {
   id: string;
