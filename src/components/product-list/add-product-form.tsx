@@ -96,7 +96,7 @@ export const AddProductForm = ({ open, setOpen }: Props): JSX.Element => {
             <FormItem className="grid grid-cols-6 items-center gap-x-4">
               <FormLabel className="mt-2 text-right">Name</FormLabel>
               <FormControl>
-                <Input {...field} className="col-span-3 w-[240px]" />
+                <Input {...field} className="col-span-3 w-[240px] capitalize" />
               </FormControl>
             </FormItem>
           )}
@@ -143,7 +143,11 @@ export const AddProductForm = ({ open, setOpen }: Props): JSX.Element => {
                 </FormControl>
                 <SelectContent>
                   {UOM_TYPES.map((uom) => (
-                    <SelectItem value={uom.value} key={uom.id}>
+                    <SelectItem
+                      className="capitalize"
+                      value={uom.value}
+                      key={uom.id}
+                    >
                       {uom.name}
                     </SelectItem>
                   ))}
