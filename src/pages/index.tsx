@@ -39,7 +39,7 @@ const AuthShowcase: React.FC = () => {
       <p className="text-center text-2xl text-white">
         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
       </p>
-      <section className="space-x-8">
+      <section className="flex flex-col space-y-4 md:flex-row md:space-x-8 md:space-y-0">
         <button
           className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
           onClick={sessionData ? () => void signOut() : () => void signIn()}
