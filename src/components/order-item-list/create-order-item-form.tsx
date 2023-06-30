@@ -220,8 +220,8 @@ export const CreateOrderItemForm = ({ open, setOpen }: Props): JSX.Element => {
     </Form>
   );
 
-  // wait for 800 miliseconds before close the dialog
+  // wait for 500 miliseconds before close the dialog
   function handleCancel() {
-    void wait(800).then(() => setOpen(!open));
+    void wait(500).then(() => setOpen(!open));
   }
 };

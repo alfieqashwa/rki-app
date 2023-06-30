@@ -142,6 +142,6 @@ export function DeleteOrderItem({
     </Dialog>
   );
   function handleCancel() {
-    void wait(800).then(() => setOpen(!open));
+    void wait(500).then(() => setOpen(!open));
   }
 }

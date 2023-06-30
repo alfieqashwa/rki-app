@@ -193,9 +193,8 @@ export function CreatePersonInCharge({ id, customerName }: Props) {
     setInputFields(values);
   }
   function handleCancel() {
-    void wait(800).then(() => setOpen(!open));
+    void wait(500).then(() => setOpen(!open));
   }
-  // wait for 800 miliseconds before close the dialog
   function handleAddFields() {
     setInputFields([...inputFields, { name: "", position: "", companyId: id }]);
   }

@@ -106,6 +106,6 @@ export function DeletePic({ id, name, companyName, open, setOpen }: Props) {
     </Dialog>
   );
   function handleCancel() {
-    void wait(800).then(() => setOpen(!open));
+    void wait(500).then(() => setOpen(!open));
   }
 }
