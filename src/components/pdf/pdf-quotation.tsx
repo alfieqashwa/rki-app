@@ -9,6 +9,7 @@ import {
   Text,
   View,
 } from "@react-pdf/renderer";
+import { VAT } from "~/constants/vat";
 
 const config = {
   primaryColor: "#002C71",
@@ -91,12 +92,35 @@ const styles = StyleSheet.create({
     width: "35%",
     fontSize: config.normalFontSize,
   },
+  cellQty: {
+    fontWeight: "heavy",
+    white: "#fff",
+    textTransform: "capitalize",
+    width: "6%",
+    fontSize: config.normalFontSize,
+  },
+  cellUom: {
+    fontWeight: "heavy",
+    white: "#fff",
+    textTransform: "capitalize",
+    width: "6%",
+    fontSize: config.normalFontSize,
+  },
   cellPrice: {
     fontWeight: "heavy",
     white: "#fff",
     textTransform: "capitalize",
     width: "15%",
     fontSize: config.normalFontSize,
+  },
+  footer: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    padding: 3,
   },
 });
 
@@ -115,14 +139,25 @@ type Props = {
 };
 
 export default function PdfPreview({ data }: Props): JSX.Element {
-  // TODO: TypeScript is yelling when i tried nested-destructured the data
-
+  // TODO: TypeScript is yelling when i was trying to nested-destructured the data
   const { orderNumber, dateOrdered, company, orderItems } = data ?? {};
 
   const companyName = company?.name;
   const address = company?.address;
   const { street, village, district, regency, province, postalCode } =
     address ?? {};
+
+  // Calculate
+  const subTotal = orderItems?.reduce(
+    (acc, curr) => acc + curr.quantity * curr.product.salePrice,
+    0
+  ) as number;
+  const vat = subTotal * VAT;
+  const total = subTotal + vat;
+
+  const formattedSubTotal = formatter.format(subTotal);
+  const formattedVat = formatter.format(vat);
+  const formattedTotal = formatter.format(total);
 
   return (
     <PDFViewer width="100%" height="650px">
@@ -292,8 +327,8 @@ export default function PdfPreview({ data }: Props): JSX.Element {
                 <Text style={styles.cellName}>Name</Text>
                 <Text style={styles.cellCategory}>Category</Text>
                 <Text style={styles.cellDesc}>description</Text>
-                <Text style={styles.cellNo}>qty</Text>
-                <Text style={styles.cellNo}>unit</Text>
+                <Text style={styles.cellQty}>qty</Text>
+                <Text style={styles.cellUom}>unit</Text>
                 <Text style={styles.cellPrice}>price</Text>
                 <Text style={styles.cellPrice}>amount</Text>
               </View>
@@ -314,13 +349,65 @@ export default function PdfPreview({ data }: Props): JSX.Element {
                       <Text style={styles.cellName}>{name}</Text>
                       <Text style={styles.cellCategory}>{category}</Text>
                       <Text style={styles.cellDesc}>{description}</Text>
-                      <Text style={styles.cellNo}>{quantity}</Text>
-                      <Text style={styles.cellNo}>{uom}</Text>
+                      <Text style={styles.cellQty}>{quantity}</Text>
+                      <Text style={styles.cellUom}>{uom}</Text>
                       <Text style={styles.cellPrice}>{formattedPrice}</Text>
                       <Text style={styles.cellPrice}>{formattedAmount}</Text>
                     </View>
                   );
                 })}
+              </View>
+              <View style={styles.footer}>
+                <Text
+                  style={{
+                    fontWeight: "heavy",
+                    color: "#fff",
+                    textTransform: "capitalize",
+                    width: "83%",
+                    fontSize: config.normalFontSize,
+                  }}
+                ></Text>
+                <Text style={styles.cellPrice}>Sub Total</Text>
+                <Text style={styles.cellPrice}>{formattedSubTotal}</Text>
+              </View>
+              <View style={styles.footer}>
+                <Text
+                  style={{
+                    fontWeight: "heavy",
+                    color: "#fff",
+                    textTransform: "capitalize",
+                    width: "83%",
+                    fontSize: config.normalFontSize,
+                  }}
+                ></Text>
+                <Text style={styles.cellPrice}>Disc 0%</Text>
+                <Text style={styles.cellPrice}>-</Text>
+              </View>
+              <View style={styles.footer}>
+                <Text
+                  style={{
+                    fontWeight: "heavy",
+                    color: "#fff",
+                    textTransform: "capitalize",
+                    width: "83%",
+                    fontSize: config.normalFontSize,
+                  }}
+                ></Text>
+                <Text style={styles.cellPrice}>Vat 11%</Text>
+                <Text style={styles.cellPrice}>{formattedVat}</Text>
+              </View>
+              <View style={styles.footer}>
+                <Text
+                  style={{
+                    fontWeight: "heavy",
+                    color: "#fff",
+                    textTransform: "capitalize",
+                    width: "83%",
+                    fontSize: config.normalFontSize,
+                  }}
+                ></Text>
+                <Text style={styles.cellPrice}>Total</Text>
+                <Text style={styles.cellPrice}>{formattedTotal}</Text>
               </View>
             </View>
           </View>

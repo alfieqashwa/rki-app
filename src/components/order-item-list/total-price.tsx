@@ -1,10 +1,11 @@
+import { VAT } from "~/constants/vat";
+
 type TotalPriceProps = {
   totalPrice: number;
 };
 
 export const TotalPrice = ({ totalPrice }: TotalPriceProps) => {
   // Value Add Tax
-  const VAT = 11 / 100;
   const sumOfTax = totalPrice * VAT;
 
   const formattedTotalPrice = new Intl.NumberFormat("id-ID", {
