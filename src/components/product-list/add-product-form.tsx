@@ -109,7 +109,7 @@ export const AddProductForm = ({ open, setOpen }: Props): JSX.Element => {
             <FormItem className="grid grid-cols-6 items-center gap-x-4">
               <FormLabel className="mt-2 text-right">Category</FormLabel>
               <Select
-                onValueChange={(value) => field.onChange(value)}
+                onValueChange={(value) => field.onChange(value as Category)}
                 defaultValue={field.value}
               >
                 <FormControl className="col-span-3 w-[240px] capitalize">
