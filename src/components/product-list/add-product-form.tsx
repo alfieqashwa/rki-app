@@ -1,5 +1,5 @@
 import { type z } from "zod";
-import { Category } from "@prisma/client";
+import { Category, type UomType } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { Button } from "~/ui/button";
 import { Input } from "~/ui/input";
@@ -133,7 +133,7 @@ export const AddProductForm = ({ open, setOpen }: Props): JSX.Element => {
             <FormItem className="grid grid-cols-6 items-center gap-x-4">
               <FormLabel className="mt-2 text-right">UoM</FormLabel>
               <Select
-                onValueChange={(value) => field.onChange(value)}
+                onValueChange={(value) => field.onChange(value as UomType)}
                 defaultValue={field.value}
               >
                 <FormControl className="col-span-3 w-[240px] capitalize">
