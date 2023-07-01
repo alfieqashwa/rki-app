@@ -140,7 +140,14 @@ type Props = {
 
 export default function PdfPreview({ data }: Props): JSX.Element {
   // TODO: TypeScript is yelling when i was trying to nested-destructured the data
-  const { orderNumber, dateOrdered, company, orderItems } = data ?? {};
+  const {
+    orderNumber,
+    dateOrdered,
+    company,
+    personInCharge,
+    user,
+    orderItems,
+  } = data ?? {};
 
   const companyName = company?.name;
   const address = company?.address;
@@ -280,41 +287,24 @@ export default function PdfPreview({ data }: Props): JSX.Element {
                 <Text>NUM : {orderNumber}</Text>
                 <Text>DATE : {format(dateOrdered as Date, "dd/MM/yyyy")}</Text>
               </View>
-              {/* <View style={{ marginTop: "16px" }}> */}
-              {/*   <Text */}
-              {/*     style={{ */}
-              {/*       marginTop: "4px", */}
-              {/*       fontSize: "10px", */}
-              {/*     }} */}
-              {/*   > */}
-              {/*     REFFERENCE */}
-              {/*   </Text> */}
-              {/*   <View */}
-              {/*     style={{ */}
-              {/*       fontSize: "10px", */}
-              {/*       display: "flex", */}
-              {/*       flexDirection: "row", */}
-              {/*       columnGap: 8, */}
-              {/*     }} */}
-              {/*   > */}
-              {/*     <Text>INQ NUM :</Text> */}
-              {/*     <Text>By Email</Text> */}
-              {/*   </View> */}
-              {/*   <View */}
-              {/*     style={{ */}
-              {/*       fontSize: "10px", */}
-              {/*       display: "flex", */}
-              {/*       flexDirection: "row", */}
-              {/*       columnGap: 8, */}
-              {/*     }} */}
-              {/*   > */}
-              {/*     <Text>INQ DATE :</Text> */}
-              {/*     <Text>-</Text> */}
-              {/*   </View> */}
-              {/* </View> */}
             </View>
           </View>
 
+          <View
+            style={{
+              paddingHorizontal: "40px",
+              marginTop: "16px",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: "12px",
+                textTransform: "capitalize",
+              }}
+            >
+              ATT: Mr/Ms {personInCharge?.name}
+            </Text>
+          </View>
           <View
             style={{
               paddingHorizontal: "10px",
@@ -408,6 +398,60 @@ export default function PdfPreview({ data }: Props): JSX.Element {
                 ></Text>
                 <Text style={styles.cellPrice}>Total</Text>
                 <Text style={styles.cellPrice}>{formattedTotal}</Text>
+              </View>
+            </View>
+          </View>
+
+          <View
+            style={{
+              width: "100%",
+              marginTop: "16px",
+              paddingHorizontal: "40px",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              // borderWidth: "1px",
+              // borderColor: "red",
+            }}
+          >
+            <View
+              style={{
+                fontSize: "8px",
+              }}
+            >
+              <Text> NOTES: </Text>
+              <Text>- Price are include VAT 11%</Text>
+              <Text>- Ready Stock, prior to sales</Text>
+              <Text>
+                - Payment Term: 100% 60 Days ARG (After Receive Goods)
+              </Text>
+              <Text>- Delivery Time 1 Weeks after Receive PO</Text>
+              <Text>- Delivery Point WH Tetra Pak</Text>
+            </View>
+
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                fontSize: "11px",
+                // borderWidth: "1px",
+                // borderColor: "blue",
+              }}
+            >
+              <Text>PT. REKAYASA KENDALI INDUSTRI</Text>
+              <View
+                style={{
+                  marginTop: "40px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  fontSize: "10px",
+                }}
+              >
+                <Text style={{ textTransform: "uppercase" }}>{user?.name}</Text>
+                <Text style={{ marginTop: "4px" }}>General Affair</Text>
               </View>
             </View>
           </View>
